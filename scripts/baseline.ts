@@ -39,7 +39,7 @@ const URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/comple
  * 13 с тримає під 5 запитами на хвилину, як у Лабораторній 1; змінюється через BASELINE_PAUSE_MS.
  * Пауза й повтори не входять у виміряну затримку: таймер — лише навколо самого виклику.
  */
-const PAUSE_MS = Number(process.env.BASELINE_PAUSE_MS ?? 13_000);
+const PAUSE_MS: number = process.env.BASELINE_PAUSE_MS ?? 13_000;
 /**
  * Тимчасові відмови провайдера: 429 (ліміт free tier) і 5xx (перевантаження — 503 «high demand»
  * обірвав перший прогін 2026-10-24 на q-08). Повтор через хвилину, до MAX_RETRIES разів;
