@@ -1,0 +1,69 @@
+diff --git a/scripts/baseline.ts b/scripts/baseline.ts
+index 32233c0..008074c 100644
+--- a/scripts/baseline.ts
++++ b/scripts/baseline.ts
+@@ -37,10 +37,20 @@ const URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/comple
+ /**
+  * Пауза між запитами (мс): ризик «ліміти free tier» зі spec.md, розділ 8.
+  * 13 с тримає під 5 запитами на хвилину, як у Лабораторній 1; змінюється через BASELINE_PAUSE_MS.
++ * Пауза й повтори не входять у виміряну затримку: таймер — лише навколо самого виклику.
+  */
+ const PAUSE_MS = Number(process.env.BASELINE_PAUSE_MS ?? 13_000);
+-/** Після HTTP 429 — одна повторна спроба через хвилину; такий запит не входить у медіану (G4). */
++/**
++ * Тимчасові відмови провайдера: 429 (ліміт free tier) і 5xx (перевантаження — 503 «high demand»
++ * обірвав перший прогін 2026-10-24 на q-08). Повтор через хвилину, до MAX_RETRIES разів;
++ * запит із повтором не входить у медіану (G4). Інші помилки зупиняють прогін одразу.
++ */
+ const RETRY_AFTER_MS = 60_000;
++const MAX_RETRIES = 3;
++
++export function isTransient(message: string): boolean {
++  return /HTTP (429|500|502|503|504)\b/.test(message);
++}
+ 
+ export interface BaselineRow {
+   readonly id: string;
+@@ -109,18 +119,22 @@ async function main(): Promise<void> {
+   const rows: BaselineRow[] = [];
+   for (const [i, entry] of entries.entries()) {
+     if (i > 0) await sleep(PAUSE_MS);
+-    let retried = false;
+-    let result: Awaited<ReturnType<typeof ask>>;
+-    try {
+-      result = await ask(model, entry.query);
+-    } catch (error) {
+-      const message = error instanceof Error ? error.message : String(error);
+-      if (!message.includes('HTTP 429')) throw error;
+-      console.error(`${entry.id}: HTTP 429 — чекаю ${RETRY_AFTER_MS / 1000} с і пробую ще раз`);
+-      await sleep(RETRY_AFTER_MS);
+-      retried = true;
+-      result = await ask(model, entry.query); // друга 429 зупиняє прогін: квоту не палимо
++    let retries = 0;
++    let result: Awaited<ReturnType<typeof ask>> | undefined;
++    while (result === undefined) {
++      try {
++        result = await ask(model, entry.query);
++      } catch (error) {
++        const message = error instanceof Error ? error.message : String(error);
++        // не тимчасова помилка або вичерпано повтори — зупиняємо прогін: квоту не палимо
++        if (!isTransient(message) || retries >= MAX_RETRIES) throw error;
++        retries++;
++        const status = /HTTP \d+/.exec(message)?.[0] ?? 'тимчасова помилка';
++        console.error(`${entry.id}: ${status} — повтор ${retries}/${MAX_RETRIES} через ${RETRY_AFTER_MS / 1000} с`);
++        await sleep(RETRY_AFTER_MS);
++      }
+     }
++    const retried = retries > 0;
+     const row: BaselineRow = {
+       id: entry.id,
+       tags: entry.tags,
+@@ -144,7 +158,7 @@ async function main(): Promise<void> {
+   const latencies = rows.filter((r) => !r.retried).map((r) => r.latencyMs);
+   const usd = priceUsd(SPEC, total);
+   console.log('\n## Підсумок (вердикти ставить людина за правилом spec.md, розділ 6)');
+-  console.log(`- Запитів: ${rows.length}, з повтором після 429: ${rows.length - latencies.length}`);
++  console.log(`- Запитів: ${rows.length}, з повтором після 429/5xx: ${rows.length - latencies.length}`);
+   console.log(`- Токени (вхід / вихід, сумарно): ${total.inputTokens} / ${total.outputTokens}`);
+   console.log(`- Вартість прогону за прайсом models.ts: $${usd.toFixed(6)} (на 100 запитів: $${((usd / rows.length) * 100).toFixed(4)})`);
+   console.log(`- Медіана затримки (без повторів): ${(median(latencies) / 1000).toFixed(2)} с`);

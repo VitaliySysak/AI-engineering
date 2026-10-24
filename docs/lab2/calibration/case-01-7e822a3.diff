@@ -1,0 +1,448 @@
+diff --git a/corpus/add-shortcut.md b/corpus/add-shortcut.md
+new file mode 100644
+index 0000000..302e04b
+--- /dev/null
++++ b/corpus/add-shortcut.md
+@@ -0,0 +1,13 @@
++# Додавання корисних скорочень (aliases)
++
++## Опис
++
++Створення скорочених команд (аліасів) для швидкої навігації та роботи в терміналі.
++
++## Команди / Код
++
++```bash
++echo "alias cls='clear'" >> ~/.bashrc && source ~/.bashrc
++echo "alias ll='ls -la'" >> ~/.bashrc && source ~/.bashrc
++echo "alias nginx='cd <nginx_path>'" >> ~/.bashrc && source ~/.bashrc
++```
+diff --git a/corpus/add-user-with-key.md b/corpus/add-user-with-key.md
+new file mode 100644
+index 0000000..77ece61
+--- /dev/null
++++ b/corpus/add-user-with-key.md
+@@ -0,0 +1,31 @@
++# Створення користувача з SSH-ключем та sudo
++
++## Опис
++
++Скрипт для безпечного створення користувача з паролем, генерації SSH-ключа та надання прав sudo.
++
++## Команди / Код
++
++```bash
++useradd -m -s /bin/bash <username>
++usermod -aG sudo <username>
++PASSWORD="<password>"
++HASH=$(echo -n "$PASSWORD" | openssl passwd -6 -stdin)
++echo "<username>:$HASH" | chpasswd -e
++echo "<username> ALL=(ALL:ALL) ALL" > /etc/sudoers.d/<username>
++
++chmod 440 /etc/sudoers.d/<username>
++
++mkdir -p /home/<username>/.ssh
++
++ssh-keygen -t rsa -b 4096 -m PEM -f /home/<username>/.ssh/<username>-key -N "" -q
++
++cat /home/<username>/.ssh/<username>-key.pub >> /home/<username>/.ssh/authorized_keys
++
++chmod 700 /home/<username>/.ssh
++chmod 600 /home/<username>/.ssh/authorized_keys
++
++chown -R <username>:<username> /home/<username>
++
++cat /home/<username>/.ssh/<username>-key
++```
+diff --git a/corpus/backup.md b/corpus/backup.md
+new file mode 100644
+index 0000000..0701299
+--- /dev/null
++++ b/corpus/backup.md
+@@ -0,0 +1,12 @@
++# Створення та відновлення бекапу бази даних (Docker)
++
++## Опис
++
++Скидання схеми та відновлення даних PostgreSQL з архіву в Docker-контейнері.
++
++## Команди / Код
++
++```bash
++docker exec -i <container_name> psql -U <db_user> -d <db_name> -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
++zcat <backup_file_path> | docker exec -i <container_name> psql -U <db_user> -d <db_name>
++```
+diff --git a/corpus/certbot-nginx.md b/corpus/certbot-nginx.md
+new file mode 100644
+index 0000000..5ec5976
+--- /dev/null
++++ b/corpus/certbot-nginx.md
+@@ -0,0 +1,55 @@
++# Конфігурація Nginx для Certbot та Proxy
++
++## Опис
++
++Налаштування веб-сервера Nginx для роботи з HTTPS, Certbot та проксіювання запитів на локальний сервіс.
++
++## Команди / Код
++
++```nginx
++server {
++    listen 80;
++    listen [::]:80;
++    server_name <domain>;
++
++    location ~ /.well-known/acme-challenge/ {
++        root /var/www/certbot;
++    }
++
++    location / {
++        return 301 https://$host$request_uri;
++    }
++}
++
++server {
++    location / {
++        proxy_pass http://127.0.0.1:<port>;
++        proxy_intercept_errors on;
++    }
++    error_page 502 504 = /maintenance.html;
++    location = /maintenance.html {
++        root <maintenance_path>;
++        internal;
++    }
++}
++
++sudo ln -s /etc/nginx/sites-available/<app_name> /etc/nginx/sites-enabled/
++
++sudo certbot --nginx -d <domain> -d www.<domain>
++
++# Приклад з розширеними заголовками
++server {
++    server_name <domain>;
++
++    location / {
++        proxy_pass http://localhost:<port>;
++        proxy_http_version 1.1;
++        proxy_set_header Upgrade $http_upgrade;
++        proxy_set_header Connection 'upgrade';
++        proxy_set_header Host $host;
++        proxy_set_header X-Real-IP $remote_addr;
++        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
++        proxy_set_header X-Forwarded-Proto $scheme;
++    }
++}
++```
+diff --git a/corpus/check-open-ports.md b/corpus/check-open-ports.md
+new file mode 100644
+index 0000000..d7c80ef
+--- /dev/null
++++ b/corpus/check-open-ports.md
+@@ -0,0 +1,11 @@
++# Перевірка відкритих портів
++
++## Опис
++
++Команда для перегляду активних мережевих підключень та відкритих портів.
++
++## Команди / Код
++
++```bash
++sudo ss -tulpn
++```
+diff --git a/corpus/install-certbot.md b/corpus/install-certbot.md
+new file mode 100644
+index 0000000..8ab4933
+--- /dev/null
++++ b/corpus/install-certbot.md
+@@ -0,0 +1,14 @@
++# Встановлення Certbot
++
++## Опис
++
++Встановлення Certbot через Snap для автоматичного отримання SSL-сертифікатів.
++
++## Команди / Код
++
++```bash
++sudo snap install core; sudo snap refresh core
++sudo snap install --classic certbot
++sudo ln -s /snap/bin/certbot /usr/bin/certbot
++sudo certbot --nginx
++```
+diff --git a/corpus/install-docker.md b/corpus/install-docker.md
+new file mode 100644
+index 0000000..cffcf96
+--- /dev/null
++++ b/corpus/install-docker.md
+@@ -0,0 +1,28 @@
++# Встановлення Docker (Rootful та Rootless)
++
++## Опис
++
++Скрипт для встановлення Docker з офіційних репозиторіїв та налаштування rootless-режиму для користувача.
++
++## Команди / Код
++
++```bash
++# Встановлення Docker
++sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
++sudo chmod a+r /etc/apt/keyrings/docker.asc
++
++echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
++
++sudo apt-get update
++sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
++
++# Rootless режим
++curl -fsSL https://get.docker.com/rootless | sh
++
++export PATH=/home/$USER/bin:$PATH
++export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock
++
++systemctl --user start docker
++systemctl --user enable docker
++sudo loginctl enable-linger $USER
++```
+diff --git a/corpus/install-nginx.md b/corpus/install-nginx.md
+new file mode 100644
+index 0000000..99c14f4
+--- /dev/null
++++ b/corpus/install-nginx.md
+@@ -0,0 +1,11 @@
++# Встановлення Nginx
++
++## Опис
++
++Команда для швидкого встановлення веб-сервера Nginx.
++
++## Команди / Код
++
++```bash
++sudo apt install nginx
++```
+diff --git a/corpus/local-port-forward.md b/corpus/local-port-forward.md
+new file mode 100644
+index 0000000..cb4e3ef
+--- /dev/null
++++ b/corpus/local-port-forward.md
+@@ -0,0 +1,11 @@
++# Прокидання локального порту через SSH
++
++## Опис
++
++Підключення до віддаленої бази даних або іншого сервісу з локальної машини через захищений SSH-тунель.
++
++## Команди / Код
++
++```bash
++ssh -N -L <local_port>:localhost:<remote_port> <username>@<ip_address>
++```
+diff --git a/corpus/private-github-repository-access.md b/corpus/private-github-repository-access.md
+new file mode 100644
+index 0000000..c1031b2
+--- /dev/null
++++ b/corpus/private-github-repository-access.md
+@@ -0,0 +1,17 @@
++# Доступ до приватного GitHub репозиторію
++
++## Опис
++
++Генерація SSH-ключа для конкретного проєкту та налаштування git для його використання.
++
++## Команди / Код
++
++```bash
++# генерація ключа доступу
++ssh-keygen -t ed25519 -f ~/.ssh/<ssh_key_name> -N "" -q
++
++# налаштування доступу для проєкту
++git config --global core.sshCommand 'ssh -i ~/.ssh/<ssh_key_name> -o IdentitiesOnly=yes'
++
++git clone git@github.com:<github_user>/<repository_name>.git .
++```
+diff --git a/docs/lab2/autonomy-log.md b/docs/lab2/autonomy-log.md
+new file mode 100644
+index 0000000..d8b22bf
+--- /dev/null
++++ b/docs/lab2/autonomy-log.md
+@@ -0,0 +1,22 @@
++# Журнал автономності · Лабораторна 2
++
++Сесія = одна цілісна робота з агентом над однією задачею: від запуску до коміту або відмови.
++Формат як у [Лабораторній 1](../lab1/autonomy-log.md). Лише дописую: неточність виправляю новим записом.
++
++## Сесія 1 · 2026-10-24 (заняття 05, крок 00)
++
++| Поле | Значення |
++|---|---|
++| Інструмент і модель | Claude Code 2.1.302 (desktop-застосунок) · Opus 5.5 |
++| Режим дозволів | auto |
++| Рівень довіри | вище L2 (auto): агент сам читав файли й виконував команди; видалення `.docx`, створення `spec.md` і коміт — лише після мого явного «так» у чаті |
++| spec-kit / `/plan` | Не використовував. Замість цього агент провів опитування: до кожного розділу каркаса `spec.md` запропонував 2–4 варіанти, я обирав |
++| Задача | Крок 00: план лабораторної, корпус документів, `docs/lab2/spec.md` |
++| Що агент запропонував | Покроковий план кроків 00–10 за сторінкою лабораторної; переведення корпусу з `.docx` у `.md`; варіанти відповідей для всіх 8 розділів специфікації; правило вердиктів `correct` / `partial` / `wrong` / `refused` (в опитуванні його не було) |
++| Що агент виконав | Прочитав мої 10 `.docx`-шпаргалок і перевірив їх на персональні дані (усі значення — заглушки `<...>`); власним скриптом переконвертував їх у `corpus/*.md` (UTF-8 без BOM, команди — у блоках коду) і видалив `.docx`; згенерував `docs/lab2/spec.md` з моїх відповідей; створив `docs/lab2/golden/.gitkeep` і цей журнал; прогнав перевірки й закомітив |
++| Де і чому я втрутився | Агент попередив, що крок 00 вимагає «файл пише студент», а перевірка `.agent-log` на `Write docs/lab2/spec.md` має бути порожньою. Я свідомо обрав, щоб `spec.md` згенерував агент за моїми рішеннями, і записав це в розділ «Історія версій» специфікації. Варіант «агент дає текст у чаті, я вставляю сам» агент відхилив як приховування авторства. Обрав цілі G1–G5, non-goals, обсяг, 7 критеріїв приймання, обмеження й ризики; перевірив і погодив правило вердиктів; прочитав `spec.md` перед комітом |
++| Які докази прийняв | Перегляд вмісту всіх 10 `.md` після конвертації; перевірка, що у файлах немає BOM і що в `spec.md` 7 критеріїв A і 5 цілей G; зелені `typecheck`, `lint`, `test`, `build` перед комітом |
++| Посилання | `.agent-log/claude-code.jsonl`, сесія `98452ea5-d172-4e9b-a324-0d99f4893bee`: конвертація корпусу — L442–L447, `Write docs/lab2/spec.md` — L464 |
++
++Відхилення від вимоги кроку 00 (зафіксовано чесно, журнал не правлю): `spec.md` написав агент, а не я.
++Рішення й числа в ньому — мої, з опитування; формулювання — агента. Деталі — у розділі «Історія версій» [spec.md](spec.md).
+diff --git a/docs/lab2/golden/.gitkeep b/docs/lab2/golden/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/docs/lab2/spec.md b/docs/lab2/spec.md
+new file mode 100644
+index 0000000..4598ba1
+--- /dev/null
++++ b/docs/lab2/spec.md
+@@ -0,0 +1,148 @@
++# Специфікація v1: асистент по шпаргалках адміністрування Linux-сервера
++
++> Лабораторна 2. Дата: 2026-10-24.
++> Походження тексту описано в розділі «Історія версій» наприкінці файлу.
++
++## 1. Задача й користувач
++
++**Користувач.** Автор нотаток (я сам). У мене є власні шпаргалки з налаштування
++Linux-сервера (Ubuntu): nginx, certbot, Docker, SSH, бекап PostgreSQL.
++
++**Питання, яке ставить користувач.** «Як зробити X покроково?» Наприклад: «як
++налаштувати nginx із HTTPS через certbot», «як створити користувача з SSH-ключем
++і sudo», «як відновити бекап PostgreSQL у Docker».
++
++**Що робить сьогодні без асистента.** Гортає `.docx`-нотатки по одному файлу й
++шукає потрібну команду вручну.
++
++**Чим це погано.** Втрата часу: пошук потрібної послідовності команд займає хвилини
++замість секунд.
++
++**Що дає асистент.** Відповідає на питання покроковою інструкцією лише з моїх
++нотаток, з цитатою на документ і фрагмент. Якщо в нотатках відповіді немає,
++чесно відмовляє.
++
++## 2. Набір документів
++
++- **Кількість:** 10 документів.
++- **Обсяг:** ≈ 6 КБ сумарно (від 204 до 1397 байт на файл).
++- **Мови:** описи й заголовки українською, команди та конфігурації англійською
++  (bash, nginx). Запити користувача українською.
++- **Формат:** Markdown, UTF-8 без BOM, тека `corpus/`. Ім'я файлу без розширення
++  дорівнює `id` документа.
++- **Відтворення колекції:** документи закомічено в репозиторій у `corpus/`;
++  окреме завантаження не потрібне. Вихідні `.docx` переведено в `.md` один раз
++  (заголовки → `#`/`##`, моноширинний текст → блоки коду); після цього джерелом
++  правди є `.md`.
++- **Формат `id`:** kebab-case латиницею без пробілів, збігається з іменем файлу.
++
++| id | Назва | Джерело | Ліцензія | Чому можна публікувати |
++|---|---|---|---|---|
++| `add-shortcut` | Додавання корисних скорочень (aliases) | власні нотатки | CC BY 4.0 | автор — я; без персональних даних |
++| `add-user-with-key` | Створення користувача з SSH-ключем та sudo | власні нотатки | CC BY 4.0 | автор — я; ім'я, пароль і ключ замінено заглушками |
++| `backup` | Створення та відновлення бекапу бази даних (Docker) | власні нотатки | CC BY 4.0 | автор — я; назви контейнера, БД і користувача — заглушки |
++| `certbot-nginx` | Конфігурація Nginx для Certbot та Proxy | власні нотатки | CC BY 4.0 | автор — я; домен і порт — заглушки |
++| `check-open-ports` | Перевірка відкритих портів | власні нотатки | CC BY 4.0 | автор — я; без персональних даних |
++| `install-certbot` | Встановлення Certbot | власні нотатки | CC BY 4.0 | автор — я; без персональних даних |
++| `install-docker` | Встановлення Docker (Rootful та Rootless) | власні нотатки | CC BY 4.0 | автор — я; лише публічні URL Docker |
++| `install-nginx` | Встановлення Nginx | власні нотатки | CC BY 4.0 | автор — я; без персональних даних |
++| `local-port-forward` | Прокидання локального порту через SSH | власні нотатки | CC BY 4.0 | автор — я; IP і ім'я — заглушки |
++| `private-github-repository-access` | Доступ до приватного GitHub репозиторію | власні нотатки | CC BY 4.0 | автор — я; користувач, репозиторій і ключ — заглушки |
++
++**Перевірка відсутності персональних даних і секретів:** кожен файл переглянуто
++вручну. Імена користувачів, IP-адреси, домени, паролі, назви ключів і репозиторіїв
++замінено заглушками виду `<username>`, `<ip_address>`, `<domain>`, `<password>`.
++Реальних ключів, токенів і паролів у корпусі немає.
++
++## 3. Вимірювані цілі v1
++
++| Ціль | Число | Як міряється | Де число |
++|---|---|---|---|
++| G1. Точність | ≥ 80% вердиктів `correct` | прогін `docs/lab2/golden/queries.jsonl`; вердикти ставить людина за правилом розділу 6 | `docs/lab2/eval-report.md` |
++| G2. Частка відповідей із цитатою | 100% відповідей (крім відмов) мають щонайменше один `id` документа з розділу 2 | автоматично в скрипті звіту | `docs/lab2/eval-report.md` |
++| G3. Правильні відмови | 100% запитів із тегом `unanswerable` отримують вердикт `refused` | протокол кроку 01, вердикт ставить людина | `docs/lab2/eval-report.md` |
++| G4. Затримка | медіана ≤ 5 с на запит (від запиту до готової відповіді) | таймер у скрипті прогону; запити з повтором після 429 у медіану не входять | `docs/lab2/eval-report.md` |
++| G5. Вартість | ≤ $0.20 на 100 запитів | `src/cost.ts` з того самого `Usage`, що в Лабораторній 1, **за платними цінами** з `src/models.ts`, навіть якщо фактично використано free tier | `docs/lab2/budget.md` |
++
++## 4. Non-goals v1
++
++- Асистент **не виконує команди**: лише показує їх із цитатою, не підключається
++  до сервера й не запускає термінал.
++- Асистент **не відповідає поза корпусом**: загальних знань про Linux не дає; якщо
++  відповіді немає в `corpus/`, відмовляє (G3).
++- Асистент **не підставляє значення** замість заглушок (`<username>`, `<domain>`
++  тощо) і не збирає реальних даних користувача.
++- **Немає автооновлення індексу**: індекс перебудовується лише вручну
++  (`npm run index`), без стеження за файлами.
++- **Немає UI**: лише CLI та MCP.
++- **Немає підтримки `.docx` і PDF**: корпус — лише Markdown.
++
++## 5. Обсяг v1
++
++**Входить у v1:**
++
++- індексація `corpus/` у `data/index.json`;
++- гібридний пошук: BM25 + вектор (косинус), злиття RRF;
++- відповідь із цитатами на фрагменти, які отримала модель;
++- правило відмови для запитів без відповіді в корпусі;
++- MCP-сервер з інструментами `search_corpus` і `fetch_chunk`;
++- CLI `scripts/search.ts`.
++
++**На майбутнє (не v1):**
++
++- реранкінг топ-20 окремою моделлю;
++- веб-чат у Next.js.
++
++## 6. Критерії приймання
++
++**Правило вердиктів** (для G1 і G3, однакове для базової лінії й фінального прогону):
++
++- `correct` — відповідь містить усі потрібні кроки й команди з документа без
++  вигаданих прапорців чи шляхів;
++- `partial` — частина кроків є, але бракує суттєвого кроку або є неточність;
++- `wrong` — відповідь неправильна або містить вигадані команди;
++- `refused` — асистент явно відмовився відповідати.
++
++| № | Критерій | Чим перевіряється |
++|---|---|---|
++| A1 | `npm run typecheck`, `npm run lint`, `npm test` і `npm run build` завершуються з кодом 0 локально і в CI на `main` | команди + статус CI на `main` |
++| A2 | Для кожного фрагмента всіх 10 документів виконується `chunk.text === normalize(raw).slice(start, end)`, а хеші документів у заголовку `data/index.json` збігаються з файлами в `corpus/` | тест у `tests/` (vitest, без мережі) |
++| A3 | `validateAnswer` відхиляє відповідь без цитати і відповідь із `id` фрагмента, якого не було серед переданих у промпт | тест у `tests/` (vitest, без мережі) |
++| A4 | `fetch_chunk` з `id`, якого немає в індексі, або зі шляхом до файлу повертає помилку, а не вміст файлу | `tests/mcp.test.ts` (тест на відмову) |
++| A5 | `docs/lab2/golden/queries.jsonl` містить ≥ 20 запитів, серед них ≥ 3 з тегом `unanswerable` і ≥ 2 з тегом `injection`; `npx tsx scripts/validate-golden.ts` завершується з кодом 0 | команда + `tests/validate-golden.test.ts` |
++| A6 | У підсумковій таблиці `eval-report.md` досягнуто G1 (≥ 80% `correct`), G2 (100% цитат) і G3 (100% `refused` на `unanswerable`) | файл `docs/lab2/eval-report.md` із числами |
++| A7 | Жоден запит із тегом `injection` не виконує вкладену інструкцію: асистент відмовляє або відповідає лише з корпусу | протокол перевірки людиною; число в `docs/lab2/eval-report.md` |
++
++## 7. Обмеження
++
++- **Бюджет:** лише free tier, $0 на всю лабораторну (прогони, верифікатор,
++  ембедінги).
++- **Модель генерації:** Gemini 3.5 Flash-Lite (free tier). У `src/models.ts` вона
++  є в `CATALOG`, але ще не прив'язана до ролі — прив'язка і звірка ціни зі сторінкою
++  вендора будуть під час реалізації.
++- **Ембедер:** шлях Б — `gemini-embedding-2`, розмірність 768.
++- **Чому документи можна надсилати на free tier:** корпус — мої власні нотатки,
++  опубліковані в публічному репозиторії під CC BY 4.0, без персональних даних і
++  секретів (розділ 2). Використання їх провайдером не розкриває нічого, що не є
++  публічним.
++- **Верифікатор (крок 03):** Gemini (free tier) — інша родина моделей, ніж Claude
++  (Anthropic), який пише код. У вхід верифікатора не потрапляють секрети.
++- **CI:** без мережі й ключів. Тести не ходять у мережу і не викликають платні API;
++  ембедінги в тестах замінено зафіксованими даними.
++- **Середовище:** Windows 11, Node.js ≥ 22.12; CI — Linux.
++- **Залізо:** слабкий ноутбук без GPU; локальні моделі (Ollama) — лише запасний
++  варіант.
++- **Термін:** до початку заняття 09 (≈ 20 год самостійної роботи, тижні 5–9).
++
++## 8. Ризики
++
++| Ризик | Ймовірність | Що робимо, якщо спрацює |
++|---|---|---|
++| Малий корпус (10 документів, ≈ 6 КБ): запити повторюються, один запит = 5% метрики, базова лінія без документів може відповідати правильно на популярні команди | висока | Чесно описуємо обмеження вимірювання в `eval-report.md`; висновок робимо за абсолютними числами й таблицею переходів вердиктів; запити складаємо так, щоб відповідь залежала саме від моїх нотаток |
++| Ліміти free tier Gemini (відповіді 429) під час прогону чи верифікації | середня | Пауза між запитами й повтор після 429 у скрипті прогону; запит із повтором не входить у G4; індекс будується один раз і зберігається в `data/index.json` |
++
++## Історія версій
++
++| Дата | Версія | Що змінено |
++|---|---|---|
++| 2026-10-24 | v1 | Перша версія. Текст згенерував агент (Claude Code) за моїми відповідями в опитуванні: агент пропонував варіанти до кожного розділу, рішення й числа обрав я. Це свідоме відхилення від вимоги кроку 00 «файл пише студент»; запис `Write docs/lab2/spec.md` у `.agent-log/claude-code.jsonl` лишено без змін. Правило вердиктів у розділі 6 сформулював агент — я його перевірив і погодив. Текст перевірено мною перед комітом. |
