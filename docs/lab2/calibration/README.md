@@ -42,21 +42,39 @@
 
 Критерії A1–A7 — [spec.md](../spec.md), розділ 6.
 
-## Ручна розмітка (заповнює автор до прогону верифікатора)
+## Ручна розмітка (до прогону верифікатора)
 
 | № | A1 | A2 | A3 | A4 | A5 | A6 | A7 |
 |---|---|---|---|---|---|---|---|
-| 01 | | | | | | | |
-| 02 | | | | | | | |
-| 03 | | | | | | | |
-| 04 | | | | | | | |
-| 05 | | | | | | | |
-| 06 | | | | | | | |
-| 07 | | | | | | | |
-| 08 | | | | | | | |
-| 09 | | | | | | | |
-| 10 | | | | | | | |
-| 11 | | | | | | | |
-| 12 | | | | | | | |
+| 01 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 02 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 03 | unknown | unknown | unknown | unknown | **pass** | unknown | unknown |
+| 04 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 05 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 06 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 07 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 08 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 09 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 10 | unknown | unknown | unknown | unknown | unknown | unknown | unknown |
+| 11 | unknown | unknown | unknown | unknown | **fail** | unknown | unknown |
+| 12 | **fail** | unknown | unknown | unknown | unknown | unknown | unknown |
 
-Розмітив: … · дата: … · коміт розмітки: …
+Разом 84 клітинки: pass — 1, fail — 2, unknown — 81.
+
+Розмітив: Vitalii · дата: 2026-10-24 · до першого прогону верифікатора на цих випадках.
+
+### Як отримано розмітку (чесно)
+
+Розмітку зроблено в опитуванні з агентом (Claude Code, Opus 5.5 — та сама родина, що пише код):
+
+1. **Перша спроба, без підказок** (випадки 01–04; далі перервано мною): 01 — A1 pass, решта unknown;
+   02 — A5 pass, A2–A4 і A6–A7 fail; 03 — A1 і A5 pass; 04 — усі unknown. Після цього я попросив пояснити
+   правило: агент пояснив, що A1 у diff не буває `pass` (результатів команд там немає), а `fail` — це
+   «зміна ламає критерій», а не «артефакту ще немає».
+2. **Друга спроба, з рекомендаціями агента** (усі 12 випадків, таблиця вище): до кожного випадку агент
+   дав фактичний опис diff і 2–3 варіанти рядка A1–A7 з позначкою «Recommended». Я обрав рекомендований
+   варіант в усіх 12 випадках.
+
+Отже, таблиця — це рекомендації агента, підтверджені мною, а не незалежна людська розмітка. Калібрування
+вимірює збіг Gemini (суддя) з цією таблицею; збіг судді з Claude тут частково закладено самим способом
+розмітки. Перша спроба наведена, щоб було видно, де моє власне прочитання відрізнялося від правила.
