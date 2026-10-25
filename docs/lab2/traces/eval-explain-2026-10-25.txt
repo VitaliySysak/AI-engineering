@@ -1,0 +1,52 @@
+### Як згенерувати ключ для нового користувача, щоб він заходив на сервер без пароля?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  add-user-with-key#0002  0.7726                   1  certbot-nginx#0001  4.69                         1  add-user-with-key#0000  0.03175
+ 2  add-user-with-key#0000  0.7565                   2  install-docker#0001  4.28                        2  add-user-with-key#0001  0.03150
+ 3  private-github-repository-access#0002  0.7168    3  add-user-with-key#0001  3.81                     3  private-github-repository-access#0001  0.03077
+ 4  add-user-with-key#0001  0.7157                   4  add-user-with-key#0000  3.09                     4  private-github-repository-access#0002  0.02996
+ 5  private-github-repository-access#0001  0.6919    5  private-github-repository-access#0001  1.67      5  certbot-nginx#0000  0.02781
+ 6  local-port-forward#0002  0.6568                  6  certbot-nginx#0000  1.54                         6  add-user-with-key#0002  0.01639
+ 7  install-certbot#0002  0.6475                     7  install-nginx#0001  1.46                         7  certbot-nginx#0001  0.01639
+ 8  local-port-forward#0000  0.6427                  8  check-open-ports#0001  1.39                      8  install-docker#0001  0.01613
+ 9  install-nginx#0000  0.6291                       9  install-certbot#0001  1.39                       9  local-port-forward#0002  0.01515
+10  install-nginx#0002  0.6291                      10  add-shortcut#0001  1.35                         10  install-certbot#0002  0.01493
+
+### Як дати новому користувачу права sudo і які права доступу має мати файл з правилом?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  add-user-with-key#0000  0.7026                   1  private-github-repository-access#0002  3.39      1  add-user-with-key#0000  0.03227
+ 2  add-user-with-key#0002  0.6925                   2  install-certbot#0002  2.21                       2  install-certbot#0002  0.03128
+ 3  add-user-with-key#0001  0.6534                   3  add-user-with-key#0000  1.84                     3  add-user-with-key#0001  0.03102
+ 4  install-nginx#0002  0.6264                       4  check-open-ports#0002  1.84                      4  check-open-ports#0002  0.03101
+ 5  check-open-ports#0002  0.6181                    5  install-nginx#0002  1.79                         5  install-nginx#0002  0.03101
+ 6  install-certbot#0002  0.6108                     6  add-user-with-key#0001  1.51                     6  add-user-with-key#0002  0.03062
+ 7  add-shortcut#0000  0.6094                        7  install-docker#0002  1.50                        7  private-github-repository-access#0002  0.03048
+ 8  install-docker#0002  0.6016                      8  certbot-nginx#0002  0.76                         8  install-docker#0002  0.02963
+ 9  certbot-nginx#0002  0.5968                       9  add-user-with-key#0002  0.58                     9  certbot-nginx#0002  0.02920
+10  install-nginx#0000  0.5965                                                                          10  add-shortcut#0000  0.01493
+
+### Як активувати новий сайт у nginx і переконатися, що він слухає і IPv4, і IPv6?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  install-nginx#0000  0.6860                       1  install-nginx#0000  2.06                         1  install-nginx#0000  0.03279
+ 2  certbot-nginx#0001  0.6724                       2  certbot-nginx#0000  1.84                         2  certbot-nginx#0000  0.03151
+ 3  certbot-nginx#0002  0.6570                       3  install-nginx#0002  1.79                         3  install-nginx#0002  0.03150
+ 4  install-nginx#0002  0.6488                       4  install-nginx#0001  1.74                         4  certbot-nginx#0001  0.03128
+ 5  certbot-nginx#0000  0.6406                       5  add-shortcut#0002  1.66                          5  certbot-nginx#0002  0.03080
+ 6  install-certbot#0002  0.6345                     6  certbot-nginx#0001  1.48                         6  install-nginx#0001  0.03033
+ 7  install-certbot#0000  0.6081                     7  certbot-nginx#0002  1.21                         7  install-certbot#0002  0.02986
+ 8  install-nginx#0001  0.6073                       8  install-certbot#0002  1.17                       8  add-shortcut#0002  0.02890
+ 9  check-open-ports#0002  0.5979                                                                        9  install-certbot#0000  0.01493
+10  check-open-ports#0001  0.5922                                                                       10  check-open-ports#0002  0.01449
+
+### Як перенести дані з бекапу в базу в Docker і безпечно підключитися до неї своїм клієнтом, не відкриваючи порт назовні?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  backup#0000  0.7891                              1  backup#0000  6.34                                1  backup#0000  0.03279
+ 2  backup#0002  0.7731                              2  private-github-repository-access#0000  3.67      2  local-port-forward#0001  0.03150
+ 3  backup#0001  0.7676                              3  local-port-forward#0001  2.87                    3  backup#0002  0.03105
+ 4  local-port-forward#0001  0.7222                  4  install-docker#0002  2.57                        4  backup#0001  0.03102
+ 5  install-docker#0002  0.7113                      5  install-docker#0000  2.28                        5  install-docker#0002  0.03101
+ 6  install-docker#0000  0.6770                      6  backup#0001  2.00                                6  install-docker#0000  0.03054
+ 7  local-port-forward#0002  0.6651                  7  backup#0002  1.89                                7  private-github-repository-access#0000  0.02983
+ 8  local-port-forward#0000  0.6523                  8  install-docker#0001  1.86                        8  install-docker#0001  0.02899
+ 9  check-open-ports#0000  0.6473                                                                        9  local-port-forward#0002  0.01493
+10  install-docker#0001  0.6435                                                                         10  local-port-forward#0000  0.01471
+
