@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/verify-input.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна не містить результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується налаштувань у scripts/baseline.ts та scripts/validate-golden.ts, але не містить доказів перевірки фрагментів документів чи хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується scripts/baseline.ts та scripts/validate-golden.ts, але не містить реалізації чи тестів для функції validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна не стосується fetch_chunk або tests/mcp.test.ts, а змінює лише пороги у валідації та тип PAUSE_MS у baseline.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна змінює поріг у scripts/validate-golden.ts, але для перевірки вмісту queries.jsonl та результату виконання команди потрібні дані виконання (тести/команда), яких немає в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/eval-report.md із підсумковими числами, а зміни стосуються лише скриптів.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується налаштування паузи у baseline.ts та порогових значень у validate-golden.ts, але не містить оцінки чи логів виконання запитів із тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

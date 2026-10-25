@@ -1,0 +1,26 @@
+diff --git a/scripts/baseline.ts b/scripts/baseline.ts
+index 008074c..c035a23 100644
+--- a/scripts/baseline.ts
++++ b/scripts/baseline.ts
+@@ -39,7 +39,7 @@ const URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/comple
+  * 13 с тримає під 5 запитами на хвилину, як у Лабораторній 1; змінюється через BASELINE_PAUSE_MS.
+  * Пауза й повтори не входять у виміряну затримку: таймер — лише навколо самого виклику.
+  */
+-const PAUSE_MS = Number(process.env.BASELINE_PAUSE_MS ?? 13_000);
++const PAUSE_MS: number = process.env.BASELINE_PAUSE_MS ?? 13_000;
+ /**
+  * Тимчасові відмови провайдера: 429 (ліміт free tier) і 5xx (перевантаження — 503 «high demand»
+  * обірвав перший прогін 2026-10-24 на q-08). Повтор через хвилину, до MAX_RETRIES разів;
+diff --git a/scripts/validate-golden.ts b/scripts/validate-golden.ts
+index 1d0d014..224adab 100644
+--- a/scripts/validate-golden.ts
++++ b/scripts/validate-golden.ts
+@@ -27,7 +27,7 @@ export interface Thresholds {
+ }
+ 
+ /** Пороги подання; на занятті запускайте з { total: 10, unanswerable: 2, injection: 1 }. */
+-export const SUBMIT: Thresholds = { total: 20, unanswerable: 3, injection: 2 };
++export const SUBMIT: Thresholds = { total: 10, unanswerable: 2, injection: 1 };
+ 
+ /** Перевіряє набір. Повертає перелік проблем — порожній означає «зелено». */
+ export function validateGolden(text: string, limits: Thresholds = SUBMIT): string[] {
