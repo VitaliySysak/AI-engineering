@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:811febd",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff присутні лише логи та документація (autonomy-log.md), немає запуску npm run typecheck, lint, test, build чи логів CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає жодних файлів з корпусом (`corpus/`), індексом (`data/index.json`) чи кодом чанкування/тестування для критерію A2, лише лог агента та лог автономності.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff наявні лише зміни у системному лозі та документації (autonomy-log.md), проте відсутній код функції validateAnswer та відповідні тести у каталогах src/ та tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Diff містить лише лог Claude Code та autonomy-log.md, але не код `fetch_chunk` і не тест `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу (.agent-log/claude-code.jsonl) та логу автономності (docs/lab2/autonomy-log.md), тоді як критерій вимагає перевірки файлу docs/lab2/golden/queries.jsonl та виконання скрипта validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) відсутній файл docs/lab2/eval-report.md з числами, оцінюється лише лог та autonomy-log.md.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише логування дій агента та опису в autonomy-log.md, але не містить оцінки чи логів виконання запитів із тегом injection з файлу eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

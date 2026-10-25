@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:672d6b8",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації в docs/lab2/indexing.md і не містить виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації в docs/lab2/indexing.md і не містить коду чи тестів для перевірки відповідності чанків і хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації в docs/lab2/indexing.md і не містить коду валідації чи тестів для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується документації в docs/lab2/indexing.md, а не коду або тестів для fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації в docs/lab2/indexing.md і не містить файлу docs/lab2/golden/queries.jsonl або результатів виконання команди.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується документа docs/lab2/indexing.md, а не eval-report.md, тому критерій не може бути перевірений цим diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується документації indexing.md і не містить результатів чи звітів у файлі docs/lab2/eval-report.md щодо ін'єкцій.",
+      "evidence": ""
+    }
+  ]
+}

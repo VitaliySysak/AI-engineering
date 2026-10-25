@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:9160bc7",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише текстовий файл із результатами оцінювання, що не стосується виконання команд перевірки коду та CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише звітний файл оцінювання (eval trace), не змінюючи корпус, чанки чи файл index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання нового файлу трасування оцінювання, але не містить коду або тестів для функції validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання нового файлу зі звітом eval-explain-2026-10-25.txt і не містить змін у коді чи тестах, пов'язаних з критерієм fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується іншого файлу (eval-explain-2026-10-25.txt), а не queries.jsonl, тому для перевірки критерію недостатньо даних із diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна додає файл трасування eval-explain-2026-10-25.txt, але не містить оновлення файлу docs/lab2/eval-report.md, який вимагається критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл трасування пошуку замість оцінки звітів у docs/lab2/eval-report.md, а сам критерій вимагає перевірки поведінки асистента на ін'єкції.",
+      "evidence": ""
+    }
+  ]
+}

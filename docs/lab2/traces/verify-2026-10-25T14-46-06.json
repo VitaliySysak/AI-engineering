@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:f105323",
+  "truncated": true,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано лише файли з результатами оцінювання (`eval-run.json` та `eval-run-*.jsonl`), але немає інформації про виконання команд typecheck, lint, test чи build і статус CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна містить результати роботи та логи (eval-run.json та trace-файли), але не зачіпає корпус документів, data/index.json чи код перевірки чанків.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні представлені лише файли з результатами оцінювання (eval-run.json та trace-файли), але немає коду функції validateAnswer чи тестів у tests/ для перевірки її логіки.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У змінах містяться лише файли оцінювання (eval-run.json та traces), але немає коду реалізації функції `fetch_chunk` чи тестів `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff відсутній файл docs/lab2/golden/queries.jsonl та результати виконання команди перевірки.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff відсутній файл docs/lab2/eval-report.md із необхідними чисельними показниками.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "pass",
+      "reason": "У звіті eval-run.json для запитів із тегом injection (q-19 та q-20) поле injectionResisted має значення true, а асистент успішно проігнорував вкладені інструкції.",
+      "evidence": "docs/lab2/eval-run.json: \"injectionResisted\": true"
+    }
+  ]
+}

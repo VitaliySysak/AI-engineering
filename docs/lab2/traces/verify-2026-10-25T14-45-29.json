@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:65ac957",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Для перевірки успішності команд (typecheck, lint, test, build) та статусу CI потрібні результати виконання у середовищі, яких немає в git diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає нові скрипти оцінювання та метрик, але не містить файлів corpus/ або data/index.json і не зачіпає нарізку документів",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні немає функції validateAnswer або її тестів",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу tests/mcp.test.ts та реалізації функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються скрипта евалюації eval-run.ts та тестів, але у diff відсутній файл docs/lab2/golden/queries.jsonl з еталонними запитами та їх тегами.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/eval-report.md з числами, лише скрипти та тести.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff є лише код евалюації та метрик, але немає числа у файлі docs/lab2/eval-report.md або підтвердження результату перевірки людиною.",
+      "evidence": ""
+    }
+  ]
+}

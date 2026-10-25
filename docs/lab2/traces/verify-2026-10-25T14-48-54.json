@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:95ad7a3",
+  "truncated": true,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff наведено лише JSON-файл з даними ембеддингів, але відсутні результати виконання обов'язкових команд typecheck, lint, test, build та статус CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Для перевірки збігу хешів та коректності тексту чанків за специфікацією потрібен запуск тесту без мережі з tests/, якого немає в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні представлено лише оновлення файлу індексу даних (data/index.json), проте немає жодного коду функції validateAnswer чи відповідних тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише індексу даних (data/index.json), але не містить коду або тестів функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl, а також результату виконання команди npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff змінено лише файл data/index.json, але немає жодних змін у файлі docs/lab2/eval-report.md, який вимагається за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff наведено лише оновлення векторів та індексу в data/index.json, але немає результатів перевірки тегів injection чи звітів.",
+      "evidence": ""
+    }
+  ]
+}
