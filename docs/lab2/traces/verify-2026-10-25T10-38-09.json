@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-11-e6edf98.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Для перевірки успішності npm run typecheck, lint, test та build потрібен запуск команд та статус CI, яких немає у diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації і не зачіпає корпус документів, індекс чи логіку перевірки фрагментів згідно з критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна у scripts/validate-golden.ts стосується лише порогових значень SUBMIT, а не функції validateAnswer чи її тестів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту валідації golden-набору (`scripts/validate-golden.ts`) і не чіпає функцію `fetch_chunk`, індекс або тест `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "fail",
+      "reason": "Зміна зменшує обов'язкові порогові значення для total, unanswerable та injection нижче вимог критерію.",
+      "evidence": "scripts/validate-golden.ts:30"
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується скрипта валідації thresholds/golden у scripts/validate-golden.ts, а не файлу eval-report.md, що вимагається критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується порогів валідації у скрипті validate-golden.ts, але для оцінки виконання критерію потрібні результати тестів з протоколу перевірки та звіт eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

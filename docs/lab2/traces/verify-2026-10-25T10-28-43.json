@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-01-7e822a3.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише markdown-файли корпусів, документацію та журнал, але немає жодного коду чи конфігурації для виконання npm-команд, а також результатів перевірки локально чи в CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні створено нові файли корпусу, але немає ані індексу data/index.json, ані тесту у tests/, який би перевіряв хеші та зрізи фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні представлено лише текстові файли корпусу, журнал та специфікацію; файли з кодом функції validateAnswer чи тестами для неї відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У змінах лише документація та файли корпусу, а код MCP-сервера та тест tests/mcp.test.ts не зачеплені.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу `docs/lab2/golden/queries.jsonl`, скрипта валідації чи тесту, тому перевірити критерій A5 неможливо.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У змінах немає файлу docs/lab2/eval-report.md, а наявність специфікації не гарантує досягнення метрик у звіті.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff додано документацію, специфікації та корпус нотаток, але немає результатів протоколу перевірки людиною чи даних із eval-report.md щодо ін'єкцій.",
+      "evidence": ""
+    }
+  ]
+}

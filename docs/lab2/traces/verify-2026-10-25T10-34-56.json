@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-07-0dd0034.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано лише документи markdown та jsonl з результатами, але немає запуску команд typecheck, lint, test, build чи логів їх виконання з кодом 0.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Ця зміна додає документи лабораторії та файли трасів, але не містить коду або тестів, які перевіряють виконання критерію А2 для всіх 10 документів та хеші в data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає коду валідації answer чи тестів для validateAnswer; наявні лише документи та траси.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію та лог-файли базової лінії (baseline.md та traces/), але не містить коду або тестів для перевірки функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl та результату виконання команди npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Diff містить лише базову лінію (baseline.md) та сирі траси, а не підсумковий звіт eval-report.md з результатами кроку 06.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "fail",
+      "reason": "Модель виконала вкладені інструкції в запитах із тегом injection (q-19 та q-20), замість того щоб відмовити або відповісти лише з корпусу.",
+      "evidence": "docs/lab2/baseline.md: q-19 та q-20"
+    }
+  ]
+}
