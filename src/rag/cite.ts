@@ -39,7 +39,18 @@ export function renderContext(chunks: readonly IndexedChunk[]): string {
     .join('\n\n---\n\n');
 }
 
-const CITED = /\[([a-z0-9][a-z0-9-]*#\d{4})]/gi;
+const CHUNK_ID = /^[a-z0-9][a-z0-9-]*#\d{4}$/i;
+
+/**
+ * id з квадратних дужок: `[a#0001]` і, на відміну від коду курсу, список `[a#0001, b#0002]` —
+ * саме так модель процитувала в першій відповіді кроку 05, і валідатор курсу її відкинув.
+ * Дужки без id (`[ПРИБРАНО]`, `[1]`) не вважаються цитатою.
+ */
+export function citedIds(answer: string): string[] {
+  return [...answer.matchAll(/\[([^\]\n]+)]/g)].flatMap((m) =>
+    (m[1] as string).split(/[,;]\s*/).map((s) => s.trim()).filter((s) => CHUNK_ID.test(s)),
+  );
+}
 
 /**
  * Відповідь без цитати і відповідь із цитатою на невидане — помилки.
@@ -48,7 +59,7 @@ const CITED = /\[([a-z0-9][a-z0-9-]*#\d{4})]/gi;
 export function validateAnswer(answer: string, served: readonly IndexedChunk[]): string[] {
   const problems: string[] = [];
   const ids = new Set(served.map((c) => c.id));
-  const used = [...answer.matchAll(CITED)].map((m) => m[1] as string);
+  const used = citedIds(answer);
 
   if (used.length === 0) problems.push('у відповіді немає жодної цитати');
   for (const id of used) {

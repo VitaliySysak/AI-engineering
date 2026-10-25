@@ -66,6 +66,17 @@ describe('validateAnswer', () => {
     expect(validateAnswer('Тридцять днів [doc-03#0004].', served)).toEqual([]);
   });
 
+  // Відповідь кроку 05 (2026-10-25): модель процитувала два фрагменти в одних дужках.
+  it('приймає список id в одних дужках і ловить невидане в ньому', () => {
+    const two = [{ id: 'local-port-forward#0001' }, { id: 'local-port-forward#0002' }] as unknown as IndexedChunk[];
+    expect(validateAnswer('Тунель [local-port-forward#0001, local-port-forward#0002].', two)).toEqual([]);
+    expect(validateAnswer('Тунель [local-port-forward#0001, backup#0002].', two).join(' ')).toContain('[backup#0002]');
+  });
+
+  it('дужки без id цитатою не вважає', () => {
+    expect(validateAnswer('Див. [1] і [ПРИБРАНО].', served).join(' ')).toContain('немає жодної цитати');
+  });
+
   it('бачить id у kebab-case, як у нашому корпусі', () => {
     const ours = [{ id: 'private-github-repository-access#0002' }] as unknown as IndexedChunk[];
     expect(validateAnswer('Ключ ed25519 [private-github-repository-access#0002].', ours)).toEqual([]);
