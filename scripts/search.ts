@@ -98,7 +98,7 @@ async function golden(index: IndexFile): Promise<void> {
 async function answer(index: IndexFile, query: string): Promise<void> {
   const l = await lists(index, query);
   const reason = refusalReason({ topCosine: l.vector[0]?.score ?? 0, wordHits: l.words.length });
-  if (REFUSAL.minCosine === null) console.error('УВАГА: правило відмови ще не відкалібровано (REFUSAL.minCosine = null)');
+  if (REFUSAL.minCosine === null) console.error('Порогу відмови на рівні пошуку немає (див. retrieval.md, розділ 4): відмовляє модель.');
   if (reason !== null) {
     console.log(`Відмова: у колекції немає відповіді на це питання (${reason}).`);
     return;
