@@ -17,6 +17,11 @@ export interface AdapterOptions {
   readonly model: string;
   readonly headers?: Readonly<Record<string, string>>;
   readonly fetch?: Fetch;
+  /**
+   * Температура семплювання. Не задано — поле не передається, діє типове значення провайдера.
+   * Суддя-верифікатор (Лаб2, крок 03) ставить 0: та сама зміна має давати той самий вердикт.
+   */
+  readonly temperature?: number;
 }
 
 async function postJson(o: AdapterOptions, body: unknown): Promise<unknown> {
@@ -148,6 +153,7 @@ export function chatCompletionsModel(o: AdapterOptions): Model {
   return async (system, messages, tools) => {
     const data = (await postJson(o, {
       model: o.model,
+      ...(o.temperature === undefined ? {} : { temperature: o.temperature }),
       messages: [{ role: 'system', content: system }, ...messages.flatMap(toChatMessages)],
       tools: tools.map((t) => ({
         type: 'function',

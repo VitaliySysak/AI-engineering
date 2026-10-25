@@ -176,9 +176,11 @@ async function main(): Promise<void> {
     url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
     model: modelId,
     headers: { authorization: `Bearer ${key}` },
+    // Калібрування, прогони 1→2: та сама зміна 11 дала fail, потім unknown — суддя має бути детермінованим.
+    temperature: 0,
   });
 
-  console.log(`Суддя: google · ${modelId} · критеріїв ${criteria.length} · diff ${diff.length} символів${truncated ? ' (обрізано)' : ''}`);
+  console.log(`Суддя: google · ${modelId} · temperature 0 · критеріїв ${criteria.length} · diff ${diff.length} символів${truncated ? ' (обрізано)' : ''}`);
   if (removed.length > 0) {
     console.log(`Прибрано перед відправкою: ${removed.join('; ')}`);
     // сам файл на диску лишився з цими рядками, а verify-input.diff потрапляє в публічний репозиторій
