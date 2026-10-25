@@ -40,6 +40,27 @@ describe('chunkDocument', () => {
     expect(code?.heading).toBe('Docker › Команди / Код');
   });
 
+  // Версія 2 правила (крок 06): назва й опис ідуть разом із командами одним фрагментом.
+  it('приклеює короткі назву й опис до наступного розділу', () => {
+    const md = '# Встановлення Nginx\n\n## Опис\n\nКоманда для швидкого встановлення.\n\n## Команди / Код\n\n```bash\nsudo apt install nginx\n```\n';
+    const chunks = chunkDocument('install-nginx', md);
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]!.heading).toBe('Встановлення Nginx › Команди / Код');
+    expect(chunks[0]!.text).toBe(normalize(md));
+  });
+
+  it('не приклеює, якщо разом довше за maxChars', () => {
+    const md = `# Т\n\n## Опис\nкоротко\n\n## Код\n${'x'.repeat(1190)}\n`;
+    const chunks = chunkDocument('doc-03', md, { ...RULE, maxChars: 1200 });
+    expect(chunks.length).toBeGreaterThan(1);
+    for (const c of chunks) expect(c.end - c.start).toBeLessThanOrEqual(RULE.maxChars + RULE.overlapChars);
+  });
+
+  it('без mergeForward поводиться як версія 1 (правило курсу)', () => {
+    const md = '# Т\n\n## Опис\nкоротко\n\n## Код\nsudo ss -tulpn\n';
+    expect(chunkDocument('doc-04', md, { ...RULE, mergeForward: false })).toHaveLength(3);
+  });
+
   it('CRLF і BOM не зсувають інваріант', () => {
     const raw = '﻿# Т\r\n\r\n## Опис\r\nТекст  \r\n';
     const text = normalize(raw);

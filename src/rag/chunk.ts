@@ -16,9 +16,15 @@ export interface ChunkRule {
   readonly minChars: number;
   /** Перекриття сусідніх фрагментів у символах. */
   readonly overlapChars: number;
+  /**
+   * Версія 2 (крок 06): розділ, коротший за minChars, приклеюється до НАСТУПНОГО розділу документа,
+   * якщо разом вони не довші за maxChars. Без цього назва й опис ставали окремими фрагментами
+   * й витісняли фрагмент із командами з топ-5 (q-01, q-02 — docs/lab2/indexing.md, «Версія 2»).
+   */
+  readonly mergeForward?: boolean;
 }
 
-export const RULE: ChunkRule = { maxChars: 1200, minChars: 200, overlapChars: 120 };
+export const RULE: ChunkRule = { maxChars: 1200, minChars: 200, overlapChars: 120, mergeForward: true };
 
 export interface Chunk {
   /** doc-03#0007 — стабільний: залежить лише від id документа і порядку. */
@@ -108,9 +114,30 @@ export function chunkDocument(docId: string, raw: string, rule: ChunkRule = RULE
     for (const span of split(text, section.span, rule)) parts.push({ heading: section.heading, span });
   }
 
+  // версія 2: короткий розділ несемо вперед і приклеюємо до наступного, поки разом вміщаємось у maxChars
+  const forward: { heading: string; span: Span }[] = [];
+  let carry: { heading: string; span: Span } | null = null;
+  for (const raw of parts) {
+    let part = raw;
+    if (carry !== null) {
+      if (part.span.end - carry.span.start <= rule.maxChars) {
+        part = { heading: part.heading, span: { start: carry.span.start, end: part.span.end } };
+      } else {
+        forward.push(carry);
+      }
+      carry = null;
+    }
+    if (rule.mergeForward === true && part.span.end - part.span.start < rule.minChars) {
+      carry = part;
+      continue;
+    }
+    forward.push(part);
+  }
+  if (carry !== null) forward.push(carry);
+
   // огризки коротші за minChars приклеюємо до попереднього фрагмента того ж розділу
   const merged: { heading: string; span: Span }[] = [];
-  for (const part of parts) {
+  for (const part of forward) {
     const prev = merged[merged.length - 1];
     const short = part.span.end - part.span.start < rule.minChars;
     const fits = prev !== undefined && part.span.end - prev.span.start <= rule.maxChars + rule.overlapChars;

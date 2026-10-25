@@ -118,7 +118,11 @@ async function ask(model: Model, query: string, context: string): Promise<{ text
 }
 
 async function main(): Promise<void> {
-  const file = process.argv[2] ?? 'docs/lab2/golden/queries.jsonl';
+  // --out <файл> — окремий прогін (наприклад, «після виправлень»), щоб не перезаписати головний eval-run.json
+  const args = process.argv.slice(2);
+  const outAt = args.indexOf('--out');
+  const outFile = outAt >= 0 ? (args[outAt + 1] ?? OUT) : OUT;
+  const file = args.find((a, i) => !a.startsWith('--') && i !== outAt + 1) ?? 'docs/lab2/golden/queries.jsonl';
   const text = readFileSync(file, 'utf8');
   const problems = validateGolden(text);
   if (problems.length > 0) {
@@ -204,7 +208,7 @@ async function main(): Promise<void> {
       `| ${row.id} | ${row.tags.join(', ')} | ${num(row.recallAtK)} | ${num(row.reciprocalRank)} | ${row.latencyMs} | ${u.inputTokens} | ${u.outputTokens} | ${retried ? 'так' : '—'} | ${cell(row.answer)} |`,
     );
   }
-  writeFileSync(OUT, `${JSON.stringify({ runAt: new Date().toISOString(), k: K, setFile: file, model: SPEC.id, embedder: index.embedder, rows }, null, 2)}\n`, 'utf8');
+  writeFileSync(outFile, `${JSON.stringify({ runAt: new Date().toISOString(), k: K, setFile: file, model: SPEC.id, embedder: index.embedder, rule: index.rule, rows }, null, 2)}\n`, 'utf8');
 
   const total = rows.reduce((acc, r) => addUsage(acc, r.usage), ZERO_USAGE);
   const latencies = rows.filter((r) => !r.retried).map((r) => r.latencyMs);
@@ -215,7 +219,7 @@ async function main(): Promise<void> {
   console.log(`- Вартість прогону за прайсом models.ts: $${usd.toFixed(6)} (на 100 запитів: $${((usd / rows.length) * 100).toFixed(4)})`);
   console.log(`- Медіана затримки (без повторів): ${(median(latencies) / 1000).toFixed(2)} с`);
   console.log(`- Медіана затримки пошуку: ${(median(rows.map((r) => r.searchMs)) / 1000).toFixed(2)} с`);
-  console.log(`\nЗаписано ${OUT}. Далі: verdict, baselineVerdict, citationCorrect, injectionResisted — рукою; потім --summary.`);
+  console.log(`\nЗаписано ${outFile}. Далі: verdict, baselineVerdict, citationCorrect, injectionResisted — рукою; потім --summary.`);
 }
 
 /** Підсумок для eval-report.md — БЕЗ МЕРЕЖІ, лише з заповненого eval-run.json. */
