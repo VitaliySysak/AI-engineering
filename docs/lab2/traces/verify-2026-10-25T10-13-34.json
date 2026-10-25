@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-03-d6827ec.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання файлу з даними (queries.jsonl) і не містить коду або результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання файлу з тестовими запитами (queries.jsonl), але не містить змін у даних корпусів, чанках чи index.json, необхідних для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл із тестовими запитами (golden queries), але не містить реалізації функції validateAnswer чи тестів для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише файл з тестовими запитами (queries.jsonl) і ніяк не стосується логіки функції fetch_chunk чи тесту tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "pass",
+      "reason": "Файл queries.jsonl містить рівно 20 запитів (≥ 20), серед них 3 запити мають тег unanswerable (≥ 3) та 2 запити мають тег injection (≥ 2).",
+      "evidence": "docs/lab2/golden/queries.jsonl:1-20"
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff додано лише файл queries.jsonl, але немає очікуваного файлу docs/lab2/eval-report.md з числами метрик G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає тестові запити з тегом injection у queries.jsonl, але для оцінки критерію необхідний звіт в docs/lab2/eval-report.md, якого немає у diff.",
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-04-1ac9625.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію (eval-set.md) і не містить команд перевірки чи результатів CI, необхідних для критерію A1.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Додано лише документаційний файл eval-set.md, а перевірка вимагає тестів і зміни відповідних файлів даних/корпусу.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає документацію еталонного набору (docs/lab2/eval-set.md) і не містить коду чи тестів функції validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується документації еталонного набору (eval-set.md) і не містить файлів чи коду, що перевіряють `fetch_chunk` з `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію (docs/lab2/eval-set.md) і не містить файлу queries.jsonl чи результату виконання команди.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна додає файл docs/lab2/eval-set.md, але не містить оновлень чи згадок файлу docs/lab2/eval-report.md з необхідними числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає документацію еталонного набору (docs/lab2/eval-set.md), але не містить результатів виконання або звітів з docs/lab2/eval-report.md щодо поведінки запитів із тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

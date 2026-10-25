@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-01-7e822a3.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише документацію та корпусні файли; зміни в коді, конфігурації чи package.json відсутні, і в diff немає результатів виконання npm-команд чи CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні додано файли корпусу, журнал та специфікацію, але немає ані коду індексації, ані тесту у tests/ для перевірки хешів і фрагментів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні представлено лише нові документи корпусу та специфікацію; файли з реалізацією validateAnswer або відповідні тести відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише файли корпусу нотаток (.md) та специфікацію (spec.md); немає коду чи тестів MCP-сервера, що стосуються функкції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу `docs/lab2/golden/queries.jsonl` та скрипту `validate-golden.ts`, а також результату їх виконання.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У змінах немає файлу docs/lab2/eval-report.md із підсумковими числами, потрібними за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff є лише початкові файли корпусу, журнал та специфікація; немає результатів протоколу перевірки людиною чи оцінок у eval-report.md щодо ін'єкцій.",
+      "evidence": ""
+    }
+  ]
+}

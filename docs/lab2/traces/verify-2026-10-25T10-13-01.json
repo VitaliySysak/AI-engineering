@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-02-a2ba047.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий код і тести, але для перевірки виконання команд typecheck, lint, test та build потрібен запуск у середовищі або CI, якого немає в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає валідатор та тести для еталонного набору queries.jsonl, але ніяк не стосується чанків документів, corpus/ та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується валідації еталонного набору (golden dataset), а не функції validateAnswer для відповідей.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає валідатор еталонного набору та його тести, але не містить реалізації функції fetch_chunk та перевірки tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Змінено лише скрипт валідатора та тести, але у diff немає самого файлу docs/lab2/golden/queries.jsonl і результату виконання команди.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується валідатора та тестів для еталонного набору, але не містить файлу docs/lab2/eval-report.md із числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише скрипт валідації та його тести для еталонного набору, але не містить результатів виконання асистента чи звіту eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

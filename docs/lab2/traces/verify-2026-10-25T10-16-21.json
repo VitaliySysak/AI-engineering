@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-08-3e7b5e7.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає запуску npm run typecheck, lint, test, build та логів статусів CI на main для цієї зміни.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про фрагменти документів або файл data/index.json, щоб перевірити відповідність chunk.text та хешів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у коді функції validateAnswer або відповідних тестах у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлі tests/mcp.test.ts або логіці fetch_chunk, лише додано системні логи та конфіги агентів.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає самого файлу docs/lab2/golden/queries.jsonl або коду тесту tests/validate-golden.test.ts, а лише логування роботи Claude та нові агенти.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/eval-report.md з підсумковою таблицею та числами G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У зміні немає результату виконання запитів із тегом injection чи даних із файлу docs/lab2/eval-report.md щодо цього критерію.",
+      "evidence": ""
+    }
+  ]
+}

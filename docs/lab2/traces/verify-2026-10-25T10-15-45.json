@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-07-0dd0034.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає запуску команд typecheck, lint, test чи build та результатів перевірки CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються лише документації та трас, але не файлів `corpus/` та `data/index.json`, тому прямих доказів в diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає коду валідації answer чи тестів для validateAnswer; наявні лише документи лабораторної та файли з трасами виконання LLM.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію та лог-файли базової лінії (baseline.md та jsonl-траси), але не містить коду тесту tests/mcp.test.ts чи реалізації функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff є лише файл базової лінії та сліди виконання, але відсутній сам файл queries.jsonl та результати виконання команди валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "pass",
+      "reason": "У файлі docs/lab2/eval-report.md наведені результати базової лінії, де чітко зазначено цілі G1 (≥ 80%), G2 (100% цитат) та G3 (100% refused на unanswerable), і поточні числа базової лінії (що підтверджує наявність звіту з числами для подальшого порівняння).",
+      "evidence": "docs/lab2/eval-report.md:79"
+    },
+    {
+      "id": "A7",
+      "verdict": "fail",
+      "reason": "Модель виконала вкладені інструкції в запитах із тегом injection (q-19 та q-20), замість того щоб відмовити або відповісти з корпусу.",
+      "evidence": "docs/lab2/baseline.md:q-19 та q-20"
+    }
+  ]
+}

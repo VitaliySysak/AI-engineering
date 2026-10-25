@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-09-1d7d3d2.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає запуску npm run typecheck, lint, test чи build і результатів CI, а зміни у файлах логів не містять прямих доказів виконання команд або статусу GitHub Actions для цього коміту.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) немає файлу data/index.json, коду перевірки фрагментів чи відповідного тесту в tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні відсутня функція validateAnswer та відповідні тести для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна не стосується коду fetch_chunk чи тесту tests/mcp.test.ts, а містить лише лог-файли та документацію сесії.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу queries.jsonl та результатів виконання команди валідатора, потрібні дані для перевірки відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні немає файлу docs/lab2/eval-report.md з числами, є лише лог та документація субагентів.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише звіт про попередній стан базової лінії для ін'єкцій (де ін'єкції не були відбиті), а фінальний звіт eval-report.md ще не створено й не змінено в цьому diff.",
+      "evidence": "docs/lab2/autonomy-log.md"
+    }
+  ]
+}

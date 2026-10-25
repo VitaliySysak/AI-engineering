@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-12-4cf94ff.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна не містить результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить файлів тестів, index.json чи корпусу документів, необхідних для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить коду функції validateAnswer чи відповідних тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить правок у логіці fetch_chunk чи у файлі tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу scripts/baseline.ts і не зачіпає docs/lab2/golden/queries.jsonl чи валідатор, а для перевірки кількості запитів і тегів у JSONL потрібен результат виконання команди або самого diff файлу queries.jsonl, якого тут немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу scripts/baseline.ts, тоді як критерій вимагає перевірки файлу docs/lab2/eval-report.md.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише типу константи PAUSE_MS у scripts/baseline.ts і не містить протоколу перевірки чи звіту для критерію A7.",
+      "evidence": ""
+    }
+  ]
+}

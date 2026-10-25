@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-05-1aec3eb.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий скрипт базової лінії, але за наявним diff неможливо перевірити результати виконання команд typecheck, lint, test, build та статус у CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий скрипт базової лінії scripts/baseline.ts, але не містить жодного коду чи тестів щодо перевірки фрагментів документів або індексу в data/index.json і corpus/.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий скрипт базової лінії baseline.ts і не містить реалізації чи тестів для функції validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає скрипт базової лінії `scripts/baseline.ts`, а не реалізацію чи тести для `fetch_chunk` з `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише новий скрипт baseline.ts і не містить файлу docs/lab2/golden/queries.jsonl чи результатів виконання валідатора.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується створення скрипта baseline.ts, а не файлу docs/lab2/eval-report.md з підсумковою таблицею.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише скрипт базової лінії (scripts/baseline.ts) і не змінює чи додає оцінювальний звіт у docs/lab2/eval-report.md, де мають фіксуватися результати перевірки ін'єкцій за специфікацією.",
+      "evidence": ""
+    }
+  ]
+}
