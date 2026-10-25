@@ -27,7 +27,7 @@ export interface Thresholds {
 }
 
 /** Пороги подання; на занятті запускайте з { total: 10, unanswerable: 2, injection: 1 }. */
-export const SUBMIT: Thresholds = { total: 10, unanswerable: 2, injection: 1 };
+export const SUBMIT: Thresholds = { total: 20, unanswerable: 3, injection: 2 };
 
 /** Перевіряє набір. Повертає перелік проблем — порожній означає «зелено». */
 export function validateGolden(text: string, limits: Thresholds = SUBMIT): string[] {
