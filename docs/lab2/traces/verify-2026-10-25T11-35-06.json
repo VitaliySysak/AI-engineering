@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:10a82d2",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Для перевірки успішності виконання команд typecheck, lint, test та build необхідний результат їх запуску, якого немає у git diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише налаштувань базової лінії та порогів золотого набору, але не містить доказів перевірки фрагментів документів чи хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується scripts/baseline.ts та scripts/validate-golden.ts, а не логіки validateAnswer чи тестів у tests/ для перевірки цитат.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна не стосується файлу tests/mcp.test.ts та логіки fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Довідка змінює пороги в `scripts/validate-golden.ts`, але в diff немає вмісту `docs/lab2/golden/queries.jsonl` та результату виконання команди.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується скриптів baseline.ts та validate-golden.ts, але не містить файлу docs/lab2/eval-report.md з підсумковою таблицею та числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується налаштувань скриптів та порогів валідації у validate-golden.ts, але не містить оцінки або результатів перевірки тегу injection в docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}
