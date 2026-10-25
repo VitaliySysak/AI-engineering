@@ -109,12 +109,33 @@ export function extractJson(text: string): unknown {
   return JSON.parse(body.slice(start, end + 1));
 }
 
-/** Перевіряє вердикт судді: схема, той самий id, evidence обовʼязковий для pass/fail. */
-export function parseVerdict(text: string, expectedId: string): VerifyReport['results'][number] {
+/** Шляхи файлів, які змінює diff (із заголовків `diff --git a/<шлях> b/<шлях>`). */
+export function diffFiles(diff: string): string[] {
+  return [...new Set([...diff.matchAll(/^diff --git a\/(\S+) b\/\S+/gm)].map((m) => m[1] as string))];
+}
+
+/** evidence посилається на файл зі зміни: повний шлях або імʼя файлу (`baseline.md:12`). */
+export function citesDiffFile(evidence: string, files: readonly string[]): boolean {
+  return files.some((path) => evidence.includes(path) || evidence.includes(path.split('/').pop() as string));
+}
+
+/** pass/fail з evidence на файл, якого немає в diff (калібрування, прогін 3: `eval-report.md:79` на випадку 07). */
+export class EvidenceNotInDiff extends Error {}
+
+/**
+ * Перевіряє вердикт судді: схема, той самий id, evidence обовʼязковий для pass/fail; якщо передано
+ * перелік файлів diff — evidence для pass/fail має посилатися на один із них.
+ */
+export function parseVerdict(text: string, expectedId: string, files?: readonly string[]): VerifyReport['results'][number] {
   const verdict = criterionVerdict.parse(extractJson(text));
   if (verdict.id !== expectedId) throw new Error(`суддя відповів про ${verdict.id}, а питали про ${expectedId}`);
   if (verdict.verdict !== 'unknown' && verdict.evidence.trim() === '') {
     throw new Error(`${expectedId}: ${verdict.verdict} без evidence`);
+  }
+  if (verdict.verdict !== 'unknown' && files !== undefined && !citesDiffFile(verdict.evidence, files)) {
+    throw new EvidenceNotInDiff(
+      `${expectedId}: evidence «${verdict.evidence}» не посилається на жоден файл зі зміни (${files.join(', ')})`,
+    );
   }
   return verdict;
 }
@@ -140,22 +161,30 @@ async function callJudge(model: Model, id: string, text: string): Promise<string
   }
 }
 
-/** Один критерій: невалідну відповідь перепитуємо один раз, потім падаємо. 429/5xx — повтор через хвилину. */
-async function judge(model: Model, c: Criterion, diff: string): Promise<VerifyReport['results'][number]> {
+/**
+ * Один критерій: невалідну відповідь перепитуємо один раз. Якщо й удруге evidence не з diff — вердикт
+ * стає unknown (вигаданий доказ не валить і не відкриває браму); інша невалідна відповідь — падаємо.
+ * 429/5xx — повтор через хвилину.
+ */
+async function judge(model: Model, c: Criterion, diff: string, files: readonly string[]): Promise<VerifyReport['results'][number]> {
   const prompt = judgePrompt(c, diff);
-  let lastError = '';
+  let lastError: unknown;
   for (let attempt = 1; attempt <= 2; attempt++) {
     const text = attempt === 1
       ? prompt
-      : `${prompt}\n\nПопередня відповідь не пройшла перевірку (${lastError}). Поверни ЛИШЕ JSON за схемою.`;
+      : `${prompt}\n\nПопередня відповідь не пройшла перевірку (${lastError instanceof Error ? lastError.message : String(lastError)}). Поверни ЛИШЕ JSON за схемою.`;
     const reply = await callJudge(model, c.id, text);
     try {
-      return parseVerdict(reply, c.id);
+      return parseVerdict(reply, c.id, files);
     } catch (error) {
-      lastError = error instanceof Error ? error.message : String(error);
+      lastError = error;
+      if (error instanceof EvidenceNotInDiff) console.error(`${error.message} — перепитую`);
     }
   }
-  throw new Error(`${c.id}: суддя двічі повернув невалідну відповідь (${lastError})`);
+  if (lastError instanceof EvidenceNotInDiff) {
+    return { id: c.id, verdict: 'unknown', reason: `Суддя двічі навів evidence поза зміною — вердикт знято. ${lastError.message}`, evidence: '' };
+  }
+  throw new Error(`${c.id}: суддя двічі повернув невалідну відповідь (${lastError instanceof Error ? lastError.message : String(lastError)})`);
 }
 
 async function main(): Promise<void> {
@@ -165,6 +194,7 @@ async function main(): Promise<void> {
   const { text: clean, removed } = redactDiff(raw);
   const truncated = clean.length > MAX_DIFF_CHARS;
   const diff = truncated ? `${clean.slice(0, MAX_DIFF_CHARS)}\n[… diff обрізано до ${MAX_DIFF_CHARS} символів]` : clean;
+  const files = diffFiles(clean);
 
   const criteria = parseCriteria(readFileSync('docs/lab2/spec.md', 'utf8'));
   if (criteria.length === 0) throw new Error('у docs/lab2/spec.md не знайдено таблиці критеріїв A1…');
@@ -190,7 +220,7 @@ async function main(): Promise<void> {
   const results: VerifyReport['results'] = [];
   for (const [i, c] of criteria.entries()) {
     if (i > 0) await sleep(PAUSE_MS);
-    results.push(await judge(model, c, diff));
+    results.push(await judge(model, c, diff, files));
   }
   const report = verifyReport.parse({ results });
 
