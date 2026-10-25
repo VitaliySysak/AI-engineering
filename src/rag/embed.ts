@@ -72,7 +72,9 @@ export function geminiEmbedder(dimensions = 768): Embedder {
           google: { taskType: 'RETRIEVAL_DOCUMENT', outputDimensionality: dimensions },
         },
       });
-      console.error(`  embedMany: ${texts.length} фрагментів, ${usage.tokens} токенів`);
+      // Gemini через AI SDK не повертає usage.tokens для ембедингів (перша побудова 2026-10-25 друкувала NaN)
+      const tokens = Number.isFinite(usage.tokens) ? String(usage.tokens) : 'провайдер не повідомив';
+      console.error(`  embedMany: ${texts.length} фрагментів, токенів: ${tokens}`);
       return embeddings;
     },
     embedQuery: async (text) => {
