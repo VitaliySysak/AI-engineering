@@ -1,16 +1,18 @@
 /**
  * Верифікатор на іншій моделі (крок 03). ХОДИТЬ У МЕРЕЖУ — запускається вручну перед злиттям у main:
  *
- *   git diff main...HEAD | Out-File -Encoding utf8 docs/lab2/verify-input.diff
- *   npm run verify
+ *   npm run verify                                   брама: кожен коміт main..HEAD окремо
+ *   npm run verify -- --commits main..<гілка>        те саме для гілки, не перемикаючись на неї
+ *   npx tsx --env-file=.env.local scripts/verify.ts <файл.diff>   один diff (калібрування)
  *
- * Критерії A1–A7 беруться з docs/lab2/spec.md (розділ 6), зміна — з файлу diff. На кожен критерій —
+ * Критерії A1–A7 беруться з docs/lab2/spec.md (розділ 6), зміна — з git або з файлу diff. На кожен критерій —
  * окремий запит до судді й окремий вердикт за схемою src/verify/schema.ts. Коди виходу: 0 — fail немає,
  * 1 — є хоч один fail (брама: червоне не зливається), 2 — верифікатор не зміг відпрацювати (це теж
  * не дозвіл на злиття). Звіт зберігається в docs/lab2/traces/verify-<час>.json.
  *
  * Суддя — модель іншої родини, ніж та, що писала код (Claude): Gemini, ідентифікатор з VERIFIER_MODEL.
  */
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { chatCompletionsModel } from '../src/agent/adapters';
@@ -187,34 +189,39 @@ async function judge(model: Model, c: Criterion, diff: string, files: readonly s
   throw new Error(`${c.id}: суддя двічі повернув невалідну відповідь (${lastError instanceof Error ? lastError.message : String(lastError)})`);
 }
 
-async function main(): Promise<void> {
-  const file = process.argv[2] ?? 'docs/lab2/verify-input.diff';
-  const raw = readFileSync(file, 'utf8');
-  if (raw.trim() === '') throw new Error(`${file} порожній: немає зміни для перевірки`);
+/** Що перевіряти: файл diff або діапазон комітів (`--commits main..HEAD`, останній прапорець виграє). */
+export type VerifyTarget = { readonly kind: 'file'; readonly path: string } | { readonly kind: 'commits'; readonly range: string };
+
+export function parseTarget(argv: readonly string[]): VerifyTarget {
+  const at = argv.lastIndexOf('--commits');
+  if (at >= 0) {
+    const range = argv[at + 1];
+    if (range === undefined || range.startsWith('--')) throw new Error('--commits потребує діапазону, наприклад main..HEAD');
+    return { kind: 'commits', range };
+  }
+  return { kind: 'file', path: argv.find((a) => !a.startsWith('--')) ?? 'docs/lab2/verify-input.diff' };
+}
+
+/** Брама по комітах: червоно, якщо червоний хоч один коміт діапазону. */
+export function isRangeBlocked(reports: readonly VerifyReport[]): boolean {
+  return reports.some(isBlocked);
+}
+
+const git = (...args: string[]) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+
+/** Один diff → вердикт по кожному критерію, таблиця в stdout, звіт у traces/. */
+async function verifyDiff(model: Model, modelId: string, criteria: readonly Criterion[], raw: string, input: string): Promise<VerifyReport> {
+  if (raw.trim() === '') throw new Error(`${input}: порожній diff — немає зміни для перевірки`);
   const { text: clean, removed } = redactDiff(raw);
   const truncated = clean.length > MAX_DIFF_CHARS;
   const diff = truncated ? `${clean.slice(0, MAX_DIFF_CHARS)}\n[… diff обрізано до ${MAX_DIFF_CHARS} символів]` : clean;
   const files = diffFiles(clean);
 
-  const criteria = parseCriteria(readFileSync('docs/lab2/spec.md', 'utf8'));
-  if (criteria.length === 0) throw new Error('у docs/lab2/spec.md не знайдено таблиці критеріїв A1…');
-
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error('GEMINI_API_KEY порожній: заповніть .env.local');
-  const modelId = process.env.VERIFIER_MODEL?.trim() || 'gemini-3.5-flash-lite';
-  const model = chatCompletionsModel({
-    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-    model: modelId,
-    headers: { authorization: `Bearer ${key}` },
-    // Калібрування, прогони 1→2: та сама зміна 11 дала fail, потім unknown — суддя має бути детермінованим.
-    temperature: 0,
-  });
-
-  console.log(`Суддя: google · ${modelId} · temperature 0 · критеріїв ${criteria.length} · diff ${diff.length} символів${truncated ? ' (обрізано)' : ''}`);
+  console.log(`Суддя: google · ${modelId} · temperature 0 · критеріїв ${criteria.length} · ${input} · diff ${diff.length} символів${truncated ? ' (обрізано)' : ''}`);
   if (removed.length > 0) {
     console.log(`Прибрано перед відправкою: ${removed.join('; ')}`);
     // сам файл на диску лишився з цими рядками, а verify-input.diff потрапляє в публічний репозиторій
-    console.error(`УВАГА: ${file} містить схоже на секрети — не комітьте його, доки не почистите.`);
+    console.error(`УВАГА: ${input} містить схоже на секрети — не комітьте його, доки не почистите.`);
   }
 
   const results: VerifyReport['results'] = [];
@@ -234,11 +241,57 @@ async function main(): Promise<void> {
   const stamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
   const out = `docs/lab2/traces/verify-${stamp}.json`;
   mkdirSync('docs/lab2/traces', { recursive: true });
-  writeFileSync(out, `${JSON.stringify({ model: modelId, input: file, truncated, removed, ...report }, null, 2)}\n`, 'utf8');
-
-  const blocked = isBlocked(report);
+  writeFileSync(out, `${JSON.stringify({ model: modelId, input, truncated, removed, ...report }, null, 2)}\n`, 'utf8');
   console.log(`\nЗвіт: ${out}`);
-  console.log(blocked ? 'БРАМА: ЧЕРВОНО — є fail, зміну не зливати.' : 'БРАМА: зелено — fail немає.');
+  console.log(isBlocked(report) ? `${input}: ЧЕРВОНО — є fail.` : `${input}: зелено — fail немає.`);
+  return report;
+}
+
+async function main(): Promise<void> {
+  const target = parseTarget(process.argv.slice(2));
+
+  const criteria = parseCriteria(readFileSync('docs/lab2/spec.md', 'utf8'));
+  if (criteria.length === 0) throw new Error('у docs/lab2/spec.md не знайдено таблиці критеріїв A1…');
+
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error('GEMINI_API_KEY порожній: заповніть .env.local');
+  const modelId = process.env.VERIFIER_MODEL?.trim() || 'gemini-3.5-flash-lite';
+  const model = chatCompletionsModel({
+    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    model: modelId,
+    headers: { authorization: `Bearer ${key}` },
+    // Калібрування, прогони 1→2: та сама зміна 11 дала fail, потім unknown — суддя має бути детермінованим.
+    temperature: 0,
+  });
+
+  if (target.kind === 'file') {
+    const report = await verifyDiff(model, modelId, criteria, readFileSync(target.path, 'utf8'), target.path);
+    const blocked = isBlocked(report);
+    console.log(blocked ? 'БРАМА: ЧЕРВОНО — є fail, зміну не зливати.' : 'БРАМА: зелено — fail немає.');
+    if (blocked) process.exit(1);
+    return;
+  }
+
+  // Брама по комітах: diff усієї гілки разом суддя пропустив (2026-10-25, lab2/verify-stop: A5 unknown),
+  // хоча окремий коміт e6edf98 ловив — тому кожен коміт діапазону судиться окремо, як у калібруванні.
+  const shas = git('rev-list', '--reverse', '--no-merges', target.range).split(/\r?\n/).filter(Boolean);
+  if (shas.length === 0) throw new Error(`у діапазоні ${target.range} немає комітів — немає зміни для перевірки`);
+  console.log(`Брама по комітах: ${target.range}, комітів ${shas.length}\n`);
+  const reports: VerifyReport[] = [];
+  const red: string[] = [];
+  for (const [i, sha] of shas.entries()) {
+    if (i > 0) await sleep(PAUSE_MS);
+    const short = sha.slice(0, 7);
+    console.log(`=== ${short} ${git('log', '-1', '--format=%s', sha).trim()}`);
+    const report = await verifyDiff(model, modelId, criteria, git('diff', '--no-color', `${sha}~1`, sha), `commit:${short}`);
+    reports.push(report);
+    if (isBlocked(report)) red.push(short);
+    console.log('');
+  }
+  const blocked = isRangeBlocked(reports);
+  console.log(blocked
+    ? `БРАМА: ЧЕРВОНО — червоні коміти: ${red.join(', ')}. Зміну не зливати.`
+    : `БРАМА: зелено — ${shas.length} із ${shas.length} комітів без fail.`);
   if (blocked) process.exit(1);
 }
 

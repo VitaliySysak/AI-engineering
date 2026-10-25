@@ -18,7 +18,7 @@
     "doctor": "tsx scripts/doctor.ts",
     "sync-skills": "tsx scripts/sync-skills.ts",
     "log:import": "tsx scripts/transcript-to-jsonl.ts",
-    "verify": "tsx --env-file=.env.local scripts/verify.ts docs/lab2/verify-input.diff"
+    "verify": "tsx --env-file=.env.local scripts/verify.ts --commits main..HEAD"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.82",
