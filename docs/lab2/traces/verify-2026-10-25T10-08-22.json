@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-12-4cf94ff.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна змінює лише один рядок у скрипті й не містить результатів виконання typecheck, lint, тестів чи збірки.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише параметра PAUSE_MS у скрипті baseline.ts і не містить коду для перевірки фрагментів документів чи хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлу scripts/baseline.ts, тоді як критерій вимагає перевірки validateAnswer та тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлу scripts/baseline.ts і не містить коду для fetch_chunk чи тестів з tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить файлу docs/lab2/golden/queries.jsonl чи результату команди валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту scripts/baseline.ts, а не файла docs/lab2/eval-report.md, який вимагається критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише параметра PAUSE_MS у scripts/baseline.ts і не зачіпає поведінку запитів із тегом injection чи звіт у docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

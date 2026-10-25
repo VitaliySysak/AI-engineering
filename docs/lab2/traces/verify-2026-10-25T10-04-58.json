@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-06-c790975.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується сценарію baselines.ts і не містить результатів виконання локальних команд typecheck, lint, test, build чи статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується виключно скрипту baseline.ts і не зачіпає файли корпусу, індексу чи тести для перевірки фрагментів документів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипта baseline.ts і не містить коду або тестів для функції validateAnswer чи перевірки цитат.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипта baseline.ts і не містить файлу tests/mcp.test.ts чи логіки fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу scripts/baseline.ts, тоді як критерій вимагає перевірки docs/lab2/golden/queries.jsonl та виконання валідації через npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу scripts/baseline.ts, тоді як критерій вимагає перевірки файлу docs/lab2/eval-report.md.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується сценарію збору baseline (scripts/baseline.ts), а не перевірки вкладених інструкцій чи файлу eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

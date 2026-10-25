@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-08-3e7b5e7.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff присутні лише логи роботи агента та створення агентів `.claude/agents/`, але немає результатів виконання команд typecheck, lint, test, build чи статусу CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff є лише лог агента та нові агенти в .claude/, але немає змін у корпусі, index.json чи тестах, які перевіряють цей критерій.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у коді функції validateAnswer або відповідних тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлі tests/mcp.test.ts або логіці fetch_chunk, лише додано файли агентів та лог.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl або тестів, а є лише нові агенти в .claude/agents/ та лог. Неможливо перевірити кількість запитів та їхні теги без самого файлу та результату команди.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff є лише логи агента та файли конфігурації/агентів, але немає файлу docs/lab2/eval-report.md з числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff немає запуску тестів із тегом injection або результату протоколу перевірки в docs/lab2/eval-report.md",
+      "evidence": ""
+    }
+  ]
+}

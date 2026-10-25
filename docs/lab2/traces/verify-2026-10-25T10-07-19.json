@@ -1,0 +1,52 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-10-9db8420.diff",
+  "truncated": false,
+  "removed": [
+    "рядок 326, схожий на ключ"
+  ],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні додано нові скрипти та тести для верифікатора, проте немає виконання команд npm run typecheck, lint, test, build та статусу CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна не містить коду або даних для перевірки відповідності фрагментів документів та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає інфраструктуру верифікатора та тести для нього, але не містить реалізації функції validateAnswer чи відповідної логіки перевірки.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Ця зміна додає лише інфраструктуру верифікатора та тести для нього, не торкаючись реалізації fetch_chunk чи логіки роботи з індексом.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає інфраструктуру верифікатора та тести для нього, але не містить файлу docs/lab2/golden/queries.jsonl.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) немає файлу docs/lab2/eval-report.md з результатами числових метрик G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає інфраструктуру верифікатора та типи, але не стосується безпеки виконання запитів із тегом injection чи поведінки асистента.",
+      "evidence": ""
+    }
+  ]
+}

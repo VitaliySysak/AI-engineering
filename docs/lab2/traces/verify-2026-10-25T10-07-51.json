@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-11-e6edf98.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Для перевірки успішності npm run typecheck, lint, test та build потрібен запуск команд та статус CI, яких немає у diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації і не зачіпає корпус документів, індекс чи логіку перевірки фрагментів тексту й хешів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна у скрипті валідації золотого набору не стосується функції validateAnswer та перевірки цитат чи id фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації і не зачіпає логіку fetch_chunk чи файл tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується валідаційного скрипта, але для перевірки виконання кількості запитів та тегів у queries.jsonl, а також успішного виконання команди, потрібен результат запуску тесту.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу scripts/validate-golden.ts, а не docs/lab2/eval-report.md, який вимагається за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації, але не містить оцінки чи результатів перевірки самих запитів з тегом injection з eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

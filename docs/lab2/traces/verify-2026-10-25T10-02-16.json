@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-01-7e822a3.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні додано нові файли документації та корпусу, але немає інформації про результати виконання команд typecheck, lint, test та build в середовищі CI або локально.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) створено лише файли корпусу (corpus/*), журнал та специфікацію, але немає тестових файлів у tests/ чи індексу data/index.json для перевірки збігу хешів і фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає коду реалізації чи тестів для функції validateAnswer, лише документи та корпус.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише файли корпусу та специфікації, але немає коду MCP-сервера чи тестів у tests/mcp.test.ts, які реалізують або перевіряють обробку помилок fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу `docs/lab2/golden/queries.jsonl`, тестового файлу `tests/validate-golden.test.ts` та результату виконання команди `npx tsx scripts/validate-golden.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) створено корпус документів, журнал та специфікацію (spec.md), але немає файлу docs/lab2/eval-report.md із числами для перевірки критерію A6.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише файли корпусу, журнал та специфікацію; результатів перевірки чи прогону запитів із тегом injection немає.",
+      "evidence": ""
+    }
+  ]
+}
