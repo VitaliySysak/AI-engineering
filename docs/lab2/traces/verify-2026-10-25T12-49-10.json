@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:338e91d",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff є лише документація та зміна логіки/тестів для цитування, але немає результатів виконання команд typecheck, lint, test чи build і статусу CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише документацію та логіку цитування (src/rag/cite.ts і tests/retrieval.test.ts), але не зачіпає файли індексу data/index.json, корпусу corpus/ чи код нормалізації текстів фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "pass",
+      "reason": "У файлі src/rag/cite.ts реалізовано функцію validateAnswer, яка перевіряє наявність цитат та відхиляє відповіді без цитат або з id, яких немає серед поданих. У tests/retrieval.test.ts додано тести, що підтверджують цю поведінку.",
+      "evidence": "src/rag/cite.ts:48"
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується цитування та валідації відповідей (src/rag/cite.ts та tests/retrieval.test.ts), а не функції fetch_chunk та перевірки наявності id чи шляху до файлу.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У змінах немає файлу docs/lab2/golden/queries.jsonl, тому неможливо перевірити кількість запитів та наявність тегів.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/eval-report.md із числами для перевірки критеріїв G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується валідації цитат та документації пошуку, але не містить результатів виконання запитів із тегом injection чи їх перевірки у звіті evaluator.",
+      "evidence": ""
+    }
+  ]
+}

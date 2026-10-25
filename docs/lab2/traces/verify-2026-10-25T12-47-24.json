@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:695fd16",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає результатів виконання npm run typecheck, lint, test чи build і статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні немає файлу data/index.json чи його заголовка, а також коду розбиття всіх 10 документів на фрагменти за цим критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "pass",
+      "reason": "Функція validateAnswer у src/rag/cite.ts перевіряє наявність цитати та наявність її id серед переданих фрагментів, а тести у tests/retrieval.test.ts перевіряють цю поведінку без мережі.",
+      "evidence": "src/rag/cite.ts:48"
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні немає реалізації функції fetch_chunk або перевірки її роботи за цим критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl і неможливо запустити npx tsx scripts/validate-golden.ts для перевірки наявності запитів і коду завершення 0.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає файлу docs/lab2/eval-report.md із підсумковими числами, а є лише скрипти, пошук, BM25 та тести.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У зміні немає файлу docs/lab2/eval-report.md або коду, що перевіряє безпеку проти prompt injection на еталонному наборі.",
+      "evidence": ""
+    }
+  ]
+}

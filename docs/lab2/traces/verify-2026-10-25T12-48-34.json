@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:65d8e48",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише текстовий файл із результатами пошуку у документації і не містить модифікацій коду чи конфігурації CI, які б прямо стосувалися перевірки типів, лінтеру, тестів чи збірки.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання текстового файлу трасування пошуку в docs/, але не змінює дані чанків, корпус документів чи файл data/index.json, перевірка яких вимагає запуску тестів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання файлу трасування у docs/, а не реалізації чи тестів validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише звіт у текстовому форматі, але не містить модифікацій коду в tests/mcp.test.ts чи логіки обробки fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише файл трасування пошуку, а не файл golden/queries.jsonl, і не містить результату виконаннявалідатора.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff додано лише трасування пошуку в docs/lab2/traces/search-explain-2026-10-25.txt, але немає файлу docs/lab2/eval-report.md з підсумковими показниками.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає файл трасування пошуку, але не містить даних щодо обробки запитів з тегом injection чи їх оцінки в eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}
