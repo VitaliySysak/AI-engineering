@@ -1,6 +1,11 @@
 {
   "permissions": {
-    "deny": ["Read(.env)", "Read(.env.local)", "Edit(.env)", "Edit(.env.local)"],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.local)",
+      "Edit(.env)",
+      "Edit(.env.local)"
+    ],
     "allow": ["mcp__context7__resolve-library-id", "mcp__context7__query-docs"]
   },
   "hooks": {
@@ -40,5 +45,6 @@
         ]
       }
     ]
-  }
+  },
+  "attribution": { "commit": "", "pr": "" }
 }
