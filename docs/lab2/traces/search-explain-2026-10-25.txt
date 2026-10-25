@@ -1,0 +1,78 @@
+### Як перевірити, чи мій сервіс справді слухає потрібний порт?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  check-open-ports#0000  0.7521                    1  certbot-nginx#0001  3.46                         1  certbot-nginx#0001  0.03110
+ 2  check-open-ports#0001  0.7387                                                                        2  check-open-ports#0000  0.01639
+ 3  check-open-ports#0002  0.7140                                                                        3  check-open-ports#0001  0.01613
+ 4  local-port-forward#0000  0.6668                                                                      4  check-open-ports#0002  0.01587
+ 5  local-port-forward#0002  0.6574                                                                      5  local-port-forward#0000  0.01563
+ 6  local-port-forward#0001  0.6381                                                                      6  local-port-forward#0002  0.01538
+ 7  certbot-nginx#0002  0.6356                                                                           7  local-port-forward#0001  0.01515
+ 8  certbot-nginx#0001  0.6304                                                                           8  certbot-nginx#0002  0.01493
+ 9  install-nginx#0000  0.6183                                                                           9  install-nginx#0000  0.01449
+10  install-nginx#0002  0.6127                                                                          10  install-nginx#0002  0.01429
+
+### Як зробити коротку команду для переходу в теку з конфігами nginx?
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  add-shortcut#0002  0.7464                        1  certbot-nginx#0000  3.37                         1  install-nginx#0002  0.03151
+ 2  install-nginx#0002  0.7445                       2  install-nginx#0001  3.20                         2  install-nginx#0000  0.03150
+ 3  install-nginx#0000  0.7390                       3  certbot-nginx#0001  2.71                         3  add-shortcut#0002  0.03110
+ 4  certbot-nginx#0002  0.7269                       4  install-nginx#0000  2.06                         4  install-nginx#0001  0.03105
+ 5  add-shortcut#0000  0.7250                        5  install-nginx#0002  1.79                         5  certbot-nginx#0000  0.03089
+ 6  add-shortcut#0001  0.7221                        6  install-docker#0001  1.67                        6  certbot-nginx#0001  0.03016
+ 7  install-nginx#0001  0.7098                       7  private-github-repository-access#0001  1.67      7  certbot-nginx#0002  0.02932
+ 8  install-certbot#0002  0.7090                     8  add-shortcut#0002  1.66                          8  add-shortcut#0001  0.02924
+ 9  certbot-nginx#0000  0.7064                       9  check-open-ports#0001  1.39                      9  install-certbot#0002  0.02822
+10  certbot-nginx#0001  0.6884                      10  install-certbot#0001  1.39                      10  private-github-repository-access#0002  0.02742
+
+### IdentitiesOnly
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  check-open-ports#0000  0.5977                    1  private-github-repository-access#0002  2.27      1  private-github-repository-access#0002  0.03154
+ 2  check-open-ports#0002  0.5735                                                                        2  check-open-ports#0000  0.01639
+ 3  local-port-forward#0002  0.5695                                                                      3  check-open-ports#0002  0.01613
+ 4  add-user-with-key#0000  0.5691                                                                       4  local-port-forward#0002  0.01587
+ 5  private-github-repository-access#0000  0.5678                                                        5  add-user-with-key#0000  0.01563
+ 6  private-github-repository-access#0002  0.5655                                                        6  private-github-repository-access#0000  0.01538
+ 7  add-shortcut#0000  0.5639                                                                            7  add-shortcut#0000  0.01493
+ 8  install-nginx#0002  0.5587                                                                           8  install-nginx#0002  0.01471
+ 9  local-port-forward#0001  0.5574                                                                      9  local-port-forward#0001  0.01449
+10  install-certbot#0002  0.5542                                                                        10  install-certbot#0002  0.01429
+
+### proxy_intercept_errors
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  certbot-nginx#0002  0.6776                       1  certbot-nginx#0002  5.77                         1  certbot-nginx#0002  0.03279
+ 2  certbot-nginx#0000  0.6541                       2  certbot-nginx#0000  3.57                         2  certbot-nginx#0000  0.03226
+ 3  certbot-nginx#0001  0.6469                                                                           3  certbot-nginx#0001  0.01587
+ 4  install-certbot#0002  0.6268                                                                         4  install-certbot#0002  0.01563
+ 5  install-nginx#0000  0.6176                                                                           5  install-nginx#0000  0.01538
+ 6  install-nginx#0002  0.6157                                                                           6  install-nginx#0002  0.01515
+ 7  local-port-forward#0000  0.6003                                                                      7  local-port-forward#0000  0.01493
+ 8  local-port-forward#0002  0.5952                                                                      8  local-port-forward#0002  0.01471
+ 9  install-nginx#0001  0.5900                                                                           9  install-nginx#0001  0.01449
+10  check-open-ports#0000  0.5827                                                                       10  check-open-ports#0000  0.01429
+
+### loginctl enable-linger
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  local-port-forward#0002  0.6530                  1  install-docker#0002  3.88                        1  install-docker#0002  0.03227
+ 2  local-port-forward#0000  0.6404                                                                      2  local-port-forward#0002  0.01639
+ 3  install-docker#0002  0.6361                                                                          3  local-port-forward#0000  0.01613
+ 4  check-open-ports#0002  0.6273                                                                        4  check-open-ports#0002  0.01563
+ 5  install-docker#0000  0.6264                                                                          5  install-docker#0000  0.01538
+ 6  install-certbot#0002  0.6251                                                                         6  install-certbot#0002  0.01515
+ 7  local-port-forward#0001  0.6238                                                                      7  local-port-forward#0001  0.01493
+ 8  install-docker#0001  0.6180                                                                          8  install-docker#0001  0.01471
+ 9  install-nginx#0002  0.6164                                                                           9  install-nginx#0002  0.01449
+10  install-nginx#0000  0.6123                                                                          10  install-nginx#0000  0.01429
+
+### ключ -m PEM
+вектор (cosine)                                     слова (BM25)                                        RRF (k=60)
+ 1  private-github-repository-access#0002  0.6558    1  add-user-with-key#0002  1.36                     1  add-user-with-key#0002  0.03252
+ 2  add-user-with-key#0002  0.6508                                                                       2  private-github-repository-access#0002  0.01639
+ 3  add-user-with-key#0000  0.6458                                                                       3  add-user-with-key#0000  0.01587
+ 4  private-github-repository-access#0001  0.6358                                                        4  private-github-repository-access#0001  0.01563
+ 5  local-port-forward#0002  0.6290                                                                      5  local-port-forward#0002  0.01538
+ 6  add-user-with-key#0001  0.6191                                                                       6  add-user-with-key#0001  0.01515
+ 7  check-open-ports#0000  0.6139                                                                        7  check-open-ports#0000  0.01493
+ 8  private-github-repository-access#0000  0.6093                                                        8  private-github-repository-access#0000  0.01471
+ 9  install-certbot#0002  0.6080                                                                         9  install-certbot#0002  0.01449
+10  local-port-forward#0000  0.6058                                                                     10  local-port-forward#0000  0.01429
+
