@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-06-c790975.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується логіки скрипту baseline.ts, але для перевірки виконання команд (typecheck, lint, test, build) та статусу CI потрібен результат їх виконання, якого немає в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується виключно логіки виконання базових тестів у scripts/baseline.ts і жодним чином не зачіпає корпуси, індексацію документів чи тести для них.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується скрипта baseline.ts (обробка 429/5xx помилок та повторів), а не валідації відповіді чи тестів для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується скрипта baseline.ts та обробки помилок запитів до API, а не функції fetch_chunk чи тесту tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить файлу queries.jsonl чи результату валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff оновлено скрипт baseline.ts (логіку повторів запитів), але немає файлу docs/lab2/eval-report.md із результатами метрик G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту базового прогону (retry логіка для HTTP 429/5xx), але не містить оцінки інжекцій чи результатів у eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

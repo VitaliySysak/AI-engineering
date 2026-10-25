@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-04-1ac9625.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання документації до лабораторної роботи і не містить виконання чи перевірки команд типу typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Додано лише документацію eval-set.md, але немає змін у коді чи тестах щодо нормалізації чанків та хешів index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію еталонного набору (docs/lab2/eval-set.md) і не містить коду або тестів для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише документацію еталонного набору (docs/lab2/eval-set.md) і не стосується реалізації функції fetch_chunk чи її тестів.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff є лише документація (docs/lab2/eval-set.md), але немає самого файлу queries.jsonl та результату виконання валідатора.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Цей diff стосується файлу docs/lab2/eval-set.md, а не вимагається перевірка файлу docs/lab2/eval-report.md з числами для критерію A6.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Додано лише опис еталонного набору та правила тегів у документацію, але немає результатів перевірки в eval-report.md чи виконання тестів.",
+      "evidence": ""
+    }
+  ]
+}

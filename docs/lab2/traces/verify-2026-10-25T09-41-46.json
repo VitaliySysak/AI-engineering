@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-12-4cf94ff.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна в коді не містить результатів виконання команд typecheck, lint, test, build або статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише параметра паузи у скрипті baseline.ts і не містить тесту чи коду для перевірки фрагментів документів чи хешів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна в scripts/baseline.ts не стосується функції validateAnswer та не містить тестів для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипта baseline.ts і не чіпає функцію fetch_chunk чи файл tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту baseline.ts і не містить файлу queries.jsonl або результату виконання валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Diff містить лише зміни у скрипті baseline.ts і не містить файлу eval-report.md з результатами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише параметра PAUSE_MS у скрипті baseline.ts і не містить результатів оцінювання ін'екцій у docs/lab2/eval-report.md чи коді перевірки.",
+      "evidence": ""
+    }
+  ]
+}

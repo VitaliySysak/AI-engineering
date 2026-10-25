@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-09-1d7d3d2.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає безпосередніх результатів виконання npm run typecheck, lint, test, build та статусу CI на main для цієї зміни.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу data/index.json, коду перевірки фрагментів чи відповідного тесту для цього критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення журналу Claude та документації субагентів, а код функції validateAnswer і відповідний тест відсутні в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "fail",
+      "reason": "У зміні відсутні файли tests/mcp.test.ts та MCP-сервер, а субаудит фіксує нереалізованість критерію A4.",
+      "evidence": "docs/lab2/subagents.md:73"
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає самого файлу queries.jsonl та результату виконання валідатора, а наявний лише лог та документація.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні відсутній файл docs/lab2/eval-report.md із числами для підсумкової таблиці.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff немає фінального звіту eval-report.md або результатів прогону наборі, а наявні дані стосуються лише базової лінії кроку 01.",
+      "evidence": ""
+    }
+  ]
+}

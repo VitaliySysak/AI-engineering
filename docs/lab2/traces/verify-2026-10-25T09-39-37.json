@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-08-3e7b5e7.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про виконання npm run typecheck, lint, test, build локально чи статусу CI на main для цієї зміни.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає змін ні в коді індексації/документів, ні в корпусі чи `data/index.json`, які б доводили виконання цього критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає реалізації validateAnswer чи тестів для неї, це лише логи та конфігурація агентів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні додано лише логування агентів та конфігурацію Claude, але немає жодного коду MCP-сервера чи тестів `tests/mcp.test.ts` для `fetch_chunk`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff присутні лише логи та агенти, сам файл docs/lab2/golden/queries.jsonl та тест tests/validate-golden.test.ts у цьому diff не змінено.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff є лише лог дій агента та нові агенти в .claude/, тоді як підсумковий звіт eval-report.md не змінено у цьому diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff є лише лог агента та нові агенти `.claude/agents/`, але немає тестів, результатів чи коду для перевірки критерію ін'єкцій.",
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-10-9db8420.diff",
+  "truncated": false,
+  "removed": [
+    "рядок 326, схожий на ключ"
+  ],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий код верифікатора та тест до нього, але не містить результатів виконання npm run typecheck, lint, test чи build і статусу CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються додавання верифікатора та тестів до нь໣о, але не документів, фрагментів чи corpus/",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає інфраструктуру верифікатора та тести для нього, але не містить реалізації функції validateAnswer чи логіки перевірки цитат.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У наданому diff відсутні зміни в логіці fetch_chunk або пов'язаних з ним тестах для перевірки цього критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає інфраструктуру верифікатора, але не містить файлу docs/lab2/golden/queries.jsonl чи модифікацій у ньому.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні немає файлу docs/lab2/eval-report.md з числами, потрібними для критерію A6.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає загальну інфраструктуру верифікатора та типи, але не стосується безпеки запитів з тегом injection чи поведінки асистента.",
+      "evidence": ""
+    }
+  ]
+}

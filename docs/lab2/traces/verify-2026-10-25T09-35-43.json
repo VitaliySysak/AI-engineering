@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-01-7e822a3.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про виконання команд typecheck, lint, test, build та статус CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff додано файли корпусу, але немає ані реалізації коду індексації/нормалізації, ані тестів у tests/, що перевіряють цей критерій.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff додано лише документи корпусу та специфікацію, але немає вихідного коду функції validateAnswer чи тестів для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff додано лише документи корпусу, звіт та специфікацію, але немає жодних змін у коді чи тестах MCP-сервера.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У змінах відсутні файли docs/lab2/golden/queries.jsonl та скрипт validate-golden.ts чи його тест, необхідні для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У змінах створено корпус і специфікацію, але підсумковий звіт `eval-report.md` із числами ще не додано.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У змінах немає даних про результати виконання тестів на ін'єкції або запису в eval-report.md",
+      "evidence": ""
+    }
+  ]
+}

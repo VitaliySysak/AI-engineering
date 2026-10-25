@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-05-1aec3eb.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Додано новий файл scripts/baseline.ts, але в diff немає запуску команд typecheck, lint, test чи build і статусів CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий скрипт базової лінії (scripts/baseline.ts), але не містить код тестів чи зміни в corpus/ та data/index.json, потрібні для перевірки критерію A2.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише скрипт базової лінії без пошуку (baseline.ts), але не містить функції validateAnswer чи тестів для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає скрипт базової лінії (baseline.ts) і ніяк не стосується функції fetch_chunk чи її перевірки в тестах.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff додано скрипт baseline.ts, але самого файлу docs/lab2/golden/queries.jsonl з необхідною кількістю запитів та тегів у цій зміні немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff додано скрипт для запуску базової лінії, але немає файлу docs/lab2/eval-report.md із підсумковою таблицею та числами для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає скрипт базової лінії, але немає результатів перевірки в docs/lab2/eval-report.md чи логів виконання запитів із тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

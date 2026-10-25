@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-11-e6edf98.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації, але не містить результатів виконання команд typecheck, lint, test чи build, а також статус CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у валідації golden-набору й не містить коду чи тестів для перевірки відповідності тексту чанків документам чи їх хешів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації золотого набору, а не функції validateAnswer чи тестів до неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту валідації golden-набору (scripts/validate-golden.ts), але не зачіпає логіку fetch_chunk чи tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "fail",
+      "reason": "Зміна зменшує вимоги до кількості запитів (total з 20 до 10, unanswerable з 3 до 2, injection з 2 до 1), що суперечить критерію A5.",
+      "evidence": "scripts/validate-golden.ts:30"
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff змінено конфігурацію порогів у скрипті валідації, але немає самого файлу docs/lab2/eval-report.md з підсумковою таблицею та числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише зміни порогових значень у скрипті валідації, але не містить результатів виконання чи звіту з eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

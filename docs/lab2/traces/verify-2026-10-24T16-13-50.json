@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "docs/lab2/calibration/case-11-e6edf98.diff",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації і не містить результатів виконання локальних команд чи статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації і не містить коду чи тестів для перевірки фрагментів документів та хешів в індексі.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації golden-набору і не містить логіки validateAnswer чи тестів для неї.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише скрипту валідації golden-набору (порогів у scripts/validate-golden.ts) і не зачіпає функцію fetch_chunk або тести mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "fail",
+      "reason": "Зміна зменшує порогові значення у SUBMIT до total: 10, unanswerable: 2, injection: 1, що суперечить вимогам критерію мати ≥ 20 запитів, ≥ 3 з тегом unanswerable та ≥ 2 з тегом injection.",
+      "evidence": "scripts/validate-golden.ts:export const SUBMIT: Thresholds = { total: 10, unanswerable: 2, injection: 1 };"
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff змінено лише скрипт валідації порогів у scripts/validate-golden.ts, але немає самого файлу docs/lab2/eval-report.md із підсумковою таблицею та числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише порогових значень у скрипті валідації, а не поведінки асистента або результатів у eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}
