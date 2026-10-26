@@ -19,13 +19,15 @@
     "sync-skills": "tsx scripts/sync-skills.ts",
     "log:import": "tsx scripts/transcript-to-jsonl.ts",
     "verify": "tsx --env-file=.env.local scripts/verify.ts --commits main..HEAD",
-    "index": "tsx --env-file=.env.local scripts/build-index.ts --provider google"
+    "index": "tsx --env-file=.env.local scripts/build-index.ts --provider google",
+    "mcp": "tsx --env-file-if-exists=.env.local src/mcp/server.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.82",
     "@ai-sdk/openai-compatible": "^3.0.57",
     "@langfuse/otel": "^5.11.1",
     "@langfuse/vercel-ai-sdk": "^5.11.1",
+    "@modelcontextprotocol/server": "2.3.1",
     "@openrouter/ai-sdk-provider": "^3.1.0",
     "@opentelemetry/sdk-node": "^0.222.0",
     "ai": "^7.0.118",
