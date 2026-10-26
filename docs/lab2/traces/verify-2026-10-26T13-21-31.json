@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:e02c812",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано лише документ зі специфікацією `docs/lab2/mcp-spec.md`, а результати команд `npm run typecheck`, `npm run lint`, `npm test`, `npm run build` чи статус CI в цьому diff відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію `docs/lab2/mcp-spec.md`, але не містить коду, тестів чи індексу для перевірки відповідності фрагментів `chunk.text === normalize(raw).slice(start, end)` та хешів у `data/index.json`.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується документації (docs/lab2/mcp-spec.md), а не реалізації validateAnswer чи тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації специфікації (docs/lab2/mcp-spec.md), а для перевірки реалізації `fetch_chunk` потрібен код та тести у файлі tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff змінено лише файл docs/lab2/mcp-spec.md, тоді як критерій A5 вимагає перевірки docs/lab2/golden/queries.jsonl та виконання команди npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff змінено специфікацію mcp-spec.md, а не файл eval-report.md з числами, який вимагається критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію (docs/lab2/mcp-spec.md) і не містить коду або звітів з evaluatіон-файлів для перевірки критерію A7.",
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:d64354c",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано новий код та тести, але для перевірки виконання команд typecheck, lint, test та build потрібен запуск команди або CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується MCP-сервера та його тестів, але не містить файлів index.json чи corpus/ для перевірки відповідності фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються MCP серверів, інструментів та їх тестів, але у diff немає реалізації валідації відповідей моделей із цитатами та id фрагментів (validateAnswer).",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "pass",
+      "reason": "Функция fetchChunk перевіряє наявність id в індексі й викидає Refusal, а тест підтверджує відмову при відсутності id або спробі передати шлях.",
+      "evidence": "src/mcp/tools.ts:98"
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Ця зміна додає MCP-сервер, інструменти та їхні тести, але не містить файлу docs/lab2/golden/queries.jsonl і не виконує валідацію через скрипт.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) немає файлу docs/lab2/eval-report.md із чисельними результатами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff немає оцінки eval-report.md чи протоколу перевірки людиною для ін'єкцій.",
+      "evidence": ""
+    }
+  ]
+}

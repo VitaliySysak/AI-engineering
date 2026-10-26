@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:d854d2c",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає залежність у package.json та package-lock.json, але статус виконання команд typecheck, lint, test та build в diff не перевіряється.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише залежностей у package.json та package-lock.json і не містить коду або тестів для перевірки відповідності фрагментів у документах та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення залежностей у package.json та package-lock.json та додавання MCP сервера, але не змінює код функції validateAnswer чи відповідні тести.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише залежностей та пакетів у package.json і package-lock.json, але не містить логіки функції fetch_chunk чи тестів з tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання залежності Model Context Protocol та пакету @modelcontextprotocol/server, але не містить файлу docs/lab2/golden/queries.jsonl або тестів validation-golden. Для оцінки виконання критерію потрібен стан цього файлу та виконання команди валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується залежностей у package.json та package-lock.json, але не містить файлу docs/lab2/eval-report.md з результатами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання залежності MCP сервера, але не містить оновлень у файлі docs/lab2/eval-report.md чи тестів для перевірки стійкості до ін'екцій.",
+      "evidence": ""
+    }
+  ]
+}

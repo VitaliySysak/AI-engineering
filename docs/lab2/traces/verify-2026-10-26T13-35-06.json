@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:2762cca",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні (diff) немає виконання команд `npm run typecheck`, `npm run lint`, `npm test` чи `npm run build`, а також статусу CI на main; є лише лог сесії та записи в документації.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення логів агента та документації (autonomy-log.md), але не зачіпає корпус документів, файл index.json чи пов'язані тести.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення логів агента та документації (autonomy-log.md), але не зачіпає код валідації answer та тести в tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає коду чи тестів файлів src/mcp або tests/mcp.test.ts, які реалізують та перевіряють цей критерій, лише зміни в логах та документації.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміни в diff стосуються лише документації (autonomy-log.md) та логів Claude Code; файл docs/lab2/golden/queries.jsonl не зачеплений у цій зміні.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/eval-report.md або його вмісту для перевірки метрик G1, G2 та G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення логів сесій (.agent-log/claude-code.jsonl) та документації (docs/lab2/autonomy-log.md), але не зачіпає файли тестування ін'єкцій та eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

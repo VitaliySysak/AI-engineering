@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:3cde4d4",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації та логів тестування (`docs/lab2/`), але не містить запуску або результатів `npm run typecheck`, `lint`, `test` чи `build`.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації та логів тестування в docs/, не містить коду індексу чи тестів для перевірки фрагментів документів.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації та логів (mcp-spec.md, traces/), але не містить коду або тестів для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "pass",
+      "reason": "Документація та логи smoke-тестів підтверджують, що fetch_chunk при запиті неіснуючого id повертає помилку isError: true замість вмісту файлу.",
+      "evidence": "docs/lab2/traces/mcp-inspector-2026-10-26.txt:39"
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації та логів (docs/lab2/), але не містить файлу docs/lab2/golden/queries.jsonl, необхідного за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна не модифікує файл docs/lab2/eval-report.md, який вимагається критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна модифікує документацію та звіти, але згідно з критерієм потрібний також звіт в docs/lab2/eval-report.md, який цим diff не охоплено.",
+      "evidence": ""
+    }
+  ]
+}
