@@ -7,6 +7,8 @@
  *   npx tsx --env-file=.env.local scripts/parallel-eval.ts 1    «до»: послідовно
  *   npx tsx --env-file=.env.local scripts/parallel-eval.ts 4    «після»: чотири гілки
  *       ХОДИТЬ У МЕРЕЖУ: 20 ембедінгів запиту + 20 викликів моделі на прогін.
+ *   npx tsx scripts/parallel-eval.ts --show 6
+ *       БЕЗ МЕРЕЖІ: друкує збережений прогін №6 з docs/lab2/parallel-run.json у форматі живого виводу.
  *
  * Паралелиться ЧИТАННЯ (запити набору). Запис однопотоковий: гілки повертають результат у пам'ять,
  * у docs/lab2/parallel-run.json пише головний потік один раз після пулу (дописує прогін у масив runs).
@@ -159,7 +161,7 @@ async function main(): Promise<void> {
   const total: Usage = ok.reduce((acc, r) => addUsage(acc, { inputTokens: r.inputTokens, cachedTokens: 0, outputTokens: r.outputTokens }), ZERO_USAGE);
   const usd = priceUsd(SPEC, total);
 
-  const run = {
+  const run: RunRecord = {
     runAt: new Date().toISOString(),
     model: SPEC.id,
     embedder: index.embedder,
@@ -180,18 +182,68 @@ async function main(): Promise<void> {
   const previous: { runs: unknown[] } = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : { runs: [] };
   writeFileSync(OUT, `${JSON.stringify({ runs: [...previous.runs, run] }, null, 2)}\n`, 'utf8');
 
-  console.log('| id | гілка, мс | з них пошук, мс | вхідні | вихідні |');
-  console.log('|---|---|---|---|---|');
-  for (const b of ok) console.log(`| ${b.id} | ${b.ms} | ${b.searchMs} | ${b.inputTokens} | ${b.outputTokens} |`);
-  for (const f of failed) console.log(`ПОМИЛКА ${f}`);
-  console.log('');
-  console.log(`ширина ${budget.maxBranches} · час стіни ${wallMs} мс · сума гілок ${sumBranchMs} мс · прискорення ${(sumBranchMs / wallMs).toFixed(2)}×`);
-  console.log(`токени ${total.inputTokens} / ${total.outputTokens} · за прайсом $${usd.toFixed(6)} · завершено ${ok.length}, впало ${failed.length}, не стартувало ${notStarted} · зупинено за бюджетом: ${stoppedEarly ? 'так' : 'ні'}`);
+  console.log(formatRun(run).join('\n'));
   console.log(`Дописано в ${OUT}`);
 }
 
+/** Один прогін у parallel-run.json. */
+export interface RunRecord {
+  readonly runAt: string;
+  readonly model: string;
+  readonly embedder: string;
+  readonly budget: Budget;
+  readonly wallMs: number;
+  readonly sumBranchMs: number;
+  readonly inputTokens: number;
+  readonly outputTokens: number;
+  readonly priceUsd: number;
+  readonly done: number;
+  readonly failed: readonly string[];
+  readonly notStarted: number;
+  readonly stoppedEarly: boolean;
+  readonly branches: readonly BranchResult[];
+}
+
+/** Таблиця гілок і два підсумкові рядки — однаково для живого прогону і для --show. */
+export function formatRun(run: RunRecord): string[] {
+  return [
+    '| id | гілка, мс | з них пошук, мс | вхідні | вихідні |',
+    '|---|---|---|---|---|',
+    ...run.branches.map((b) => `| ${b.id} | ${b.ms} | ${b.searchMs} | ${b.inputTokens} | ${b.outputTokens} |`),
+    ...run.failed.map((f) => `ПОМИЛКА ${f}`),
+    '',
+    `ширина ${run.budget.maxBranches} · час стіни ${run.wallMs} мс · сума гілок ${run.sumBranchMs} мс · прискорення ${(run.sumBranchMs / run.wallMs).toFixed(2)}×`,
+    `токени ${run.inputTokens} / ${run.outputTokens} · за прайсом $${run.priceUsd.toFixed(6)} · завершено ${run.done}, впало ${run.failed.length}, не стартувало ${run.notStarted} · зупинено за бюджетом: ${run.stoppedEarly ? 'так' : 'ні'}`,
+  ];
+}
+
+/**
+ * --show <n> — БЕЗ МЕРЕЖІ: друкує прогін №n (з 1) із parallel-run.json у форматі живого виводу.
+ * Для трас, коли живий вивід термінала втрачено; заголовок прямо каже, що це відтворення з файлу.
+ */
+export function showRun(runs: readonly RunRecord[], n: number): string[] {
+  const run = runs[n - 1];
+  if (run === undefined) throw new Error(`прогону №${n} немає: у ${OUT} їх ${runs.length}`);
+  const started = new Date(Date.parse(run.runAt) - run.wallMs).toISOString();
+  return [
+    `ВІДТВОРЕНО З ${OUT}, прогін №${n} із ${runs.length} (не живий вивід; мережі не було)`,
+    `Старт ${started} · кінець ${run.runAt}`,
+    `Модель: ${run.model} · ембедер ${run.embedder} · ширина пулу ${run.budget.maxBranches} · запитів ${run.done + run.failed.length + run.notStarted}`,
+    `Бюджет: maxTokens ${run.budget.maxTokens}, maxWallMs ${run.budget.maxWallMs}`,
+    '',
+    ...formatRun(run),
+  ];
+}
+
 if (process.argv[1]?.endsWith('parallel-eval.ts')) {
-  main().catch((error: unknown) => {
+  const [first, second] = process.argv.slice(2);
+  const job = first === '--show'
+    ? Promise.resolve().then(() => {
+        const { runs } = JSON.parse(readFileSync(OUT, 'utf8')) as { runs: RunRecord[] };
+        console.log(showRun(runs, Number(second)).join('\n'));
+      })
+    : main();
+  job.catch((error: unknown) => {
     console.error(error instanceof Error ? error.message : error);
     process.exit(1);
   });

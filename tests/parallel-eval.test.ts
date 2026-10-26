@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BUDGET, failureReason, parseWidth, runPool, type Budget } from '../scripts/parallel-eval';
+import { BUDGET, failureReason, parseWidth, runPool, showRun, type Budget, type RunRecord } from '../scripts/parallel-eval';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const budget = (over: Partial<Budget> = {}): Budget => ({ maxBranches: 2, maxTokens: 1_000, maxWallMs: 60_000, ...over });
@@ -119,6 +119,44 @@ describe('failureReason', () => {
 
   it('без метрики — стиснутий початок повідомлення', () => {
     expect(failureReason('HTTP 503:\n  high demand')).toBe('HTTP 503: high demand');
+  });
+});
+
+describe('showRun', () => {
+  const run: RunRecord = {
+    runAt: '2026-10-26T11:00:04.000Z',
+    model: 'gemini-3.5-flash-lite',
+    embedder: 'google:gemini-embedding-2@768',
+    budget: { maxBranches: 2, maxTokens: 60_000, maxWallMs: 300_000 },
+    wallMs: 4_000,
+    sumBranchMs: 6_000,
+    inputTokens: 2_000,
+    outputTokens: 300,
+    priceUsd: 0.00135,
+    done: 2,
+    failed: ['q-03: HTTP 429'],
+    notStarted: 0,
+    stoppedEarly: false,
+    branches: [
+      { id: 'q-01', inputTokens: 1_000, outputTokens: 100, ms: 3_000, searchMs: 300 },
+      { id: 'q-02', inputTokens: 1_000, outputTokens: 200, ms: 3_000, searchMs: 310 },
+    ],
+  };
+
+  it('прямо каже, що це відтворення з файлу, і друкує ті самі підсумкові рядки', () => {
+    const lines = showRun([run], 1);
+    expect(lines[0]).toMatch(/^ВІДТВОРЕНО З docs\/lab2\/parallel-run\.json, прогін №1 із 1/);
+    expect(lines[1]).toBe('Старт 2026-10-26T11:00:00.000Z · кінець 2026-10-26T11:00:04.000Z');
+    expect(lines).toContain('| q-02 | 3000 | 310 | 1000 | 200 |');
+    expect(lines).toContain('ПОМИЛКА q-03: HTTP 429');
+    expect(lines).toContain('ширина 2 · час стіни 4000 мс · сума гілок 6000 мс · прискорення 1.50×');
+    expect(lines.at(-1)).toBe(
+      'токени 2000 / 300 · за прайсом $0.001350 · завершено 2, впало 1, не стартувало 0 · зупинено за бюджетом: ні',
+    );
+  });
+
+  it('неіснуючий номер — помилка, а не порожній вивід', () => {
+    expect(() => showRun([run], 2)).toThrow(/прогону №2 немає/);
   });
 });
 
