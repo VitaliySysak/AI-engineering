@@ -1,3 +1,9 @@
 {"ts":"2026-10-26T13:14:29.845Z","source":"unknown","tool":"fetch_chunk","args":{"id":"install-nginx#0000"},"result":"ok"}
 {"ts":"2026-10-26T13:14:36.838Z","source":"unknown","tool":"fetch_chunk","args":{"id":"add-shortcut#0099"},"result":"refused","why":"Error: фрагмента add-shortcut#0099 немає в індексі"}
 {"ts":"2026-10-26T13:14:47.769Z","source":"unknown","tool":"search_corpus","args":{"query":"як встановити nginx","topK":5},"result":"refused","why":"Error: ключ ембедера не задано в оточенні процесу — search_corpus недоступний, fetch_chunk працює"}
+{"ts":"2026-10-26T13:44:50.575Z","source":"lab2-app","tool":"search_corpus","args":{"query":"як встановити nginx","topK":3},"result":"ok","hits":3}
+{"ts":"2026-10-26T13:44:50.580Z","source":"lab2-app","tool":"fetch_chunk","args":{"id":"install-nginx#0000"},"result":"ok"}
+{"ts":"2026-10-26T13:44:50.581Z","source":"lab2-app","tool":"fetch_chunk","args":{"id":"add-shortcut#0099"},"result":"refused","why":"Error: фрагмента add-shortcut#0099 немає в індексі"}
+{"ts":"2026-10-26T13:47:45.930Z","source":"claude-code","tool":"search_corpus","args":{"query":"як встановити nginx","topK":5},"result":"ok","hits":5}
+{"ts":"2026-10-26T13:47:46.030Z","source":"claude-code","tool":"fetch_chunk","args":{"id":"install-nginx#0000"},"result":"ok"}
+{"ts":"2026-10-26T13:47:46.122Z","source":"claude-code","tool":"fetch_chunk","args":{"id":"add-shortcut#0099"},"result":"refused","why":"Error: фрагмента add-shortcut#0099 немає в індексі"}
