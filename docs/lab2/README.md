@@ -31,7 +31,7 @@ injection **0 → 2 із 2**, частка відповідей із цитат�
 | 07 | Граф залежностей, бюджет до запуску, паралельні прогони 1/2/4/8, маршрутизація, висновок | [budget.md](budget.md) · [permalink](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/budget.md) · дані [`parallel-run.json`](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/parallel-run.json) · бюджет до коду — коміт [`e35bbbf`](https://github.com/VitaliySysak/AI-engineering/commit/e35bbbf) |
 | 08 | Специфікація MCP-сервера (до коду), smoke-тест Inspector | [mcp-spec.md](mcp-spec.md) · [permalink](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/mcp-spec.md) · специфікація [`e02c812`](https://github.com/VitaliySysak/AI-engineering/commit/e02c812) раніше за код [`d64354c`](https://github.com/VitaliySysak/AI-engineering/commit/d64354c) |
 | 09 | Підключення до Claude Code і до застосунку, виклики з обох боків | [mcp-integration.md](mcp-integration.md) · [permalink](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/mcp-integration.md) · журнал сервера [`mcp-calls.jsonl`](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/traces/mcp-calls.jsonl) |
-| — | Журнал автономності (7 сесій) | [autonomy-log.md](autonomy-log.md) · [permalink](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/autonomy-log.md) · журнал дій агента [`.agent-log/claude-code.jsonl`](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/.agent-log/claude-code.jsonl) |
+| — | Журнал автономності (8 сесій; остання — про цей README) | [autonomy-log.md](autonomy-log.md) · [permalink](https://github.com/VitaliySysak/AI-engineering/blob/684bb7d/docs/lab2/autonomy-log.md) (коміт із сесією 8) · журнал дій агента [`.agent-log/claude-code.jsonl`](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/.agent-log/claude-code.jsonl) |
 | — | Траси | [traces/](traces/) · [permalink](https://github.com/VitaliySysak/AI-engineering/tree/d62e2223a04b7eed736efa9b46f534ec68e0f324/docs/lab2/traces) |
 
 Ключові траси (скріншоти з часом, токенами й вартістю):
@@ -91,7 +91,7 @@ injection **0 → 2 із 2**, частка відповідей із цитат�
 5. Числа звіту без мережі: `npx tsx scripts/eval-run.ts --summary docs/lab2/eval-run.json`
 
 ## Чесні застереження
-- Усі сім сесій журналу автономності датовані 2026-10-24 – 2026-10-26, а не розподілені по тижнях занять 05–08;
+- Усі вісім сесій журналу автономності датовані 2026-10-24 – 2026-10-26, а не розподілені по тижнях занять 05–08;
   це записано в самому журналі
 - Ціль G1 (≥ 80%) і критерій A6 не досягнуто — [eval-report.md](eval-report.md), «Звірка з вимірюваними цілями»
 - Скріншоти паралельних прогонів (крок 07) — відтворення з файлу результатів, а не живий вивід
