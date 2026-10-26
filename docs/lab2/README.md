@@ -57,13 +57,15 @@ injection **0 → 2 із 2**, частка відповідей із цитат�
 | Тести (без мережі, у CI) | [`tests/`](https://github.com/VitaliySysak/AI-engineering/tree/d62e2223a04b7eed736efa9b46f534ec68e0f324/tests): `chunk`, `index`, `retrieval`, `metrics`, `eval-run`, `validate-golden`, `verify*`, `parallel-eval`, `mcp` (зокрема тест на відмову у виході за межі — [«ВІДМОВА…» у `tests/mcp.test.ts`](https://github.com/VitaliySysak/AI-engineering/blob/d62e2223a04b7eed736efa9b46f534ec68e0f324/tests/mcp.test.ts)) — 190 тестів |
 
 ## Прогони CI
-- Зелений на `main` (останній перед поданням, коміт `44c57e2` — злиття кроку 09):
-  https://github.com/VitaliySysak/AI-engineering/actions/runs/40338280674. Прогін на коміті з цим README буде
-  новішим — усі прогони `main`: https://github.com/VitaliySysak/AI-engineering/actions?query=branch%3Amain
+- Зелений на `main` після злиття кроку 10 (коміт `07522cd`, 2026-10-26):
+  [прогін 40344502001](https://github.com/VitaliySysak/AI-engineering/actions/runs/40344502001)
+- Зелений на `main` після злиття кроку 09 (коміт `44c57e2`):
+  [прогін 40338280674](https://github.com/VitaliySysak/AI-engineering/actions/runs/40338280674)
+- Пізніші коміти (зокрема цей) мають власні прогони — [усі прогони `main`](https://github.com/VitaliySysak/AI-engineering/actions?query=branch%3Amain)
 - Зупинений верифікатором випадок: стоп `e6edf98` знайдено брамою по комітах **локально** (`npm run verify`; брама
   — не CI, рішення автора на кроці 03), не через пул-реквест. Зелений CI на виправленні `10a82d2`, гілка
-  `lab2/verify-stop`: https://github.com/VitaliySysak/AI-engineering/actions/runs/40189612460. Деталі й звіти —
-  [verifier.md, «Верифікатор зупинив зміну»](verifier.md)
+  `lab2/verify-stop`: [прогін 40189612460](https://github.com/VitaliySysak/AI-engineering/actions/runs/40189612460).
+  Деталі й звіти — [verifier.md, «Верифікатор зупинив зміну»](verifier.md)
 
 ## Інструменти й моделі
 | Роль | Інструмент / модель | Версія |
