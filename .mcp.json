@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "lab2-corpus": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "tsx", "--env-file-if-exists=.env.local", "src/mcp/server.ts"],
+      "env": {
+        "MCP_CLIENT_LABEL": "claude-code"
+      }
+    }
+  }
+}
