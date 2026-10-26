@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:bb6408a",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає запуску команд typecheck, lint, test, build чи логів їх виконання з кодом 0, хоча зміна стосується логів і документації.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу автономності та трас (png-файлів), тоді як критерій вимагає перевірки фрагментів документів у corpus та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується журналу автономії та скріншотів, але не містить коду функції validateAnswer чи відповідних тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу сесії агента та документації з трасами, тоді як критерій вимагає перевірки функції fetch_chunk у коді та тестах tests/mcp.test.ts, яких у цьому diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна не стосується файлу docs/lab2/golden/queries.jsonl, оцінюваного цим критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу `docs/lab2/eval-report.md` та його числових метрик щодо G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується журналів роботи (autonomy-log.md) та бінарних трас, але не перевіряє запити з тегом injection у docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

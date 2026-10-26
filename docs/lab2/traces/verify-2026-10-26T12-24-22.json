@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:d44c32e",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про результати виконання команд typecheck, lint, test та build чи статус CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише документацію та JSON-звіт про прогони, але не змінює код розбиття на чанки чи індекс corpus/data/index.json, і не додає тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає файлів коду чи тестів із реалізацією чи тестуванням validateAnswer, лише документація (budget.md, subagents.md) та JSON-звіт.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Diff містить лише документацію та JSON із результатами прогонів, але не код `fetch_chunk` чи `tests/mcp.test.ts`.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl та результатів виконання команди npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні немає файлу docs/lab2/eval-report.md з результатами оцінювання G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна оновлює звіти в docs/lab2/budget.md та додає дані в parallel-run.json, але не містить коду або тестів, що перевіряють безпеку від ін'єкцій чи виконання вкладених інструкцій з тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

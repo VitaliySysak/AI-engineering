@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:e35bbbf",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання документації в docs/lab2/budget.md і не містить результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл `docs/lab2/budget.md`, але не містить коду індексування `corpus/`, генерації фрагментів або тестів у `tests/`, необхідних для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію budget.md і не містить файлу validateAnswer чи тестів для нього.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл документації docs/lab2/budget.md і ніяк не стосується коду fetch_chunk чи тестів mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff додано лише файл docs/lab2/budget.md, тоді як критерій вимагає перевірки docs/lab2/golden/queries.jsonl та тесту tests/validate-golden.test.ts, яких у diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу docs/lab2/budget.md, тоді як критерій вимагає перевірки файлу docs/lab2/eval-report.md.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл docs/lab2/budget.md про бюджет і маршрутизацію, але не містить жодної інформації про запити з тегом injection чи їх поведінку.",
+      "evidence": ""
+    }
+  ]
+}

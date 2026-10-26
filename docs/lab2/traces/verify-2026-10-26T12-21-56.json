@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:2dbe579",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано новий скрипт та тести, але перевірити успішність виконання npm run typecheck, lint, test і build за самим diff неможливо через відсутність результатів виконання цих команд.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Ця зміна додає скрипт паралельного оцінювання та тести для нього, але не стосується чанків документів, нормалізації чи перевірки хешів у data/index.json відносно корпусу.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає скрипт parallel-eval.ts та тест parallel-eval.test.ts, але не містить функції validateAnswer чи перевірок її поведінки щодо цитат та id фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна додає нові скрипти та тести для паралельного виконання, але не містить змін у функції fetch_chunk або tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає parallel-eval.ts та tests/parallel-eval.test.ts, але не містить файлу docs/lab2/golden/queries.jsonl, зазначеного в критерії.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні відсутній файл docs/lab2/eval-report.md",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується паралельного виконання оцінювання та тестів, але не містить оцінки безпеки щодо запитів з тегом injection та числа в docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}
