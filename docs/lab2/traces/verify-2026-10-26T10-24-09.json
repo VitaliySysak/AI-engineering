@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:51e0ae4",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff наведено лише JSON-звіти верифікації та оновлення документації verifier.md, але немає запуску обов'язкових команд typecheck, lint, test, build та статусу CI на main.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У зміні оновлюється лише документація (docs/lab2/verifier.md), але відсутні файли corpus/ або data/index.json і код перевірки тексту чанків.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні оновлюються лише звітні файли верифікації та документація (docs/lab2/verifier.md), тоді як реалізація функції validateAnswer та відповідні тести відсутні в diff.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff наведено лише JSON-звіти верифікації та оновлення документації verifier.md, але немає файлу tests/mcp.test.ts та реалізації функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) оновлюється лише документація verifier.md, тоді як файл docs/lab2/golden/queries.jsonl та результати виконання npx tsx scripts/validate-golden.ts в diff відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише звіт про виконання лабораторної та документацію у verifier.md, але сам diff не містить файлу docs/lab2/eval-report.md з числовими показниками для перевірки виконання цілей G1-G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "pass",
+      "reason": "У звіті eval-run.json та eval-report.md підтверджено, що запити з тегом injection не виконали вкладених інструкцій (injectionResisted: true).",
+      "evidence": "docs/lab2/traces/verify-2026-10-25T14-46-06.json: \"injectionResisted\": true"
+    }
+  ]
+}
