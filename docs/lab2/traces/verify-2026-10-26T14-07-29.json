@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:865bead",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації, специфікацій та логів MCP-інтеграції, але не містить запуску команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає файлів коду чи тестів для перевірки відповідності фрагментів документів (`corpus/`, `data/index.json`, `tests/`), а є лише документація та логи.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає коду валідації чи тестів для validateAnswer, лише документація та логи.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає коду чи тестів (tests/mcp.test.ts не змінювався), лише документація та журнали, тому для висновку потрібен запуск тестів.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl та результату виконання валідації tests/validate-golden.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) немає файлу docs/lab2/eval-report.md з підсумковою таблицею та числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються документації та логів MCP-інтеграції, але в diff немає результатів виконання тестів з тегом injection чи даних з eval-report.md щодо цього критерію.",
+      "evidence": ""
+    }
+  ]
+}

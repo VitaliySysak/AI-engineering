@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:f8bb42a",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff наведено лише логи агента та документацію (autonomy-log.md), але немає виводів команд typecheck, lint, test, build чи статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу дій агента та документації в autonomy-log.md, не зачіпаючи код корпусів, індексів, чанків чи тести.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Цей diff стосується лише логів агента та документації (autonomy-log.md), тоді як критерій A3 вимагає наявності та перевірки функції validateAnswer у тестових файлах tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Ця зміна оновлює лише внутрішній лог агента та журнали (.agent-log/claude-code.jsonl та docs/lab2/autonomy-log.md). Код сервера чи тести у файлі tests/mcp.test.ts тут не змінювалися.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У зміні оновлюються лише журнали `.agent-log/claude-code.jsonl` та `docs/lab2/autonomy-log.md`; файл `docs/lab2/golden/queries.jsonl` або скрипт валідації не зачеплені.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні оновлюється лише журнал агентів та лог Claude Code (.agent-log/claude-code.jsonl, docs/lab2/autonomy-log.md), але відсутні числа чи файл docs/lab2/eval-report.md, який вимагається за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення журналу дій агента та автономії у файлі autonomy-log.md, але не зачіпає код оцінювання, логи викликів або файл docs/lab2/eval-report.md з результатами тестів на injection.",
+      "evidence": ""
+    }
+  ]
+}

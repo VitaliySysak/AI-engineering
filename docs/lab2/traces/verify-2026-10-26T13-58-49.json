@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:6030064",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна лише додає залежність у package.json та package-lock.json, але для перевірки виконання критерію потрібен запуск команд типу typecheck, lint, test та build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише залежностей у package.json та package-lock.json і не містить файлів з корпусу документів або індексу.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише оновлення залежностей у package.json та package-lock.json і не стосується функції validateAnswer чи тестів у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише оновлення package.json та package-lock.json і не містить коду або тестів для перевірки логіки fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише залежностей у package.json та package-lock.json і не містить файлу docs/lab2/golden/queries.jsonl чи скриптів перевірки.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлів package.json та package-lock.json і не містить файлу docs/lab2/eval-report.md з результатами оцінювання.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише залежностей у package.json та package-lock.json і не містить даних оцінювання безпеки для запитів із тегом injection.",
+      "evidence": ""
+    }
+  ]
+}
