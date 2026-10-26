@@ -1,0 +1,1459 @@
+{
+  "runs": [
+    {
+      "runAt": "2026-10-26T10:52:56.825Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 1,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 26379,
+      "sumBranchMs": 24097,
+      "inputTokens": 18525,
+      "outputTokens": 3241,
+      "priceUsd": 0.01366,
+      "done": 16,
+      "failed": [
+        "q-17: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-18: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-19: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-20: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 347,
+          "ms": 1902,
+          "searchMs": 500
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 150,
+          "ms": 1218,
+          "searchMs": 331
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 201,
+          "ms": 1307,
+          "searchMs": 335
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 178,
+          "ms": 1543,
+          "searchMs": 337
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 62,
+          "ms": 1217,
+          "searchMs": 328
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 215,
+          "ms": 1980,
+          "searchMs": 309
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 104,
+          "ms": 1166,
+          "searchMs": 306
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 74,
+          "ms": 1852,
+          "searchMs": 318
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 926,
+          "searchMs": 316
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 208,
+          "ms": 1446,
+          "searchMs": 373
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 457,
+          "ms": 2303,
+          "searchMs": 298
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 275,
+          "ms": 1685,
+          "searchMs": 320
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 445,
+          "ms": 1974,
+          "searchMs": 321
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 255,
+          "ms": 1293,
+          "searchMs": 338
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 172,
+          "ms": 1207,
+          "searchMs": 324
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 1078,
+          "searchMs": 319
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T10:54:28.995Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 2,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 18795,
+      "sumBranchMs": 34500,
+      "inputTokens": 19792,
+      "outputTokens": 3389,
+      "priceUsd": 0.01441,
+      "done": 17,
+      "failed": [
+        "q-17: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-19: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-20: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 461,
+          "ms": 2339,
+          "searchMs": 500
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 135,
+          "ms": 3153,
+          "searchMs": 403
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 190,
+          "ms": 1352,
+          "searchMs": 362
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 185,
+          "ms": 1837,
+          "searchMs": 322
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 65,
+          "ms": 1154,
+          "searchMs": 308
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 219,
+          "ms": 1298,
+          "searchMs": 291
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 102,
+          "ms": 2268,
+          "searchMs": 308
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 177,
+          "ms": 1198,
+          "searchMs": 325
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 2864,
+          "searchMs": 294
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 195,
+          "ms": 2579,
+          "searchMs": 326
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 516,
+          "ms": 2305,
+          "searchMs": 311
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 294,
+          "ms": 2134,
+          "searchMs": 358
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 313,
+          "ms": 1692,
+          "searchMs": 413
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 226,
+          "ms": 2541,
+          "searchMs": 350
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 174,
+          "ms": 1225,
+          "searchMs": 349
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 1441,
+          "searchMs": 308
+        },
+        {
+          "id": "q-18",
+          "inputTokens": 1267,
+          "outputTokens": 39,
+          "ms": 3120,
+          "searchMs": 427
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T10:55:16.639Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 4,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 8137,
+      "sumBranchMs": 30113,
+      "inputTokens": 18525,
+      "outputTokens": 3203,
+      "priceUsd": 0.013565,
+      "done": 16,
+      "failed": [
+        "q-17: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-18: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-19: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-20: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 476,
+          "ms": 3487,
+          "searchMs": 444
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 114,
+          "ms": 2740,
+          "searchMs": 409
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 223,
+          "ms": 1611,
+          "searchMs": 413
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 122,
+          "ms": 2265,
+          "searchMs": 474
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 62,
+          "ms": 1075,
+          "searchMs": 327
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 236,
+          "ms": 2272,
+          "searchMs": 289
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 98,
+          "ms": 2329,
+          "searchMs": 316
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 108,
+          "ms": 1072,
+          "searchMs": 276
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 55,
+          "ms": 1654,
+          "searchMs": 330
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 208,
+          "ms": 1389,
+          "searchMs": 304
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 434,
+          "ms": 1963,
+          "searchMs": 357
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 209,
+          "ms": 2034,
+          "searchMs": 329
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 364,
+          "ms": 2165,
+          "searchMs": 311
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 245,
+          "ms": 1634,
+          "searchMs": 300
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 146,
+          "ms": 1149,
+          "searchMs": 307
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 103,
+          "ms": 1274,
+          "searchMs": 313
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T10:59:33.649Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 8,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 4314,
+      "sumBranchMs": 29899,
+      "inputTokens": 23862,
+      "outputTokens": 3395,
+      "priceUsd": 0.015646,
+      "done": 20,
+      "failed": [],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 347,
+          "ms": 1952,
+          "searchMs": 460
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 207,
+          "ms": 1629,
+          "searchMs": 451
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 267,
+          "ms": 2192,
+          "searchMs": 452
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 172,
+          "ms": 1607,
+          "searchMs": 485
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 57,
+          "ms": 1567,
+          "searchMs": 460
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 219,
+          "ms": 1899,
+          "searchMs": 489
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 95,
+          "ms": 1563,
+          "searchMs": 519
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 58,
+          "ms": 1771,
+          "searchMs": 466
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 1034,
+          "searchMs": 355
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 203,
+          "ms": 1328,
+          "searchMs": 362
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 254,
+          "ms": 1658,
+          "searchMs": 298
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 264,
+          "ms": 1794,
+          "searchMs": 355
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 369,
+          "ms": 2003,
+          "searchMs": 294
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 194,
+          "ms": 1186,
+          "searchMs": 318
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 205,
+          "ms": 1432,
+          "searchMs": 402
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 1034,
+          "searchMs": 347
+        },
+        {
+          "id": "q-17",
+          "inputTokens": 1291,
+          "outputTokens": 87,
+          "ms": 1140,
+          "searchMs": 295
+        },
+        {
+          "id": "q-18",
+          "inputTokens": 1267,
+          "outputTokens": 41,
+          "ms": 947,
+          "searchMs": 305
+        },
+        {
+          "id": "q-19",
+          "inputTokens": 1327,
+          "outputTokens": 171,
+          "ms": 1215,
+          "searchMs": 329
+        },
+        {
+          "id": "q-20",
+          "inputTokens": 1452,
+          "outputTokens": 87,
+          "ms": 948,
+          "searchMs": 331
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T11:10:15.032Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 1,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 34466,
+      "sumBranchMs": 32433,
+      "inputTokens": 18525,
+      "outputTokens": 2992,
+      "priceUsd": 0.013038,
+      "done": 16,
+      "failed": [
+        "q-17: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-18: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-19: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin",
+        "q-20: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billin"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 432,
+          "ms": 2116,
+          "searchMs": 495
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 118,
+          "ms": 2574,
+          "searchMs": 342
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 163,
+          "ms": 2286,
+          "searchMs": 318
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 131,
+          "ms": 2040,
+          "searchMs": 332
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 71,
+          "ms": 974,
+          "searchMs": 316
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 179,
+          "ms": 3088,
+          "searchMs": 312
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 95,
+          "ms": 1819,
+          "searchMs": 325
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 108,
+          "ms": 1221,
+          "searchMs": 346
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 1024,
+          "searchMs": 326
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 204,
+          "ms": 1482,
+          "searchMs": 317
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 419,
+          "ms": 1737,
+          "searchMs": 296
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 287,
+          "ms": 2090,
+          "searchMs": 319
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 306,
+          "ms": 1716,
+          "searchMs": 365
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 226,
+          "ms": 1246,
+          "searchMs": 307
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 155,
+          "ms": 5720,
+          "searchMs": 346
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 1300,
+          "searchMs": 311
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T11:32:25.250Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 1,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 93417,
+      "sumBranchMs": 93417,
+      "inputTokens": 23862,
+      "outputTokens": 3532,
+      "priceUsd": 0.015989,
+      "done": 20,
+      "failed": [],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 448,
+          "ms": 9565,
+          "searchMs": 490
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 150,
+          "ms": 2082,
+          "searchMs": 353
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 216,
+          "ms": 2993,
+          "searchMs": 341
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 171,
+          "ms": 4485,
+          "searchMs": 337
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 75,
+          "ms": 4096,
+          "searchMs": 385
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 257,
+          "ms": 6134,
+          "searchMs": 332
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 98,
+          "ms": 2994,
+          "searchMs": 340
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 72,
+          "ms": 3717,
+          "searchMs": 317
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 3885,
+          "searchMs": 332
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 207,
+          "ms": 3172,
+          "searchMs": 323
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 386,
+          "ms": 4981,
+          "searchMs": 374
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 283,
+          "ms": 6286,
+          "searchMs": 324
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 313,
+          "ms": 4585,
+          "searchMs": 331
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 217,
+          "ms": 3907,
+          "searchMs": 335
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 185,
+          "ms": 5947,
+          "searchMs": 331
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 103,
+          "ms": 5974,
+          "searchMs": 316
+        },
+        {
+          "id": "q-17",
+          "inputTokens": 1291,
+          "outputTokens": 31,
+          "ms": 5258,
+          "searchMs": 368
+        },
+        {
+          "id": "q-18",
+          "inputTokens": 1267,
+          "outputTokens": 41,
+          "ms": 5218,
+          "searchMs": 304
+        },
+        {
+          "id": "q-19",
+          "inputTokens": 1327,
+          "outputTokens": 153,
+          "ms": 2857,
+          "searchMs": 327
+        },
+        {
+          "id": "q-20",
+          "inputTokens": 1452,
+          "outputTokens": 75,
+          "ms": 5281,
+          "searchMs": 300
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T11:35:20.230Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 2,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 35168,
+      "sumBranchMs": 67965,
+      "inputTokens": 23862,
+      "outputTokens": 3547,
+      "priceUsd": 0.016026,
+      "done": 20,
+      "failed": [],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 536,
+          "ms": 3156,
+          "searchMs": 417
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 123,
+          "ms": 1489,
+          "searchMs": 406
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 186,
+          "ms": 3892,
+          "searchMs": 317
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 155,
+          "ms": 3014,
+          "searchMs": 316
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 58,
+          "ms": 2249,
+          "searchMs": 342
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 246,
+          "ms": 3841,
+          "searchMs": 320
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 97,
+          "ms": 1773,
+          "searchMs": 313
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 74,
+          "ms": 4024,
+          "searchMs": 325
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 3510,
+          "searchMs": 297
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 208,
+          "ms": 1617,
+          "searchMs": 296
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 384,
+          "ms": 2939,
+          "searchMs": 333
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 208,
+          "ms": 1617,
+          "searchMs": 304
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 296,
+          "ms": 7299,
+          "searchMs": 302
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 252,
+          "ms": 6488,
+          "searchMs": 330
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 192,
+          "ms": 3676,
+          "searchMs": 313
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 984,
+          "searchMs": 314
+        },
+        {
+          "id": "q-17",
+          "inputTokens": 1291,
+          "outputTokens": 87,
+          "ms": 3386,
+          "searchMs": 293
+        },
+        {
+          "id": "q-18",
+          "inputTokens": 1267,
+          "outputTokens": 37,
+          "ms": 2327,
+          "searchMs": 311
+        },
+        {
+          "id": "q-19",
+          "inputTokens": 1327,
+          "outputTokens": 207,
+          "ms": 4681,
+          "searchMs": 326
+        },
+        {
+          "id": "q-20",
+          "inputTokens": 1452,
+          "outputTokens": 103,
+          "ms": 6003,
+          "searchMs": 336
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T11:37:49.835Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 4,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 13267,
+      "sumBranchMs": 42226,
+      "inputTokens": 19816,
+      "outputTokens": 3528,
+      "priceUsd": 0.014765,
+      "done": 17,
+      "failed": [
+        "q-18: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-19: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-20: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 543,
+          "ms": 2244,
+          "searchMs": 471
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 147,
+          "ms": 4371,
+          "searchMs": 452
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 195,
+          "ms": 1507,
+          "searchMs": 460
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 174,
+          "ms": 4184,
+          "searchMs": 465
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 62,
+          "ms": 3023,
+          "searchMs": 335
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 306,
+          "ms": 3058,
+          "searchMs": 320
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 108,
+          "ms": 4518,
+          "searchMs": 374
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 170,
+          "ms": 1319,
+          "searchMs": 376
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 3058,
+          "searchMs": 325
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 208,
+          "ms": 1414,
+          "searchMs": 325
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 401,
+          "ms": 1864,
+          "searchMs": 329
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 276,
+          "ms": 1456,
+          "searchMs": 334
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 384,
+          "ms": 1741,
+          "searchMs": 316
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 222,
+          "ms": 1423,
+          "searchMs": 320
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 204,
+          "ms": 5094,
+          "searchMs": 311
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 47,
+          "ms": 1006,
+          "searchMs": 311
+        },
+        {
+          "id": "q-17",
+          "inputTokens": 1291,
+          "outputTokens": 30,
+          "ms": 946,
+          "searchMs": 308
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T12:02:59.865Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 4,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 82838,
+      "sumBranchMs": 244676,
+      "inputTokens": 18525,
+      "outputTokens": 3367,
+      "priceUsd": 0.013975,
+      "done": 16,
+      "failed": [
+        "q-17: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-18: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-19: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-20: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 439,
+          "ms": 12063,
+          "searchMs": 500
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 151,
+          "ms": 11717,
+          "searchMs": 641
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 198,
+          "ms": 11854,
+          "searchMs": 594
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 170,
+          "ms": 10739,
+          "searchMs": 629
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 62,
+          "ms": 12250,
+          "searchMs": 445
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 214,
+          "ms": 8375,
+          "searchMs": 320
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 102,
+          "ms": 9656,
+          "searchMs": 310
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 170,
+          "ms": 48051,
+          "searchMs": 311
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 51,
+          "ms": 17273,
+          "searchMs": 364
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 220,
+          "ms": 10615,
+          "searchMs": 324
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 501,
+          "ms": 11619,
+          "searchMs": 321
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 278,
+          "ms": 9105,
+          "searchMs": 318
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 302,
+          "ms": 9370,
+          "searchMs": 385
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 223,
+          "ms": 45460,
+          "searchMs": 379
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 183,
+          "ms": 6947,
+          "searchMs": 372
+        },
+        {
+          "id": "q-16",
+          "inputTokens": 1349,
+          "outputTokens": 103,
+          "ms": 9582,
+          "searchMs": 303
+        }
+      ]
+    },
+    {
+      "runAt": "2026-10-26T12:04:36.741Z",
+      "model": "gemini-3.5-flash-lite",
+      "embedder": "google:gemini-embedding-2@768",
+      "budget": {
+        "maxBranches": 4,
+        "maxTokens": 60000,
+        "maxWallMs": 300000
+      },
+      "wallMs": 58912,
+      "sumBranchMs": 213470,
+      "inputTokens": 17176,
+      "outputTokens": 3187,
+      "priceUsd": 0.01312,
+      "done": 15,
+      "failed": [
+        "q-16: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-17: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-18: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-19: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on",
+        "q-20: HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, description: Generate content requests per minute limit exceeded on"
+      ],
+      "notStarted": 0,
+      "stoppedEarly": false,
+      "branches": [
+        {
+          "id": "q-01",
+          "inputTokens": 1256,
+          "outputTokens": 448,
+          "ms": 30534,
+          "searchMs": 505
+        },
+        {
+          "id": "q-02",
+          "inputTokens": 960,
+          "outputTokens": 128,
+          "ms": 29151,
+          "searchMs": 509
+        },
+        {
+          "id": "q-03",
+          "inputTokens": 982,
+          "outputTokens": 204,
+          "ms": 17304,
+          "searchMs": 485
+        },
+        {
+          "id": "q-04",
+          "inputTokens": 1344,
+          "outputTokens": 172,
+          "ms": 11742,
+          "searchMs": 481
+        },
+        {
+          "id": "q-05",
+          "inputTokens": 1310,
+          "outputTokens": 61,
+          "ms": 11945,
+          "searchMs": 333
+        },
+        {
+          "id": "q-06",
+          "inputTokens": 999,
+          "outputTokens": 179,
+          "ms": 10691,
+          "searchMs": 322
+        },
+        {
+          "id": "q-07",
+          "inputTokens": 978,
+          "outputTokens": 106,
+          "ms": 8452,
+          "searchMs": 331
+        },
+        {
+          "id": "q-08",
+          "inputTokens": 952,
+          "outputTokens": 145,
+          "ms": 26610,
+          "searchMs": 312
+        },
+        {
+          "id": "q-09",
+          "inputTokens": 973,
+          "outputTokens": 49,
+          "ms": 7676,
+          "searchMs": 357
+        },
+        {
+          "id": "q-10",
+          "inputTokens": 1095,
+          "outputTokens": 220,
+          "ms": 7702,
+          "searchMs": 308
+        },
+        {
+          "id": "q-11",
+          "inputTokens": 1313,
+          "outputTokens": 438,
+          "ms": 9299,
+          "searchMs": 318
+        },
+        {
+          "id": "q-12",
+          "inputTokens": 1397,
+          "outputTokens": 280,
+          "ms": 12314,
+          "searchMs": 322
+        },
+        {
+          "id": "q-13",
+          "inputTokens": 1238,
+          "outputTokens": 360,
+          "ms": 10413,
+          "searchMs": 360
+        },
+        {
+          "id": "q-14",
+          "inputTokens": 1391,
+          "outputTokens": 253,
+          "ms": 9375,
+          "searchMs": 499
+        },
+        {
+          "id": "q-15",
+          "inputTokens": 988,
+          "outputTokens": 144,
+          "ms": 10262,
+          "searchMs": 321
+        }
+      ]
+    }
+  ]
+}
