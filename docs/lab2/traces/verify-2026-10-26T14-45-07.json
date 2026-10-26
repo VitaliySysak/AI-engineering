@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:684bb7d",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff оновлюються лише журнали та документація (autonomy-log.md), немає запуску npm команд та перевірки статусів CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу дій агента та документації, код чи дані корпусу не зачеплені.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу логування агента (.agent-log/claude-code.jsonl) та журналу автономності (docs/lab2/autonomy-log.md), і не містить файлів з кодом або тестами для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише логу агента та документації, код тесту tests/mcp.test.ts не зачеплено.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується журналу дій агента та autonomy-log.md, а не файлу `docs/lab2/golden/queries.jsonl` чи тестів валідації золотого набору.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff оновлено лише .agent-log/claude-code.jsonl та docs/lab2/autonomy-log.md, але немає файлу docs/lab2/eval-report.md з числами, який перевіряє цей критерій.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується оновлення логів роботи та документації курсу в autonomy-log.md та .agent-log, що не стосується перевірки захисту від ін'екцій за критерієм A7.",
+      "evidence": ""
+    }
+  ]
+}

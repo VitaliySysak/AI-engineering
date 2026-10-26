@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:320c3f4",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff додано лише звіт перевірки та документацію verifier.md, але немає результатів виконання команд typecheck, lint, test, build чи статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання файлу звіту судді та документації, без зміни коду корпусів, тестів чи data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання JSON-файлу траси та оновлення документації, тоді як код або тест для validateAnswer у diff відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна містить лише додавання звіту та опису в doc/lab2/verifier.md, але не зміни у tests/mcp.test.ts або коді функції fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання файлу траси та документації verifier.md, але не містить змін у файлі docs/lab2/golden/queries.jsonl або результатів виконання команди валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У зміні не зачеплено файл docs/lab2/eval-report.md, який вимагається специфікацією критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише новий JSON-файл траси та оновлення в документації verifier.md, але не містить числа чи даних у docs/lab2/eval-report.md щодо запитів з тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

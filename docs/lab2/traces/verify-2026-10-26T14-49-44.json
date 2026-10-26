@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:a03bee9",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації в docs/lab2/README.md і не містить результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації README.md, а не файлів корпусу чи індексу даних, необхідних для перевірки критерію.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації README.md і не містить коду або тестів для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації README.md і не містить коду чи тестів для перевірки fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації README.md і не містить файлу docs/lab2/golden/queries.jsonl чи результатів виконання валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується файлу docs/lab2/README.md та журналу автономності, тоді як критерій вимагає перевірки файлу docs/lab2/eval-report.md.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише журналу автономності та README.md, а не файлу eval-report.md чи коду обробки запитів з тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

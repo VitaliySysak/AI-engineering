@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:d62e222",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише документації (eval-report.md) і не містить результатів виконання команд typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише звіту eval-report.md і не містить коду чи тестів для перевірки фрагментів документів та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише опису в документі docs/lab2/eval-report.md, а критерій вимагає перевірки validateAnswer тестом у tests/.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише звіту eval-report.md і не містить файлу tests/mcp.test.ts чи коду fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлу документації eval-report.md і не містить файлу queries.jsonl чи результату виконання валідатора.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У diff немає самих чисел з таблиці, які б підтверджували виконання G1 (≥ 80%), G2 (100%) та G3 (100%), а наявний текст лише згадує частку точнiсть 52,9%, що менше за 80%.",
+      "evidence": "docs/lab2/eval-report.md"
+    },
+    {
+      "id": "A7",
+      "verdict": "pass",
+      "reason": "У звіті eval-report.md зафіксовано покращення стійкості до injection (0 → 2 із 2), що підтверджує виконання критерію.",
+      "evidence": "docs/lab2/eval-report.md: стійкість до injection 0 → 2 із 2"
+    }
+  ]
+}

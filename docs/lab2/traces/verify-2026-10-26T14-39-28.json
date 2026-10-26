@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:1c32018",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff є лише документація (README.md), а не результати виконання npm-команд чи статус CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff наявний лише новий файл документації docs/lab2/README.md, а зміни в коді чи файлах даних/корпусу відсутні.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff додано лише документацію (`docs/lab2/README.md`), а не код чи тести для validateAnswer, тому перевірити критерій неможливо.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні оновлено лише файл документації docs/lab2/README.md, тоді як перевірка критерію вимагає наявності та аналізу тесту у tests/mcp.test.ts, якого в diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише документацію (docs/lab2/README.md), але не містить файлу queries.jsonl та результатів виконання команди npx tsx scripts/validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "fail",
+      "reason": "У файлі docs/lab2/README.md прямо зазначено, що ціль G1 (≥ 80%) і критерій A6 не досягнуто.",
+      "evidence": "docs/lab2/README.md"
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише додавання документації README.md і не містить коду або тестів для перевірки стійкості до injection (A7).",
+      "evidence": ""
+    }
+  ]
+}
