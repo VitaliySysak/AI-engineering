@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BUDGET, parseWidth, runPool, type Budget } from '../scripts/parallel-eval';
+import { BUDGET, failureReason, parseWidth, runPool, type Budget } from '../scripts/parallel-eval';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const budget = (over: Partial<Budget> = {}): Budget => ({ maxBranches: 2, maxTokens: 1_000, maxWallMs: 60_000, ...over });
@@ -98,6 +98,27 @@ describe('runPool', () => {
     const sequential = await time(1);
     const parallel = await time(4);
     expect(parallel).toBeLessThan(sequential / 2);
+  });
+});
+
+describe('failureReason', () => {
+  it('з тіла 429 бере метрику квоти, ліміт і «retry in», а не загальну першу фразу', () => {
+    const body = JSON.stringify([
+      {
+        error: {
+          code: 429,
+          message:
+            'You exceeded your current quota, please check your plan and billing details.\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 41.2s.',
+        },
+      },
+    ]);
+    expect(failureReason(`https://x/chat/completions → HTTP 429: ${body}`)).toBe(
+      'HTTP 429 · Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite · retry in 41.2s',
+    );
+  });
+
+  it('без метрики — стиснутий початок повідомлення', () => {
+    expect(failureReason('HTTP 503:\n  high demand')).toBe('HTTP 503: high demand');
   });
 });
 

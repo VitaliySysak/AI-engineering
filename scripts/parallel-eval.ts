@@ -93,6 +93,19 @@ export function parseWidth(arg: string | undefined, max = BUDGET.maxBranches): n
   return width;
 }
 
+/**
+ * Коротка причина падіння гілки для звіту. Для 429 від Gemini важлива не перша фраза («You exceeded your
+ * current quota…» — однакова для всіх лімітів), а рядок «Quota exceeded for metric: …, limit: …» і «retry in …»:
+ * лише з них видно, денний це ліміт чи хвилинний.
+ */
+export function failureReason(message: string): string {
+  const status = /HTTP \d{3}/.exec(message)?.[0];
+  const metric = /Quota exceeded for metric: [^\\"\n]+/.exec(message)?.[0];
+  const retry = /retry in [\d.]+s/i.exec(message)?.[0];
+  if (metric) return [status, metric.trim(), retry].filter(Boolean).join(' · ');
+  return message.replace(/\s+/g, ' ').slice(0, 300);
+}
+
 const K = 5;
 const OUT = 'docs/lab2/parallel-run.json';
 const SPEC = CATALOG['gemini-3.5-flash-lite'];
@@ -139,7 +152,7 @@ async function main(): Promise<void> {
   const wallMs = Math.round(performance.now() - wallStart);
 
   const ok = results.filter((r): r is BranchResult => r !== undefined && !(r instanceof Error));
-  const failed = results.flatMap((r, i) => (r instanceof Error ? [`${entries[i]?.id}: ${r.message.slice(0, 200)}`] : []));
+  const failed = results.flatMap((r, i) => (r instanceof Error ? [`${entries[i]?.id}: ${failureReason(r.message)}`] : []));
   // гілки, які правило зупинки не пустило на старт: у results на їхньому місці дірка
   const notStarted = tasks.length - ok.length - failed.length;
   const sumBranchMs = ok.reduce((n, r) => n + r.ms, 0);
