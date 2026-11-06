@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:2dec706",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про результати виконання команд типу npm run typecheck, npm run lint, npm test та npm run build локально або в CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується сценаріїв запуску задач та їх тестів, але не містить коду для перевірки фрагментів документів чи хешів у data/index.json відповідно до критерію A2.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються каркаса прогону задач (harness), але не містять функції validateAnswer чи перевірки цитат і id фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються фабрики задач (агентів), а не функції fetch_chunk та тестів tests/mcp.test.ts, вказані в критерії.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає файли пов'язані з лабораторією 3 (run-queue.ts, run-task.ts тощо), але не містить файлів docs/lab2/golden/queries.jsonl чи tests/validate-golden.test.ts, вказаних у критерії.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Змінено лише скрипти запуску задач та їхні тести, але не знайдено файлу docs/lab2/eval-report.md з числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується реалізації черги та виконання задач у harness, але не містить оцінки безпеки щодо injection та звіту в docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

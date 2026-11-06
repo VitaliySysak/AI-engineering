@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:5ef29ce",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff є лише документація та артефакти запуску агентів; немає змін у вихідному коді чи конфігурації для перевірки команд typecheck, lint, test та build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлах корпусів, даних чи коду індексу/чанків, лише логування прогонів агентів у папці docs/lab3/runs.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміни у diff стосуються лише логів виконання інших завдань (t-01, t-04) та їхніх патчів, але не містять коду validateAnswer чи тестів для нього.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлі tests/mcp.test.ts (окрім звітів виконання інших завдань), які б містили прямий доказ роботи функції fetch_chunk за критерієм.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl чи його вмісту, тому неможливо перевірити кількість запитів та наявність тегів.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У змінах немає файлу docs/lab2/eval-report.md із підсумковою таблицею та числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються додавання логів прогонів та результатів агентів для лабораторної роботи, а не безпеки та перевірки запитів із тегом injection у docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

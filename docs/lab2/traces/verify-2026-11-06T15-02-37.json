@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:29269b3",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У зміні (git diff) представлені лише логи Claude Code та документація лабораторії 3, але немає інформації про поточний стан виконання команд typecheck, lint, test та build в репозиторії.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна не містить файлів corpus/ чи data/index.json, а є лише логами та документацією Лабораторної 3.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У зміні представлені лише файли журналу автономності та документації фабрики, але відсутні вихідні коди та тести для validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У зміні представлені лише журнали та документація (autonomy-log.md, factory.md), а файл tests/mcp.test.ts та код fetch_chunk не зачеплені.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лабораторної 3 (фабрика задач) та логів автономності, але не містить жодних модифікацій файлу docs/lab2/golden/queries.jsonl чи скрипта validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лабораторної 3, тоді як критерій A6 вимагає перевірки підсумкової таблиці eval-report.md для лабораторної 2.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується створення лабораторного журналу та звіту з фабрики задач, але в diff немає виконання протоколу перевірки ін'єкцій чи числових результатів тестів на ін'єкції з docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}

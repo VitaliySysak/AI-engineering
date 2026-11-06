@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:cf241ba",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл tasks.jsonl, але для перевірки виконання команд (typecheck, lint, test, build) потрібен результат їх запуску або статус CI, яких у diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна додає лише новий файл docs/lab3/tasks.jsonl зі списком завдань і не містить змін у corpus/, data/index.json чи пов'язаних тестах для критерію A2.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл docs/lab3/tasks.jsonl зlab-завданнями, але не містить реалізації чи тестів для функції validateAnswer.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна створює лише файл docs/lab3/tasks.jsonl і не містить коду або тестів для fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна додає новий файл docs/lab3/tasks.jsonl, але не чіпає docs/lab2/golden/queries.jsonl чи скрипт валідації. Для перевірки наявності запитів і виконання команди потрібен результат виконання, якого в diff немає.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються файлу docs/lab3/tasks.jsonl, але немає жодного diff для docs/lab2/eval-report.md, щоб побачити підсумкові точні номери.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується додавання завдань у docs/lab3/tasks.jsonl і не містить файлу docs/lab2/eval-report.md чи тестів на ін'єкції.",
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:afde7a4",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "У diff немає інформації про запуски команд у проєкті чи статус CI на main, оскільки змінені лише файли документації та звітів.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлах корпусів, даних чи коду чанкування/індексування для перевірки критерію A2.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у функції validateAnswer чи тестів для неї — представлені лише файли звітів агента та інші задачі.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "У diff немає змін у файлі tests/mcp.test.ts або в коді MCP, що реалізує fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "У diff немає файлу docs/lab2/golden/queries.jsonl чи тесту tests/validate-golden.test.ts, а наявні лише логи та артефакти запуску інших задач (t-02, t-05).",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "У змінах відсутній файл docs/lab2/eval-report.md з необхідними числами.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "У diff немає файлів із результатами оцінювання асистента на ін'єкціях (`docs/lab2/eval-report.md`) або запитів із тегом injection.",
+      "evidence": ""
+    }
+  ]
+}

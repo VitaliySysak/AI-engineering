@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:00dd8d3",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується коду тестування та виконання завдань, але в diff немає результатів виконання npm run typecheck, lint, test, build чи статусу CI.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується сценаріїв виконання завдань (harness) та тестів для них, але не містить жодних змін у файлах data/index.json чи corpus/.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується оновлення harness (`run-queue.ts`, `run-task.ts`, `run-task.test.ts`), а не функції validateAnswer та пов'язаних із нею перевірок цитат і id фрагментів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується сценаріїв запуску та збору метаданих завдань (run-queue.ts, run-task.ts), але не містить коду для функції fetch_chunk або перевірок за специфікацією tests/mcp.test.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна стосується тестування харнесу та виконання завдань (scripts/harness та tests/harness), але не містить жодної інформації про файл docs/lab2/golden/queries.jsonl чи скрипт validate-golden.ts.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміни стосуються налаштувань тестового harness (скриптів запусків та їхніх тестів), але у diff немає файлу docs/lab2/eval-report.md із числами, який вимагається за специфікацією.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується оновлення логіки збору метаданих та запусків у скриптах харнасу, але не містить жодної перевірки чи згадки тегу injection або оцінки безпеки асистента.",
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "input": "commit:7030888",
+  "truncated": false,
+  "removed": [],
+  "results": [
+    {
+      "id": "A1",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише налаштувань .gitignore і не містить результатів виконання typecheck, lint, test чи build.",
+      "evidence": ""
+    },
+    {
+      "id": "A2",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлу .gitignore і не містить коду або тестів для перевірки відповідності фрагментів документів та хешів у data/index.json.",
+      "evidence": ""
+    },
+    {
+      "id": "A3",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише файлу .gitignore і не містить коду функції validateAnswer чи тестів.",
+      "evidence": ""
+    },
+    {
+      "id": "A4",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише .gitignore і не містить коду або тестів для fetch_chunk.",
+      "evidence": ""
+    },
+    {
+      "id": "A5",
+      "verdict": "unknown",
+      "reason": "Зміна в .gitignore не стосується файлу queries.jsonl та виконання скрипту валідації.",
+      "evidence": ""
+    },
+    {
+      "id": "A6",
+      "verdict": "unknown",
+      "reason": "Зміна у .gitignore не стосується файлу docs/lab2/eval-report.md та не містить даних про метрики G1, G2, G3.",
+      "evidence": ""
+    },
+    {
+      "id": "A7",
+      "verdict": "unknown",
+      "reason": "Зміна стосується лише конфігурації .gitignore для лабораторії 3 і не стосується критерію A7 або файлу docs/lab2/eval-report.md.",
+      "evidence": ""
+    }
+  ]
+}
