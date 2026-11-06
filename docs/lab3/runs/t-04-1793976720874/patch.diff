@@ -1,0 +1,48 @@
+diff --git a/tests/bm25-tokenize.test.ts b/tests/bm25-tokenize.test.ts
+new file mode 100644
+index 0000000..4719f73
+--- /dev/null
++++ b/tests/bm25-tokenize.test.ts
+@@ -0,0 +1,42 @@
++import { describe, expect, it } from 'vitest';
++
++import { tokenize } from '../src/rag/bm25';
++
++describe('tokenize', () => {
++  it('переводить у нижній регістр', () => {
++    expect(tokenize('Документ ДОКУМЕНТ документ')).toEqual(['документ', 'документ', 'документ']);
++    expect(tokenize('Nginx NGINX')).toEqual(['nginx', 'nginx']);
++  });
++
++  it('зберігає кирилицю як токени', () => {
++    expect(tokenize('встановлення сервера')).toEqual(['встановлення', 'сервера']);
++    expect(tokenize('їжак Ґанок')).toEqual(['їжак', 'ґанок']);
++  });
++
++  it('зберігає цифри як токени', () => {
++    expect(tokenize('порт 8080')).toEqual(['порт', '8080']);
++    expect(tokenize('Python3 і v22')).toEqual(['python3', 'v22']);
++    expect(tokenize('2026')).toEqual(['2026']);
++  });
++
++  it('розбиває за пунктуацією й пробільними символами', () => {
++    expect(tokenize('рядок, другий; третій.')).toEqual(['рядок', 'другий', 'третій']);
++    expect(tokenize('a-b/c:d(ef)[gh]{ij}')).toEqual(['ef', 'gh', 'ij']);
++    expect(tokenize('перший\tдругий\nтретій')).toEqual(['перший', 'другий', 'третій']);
++  });
++
++  it('відкидає токени коротші за 2 символи', () => {
++    expect(tokenize('я і в а')).toEqual([]);
++    expect(tokenize('a b c')).toEqual([]);
++    expect(tokenize('у ок 5')).toEqual(['ок']);
++  });
++
++  it('залишає токени рівно з 2 символів', () => {
++    expect(tokenize('ок но ab')).toEqual(['ок', 'но', 'ab']);
++  });
++
++  it('повертає порожній масив для порожнього рядка і рядка без слів', () => {
++    expect(tokenize('')).toEqual([]);
++    expect(tokenize('?!  ...  ()')).toEqual([]);
++  });
++});
