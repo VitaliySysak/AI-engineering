@@ -14,6 +14,7 @@ import {
   allowedToolsFor,
   claudeArgs,
   readMeta,
+  relocate,
   runTask,
   type AgentResult,
   type AgentRunner,
@@ -100,7 +101,7 @@ describe('runTask — журнал пишеться завжди', () => {
     expect(rec.result_subtype).toBe('error_max_budget_usd');
     expect(rec.cost_usd_estimate).toBe(0.31);
     expect(rec.num_turns).toBe(5);
-    expect(rec.input_tokens).toBe(1200);
+    expect(rec.input_tokens).toBe(1200); // без кеш-полів повний вхід = usage.input_tokens
     expect(existsSync(join(rec.artifact_dir, 'run.json'))).toBe(true);
   });
 
@@ -155,8 +156,31 @@ describe('runTask — журнал пишеться завжди', () => {
 describe('readMeta', () => {
   it('не-JSON вивід дає null у всіх полях, а не виняток', () => {
     expect(readMeta('Error: not logged in')).toEqual({
-      session_id: null, result_subtype: null, num_turns: null, input_tokens: null, output_tokens: null, cost_usd_estimate: null,
+      session_id: null, result_subtype: null, num_turns: null, input_tokens: null, cache_read_tokens: null,
+      output_tokens: null, permission_denials: null, cost_usd_estimate: null,
     });
+  });
+
+  it('повний вхід = некешований + прочитаний з кешу + записаний у кеш (числа справжнього прогону t-01)', () => {
+    const meta = readMeta(JSON.stringify({
+      session_id: 'a7b8', subtype: 'success', num_turns: 9, total_cost_usd: 0.00556803,
+      usage: { input_tokens: 10, cache_creation_input_tokens: 18357, cache_read_input_tokens: 56063, output_tokens: 2670 },
+      permission_denials: [{ tool_name: 'Bash' }],
+    }));
+    expect(meta.input_tokens).toBe(74430);
+    expect(meta.cache_read_tokens).toBe(56063);
+    expect(meta.output_tokens).toBe(2670);
+    expect(meta.permission_denials).toBe(1);
+  });
+});
+
+describe('relocate', () => {
+  it('журнал відібраної копії вказує на саму копію, сирий шлях лишається окремо', () => {
+    const rec = run(fake({}));
+    const moved = relocate(rec, 'docs\\lab3\\runs\\t-99-1');
+    expect(moved.artifact_dir).toBe('docs/lab3/runs/t-99-1');
+    expect(moved.raw_artifact_dir).toBe(rec.artifact_dir);
+    expect(moved.task_id).toBe(rec.task_id);
   });
 });
 

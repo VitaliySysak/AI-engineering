@@ -45,8 +45,13 @@ export interface RunRecord {
   /** subtype результату Claude Code (наприклад, 'success'); розрізняє вичерпаний бюджет і падіння — крок 03 */
   readonly result_subtype: string | null;
   readonly num_turns: number | null;
+  /** ПОВНИЙ вхід: usage.input_tokens + cache_read_input_tokens + cache_creation_input_tokens (як Usage у src/cost.ts) */
   readonly input_tokens: number | null;
+  /** з них прочитано з кешу */
+  readonly cache_read_tokens: number | null;
   readonly output_tokens: number | null;
+  /** скільки викликів інструментів відхилив dontAsk (permission_denials у JSON Claude Code) */
+  readonly permission_denials: number | null;
   /** total_cost_usd — КЛІЄНТСЬКА ОЦІНКА Claude Code, не рахунок (за підпискою Pro грошей не списано) */
   readonly cost_usd_estimate: number | null;
   readonly trace_id: string | null; // крок 06
@@ -125,26 +130,44 @@ export function claudeArgs(task: Task): string[] {
 export const claudeRunner: AgentRunner = (task, cwd) => spawnAgent('claude', claudeArgs(task), cwd, task.budget.timeout_s);
 
 /**
- * Поля з claude -p --output-format json: session_id, subtype, num_turns, total_cost_usd, usage.input_tokens,
- * usage.output_tokens. Назви токенів звірити з першим справжнім output.txt і записати у factory.md.
+ * Поля з claude -p --output-format json (звірено з першим справжнім прогоном t-01, 2026-11-06):
+ * session_id, subtype, num_turns, total_cost_usd, permission_denials[], usage.{input_tokens,
+ * cache_read_input_tokens, cache_creation_input_tokens, output_tokens}. usage.input_tokens — лише НЕкешований
+ * хвіст (у t-01 — 10 із 74 430), тому повний вхід складається з трьох полів.
  */
 export function readMeta(stdout: string) {
-  const empty = { session_id: null, result_subtype: null, num_turns: null, input_tokens: null, output_tokens: null, cost_usd_estimate: null };
+  const empty = {
+    session_id: null, result_subtype: null, num_turns: null, input_tokens: null, cache_read_tokens: null,
+    output_tokens: null, permission_denials: null, cost_usd_estimate: null,
+  };
   try {
     const j = JSON.parse(stdout) as Record<string, unknown>;
     const usage = (typeof j.usage === 'object' && j.usage !== null ? j.usage : {}) as Record<string, unknown>;
     const num = (v: unknown) => (typeof v === 'number' ? v : null);
+    const fresh = num(usage.input_tokens);
+    const read = num(usage.cache_read_input_tokens);
+    const created = num(usage.cache_creation_input_tokens);
     return {
       session_id: typeof j.session_id === 'string' ? j.session_id : null,
       result_subtype: typeof j.subtype === 'string' ? j.subtype : null,
       num_turns: num(j.num_turns),
-      input_tokens: num(usage.input_tokens),
+      input_tokens: fresh === null ? null : fresh + (read ?? 0) + (created ?? 0),
+      cache_read_tokens: read,
       output_tokens: num(usage.output_tokens),
+      permission_denials: Array.isArray(j.permission_denials) ? j.permission_denials.length : null,
       cost_usd_estimate: num(j.total_cost_usd),
     };
   } catch {
     return empty;
   }
+}
+
+/**
+ * Журнал відібраного артефакту: run.json копії в docs/lab3/runs/ має вказувати на ЦЮ ж теку (шлях від кореня
+ * репозиторію), а не на сиру runs/, якої в git немає. Сирий шлях лишається в raw_artifact_dir.
+ */
+export function relocate(record: RunRecord, keptDir: string): RunRecord & { readonly raw_artifact_dir: string } {
+  return { ...record, artifact_dir: keptDir.replace(/\\/g, '/'), raw_artifact_dir: record.artifact_dir };
 }
 
 /** Критерії приймання — це КОМАНДИ. Виконуємо їх у дереві прогону. */

@@ -9,10 +9,10 @@
  * ВИТРАЧАЄ ЛІМІТ ПІДПИСКИ (claude -p) — запускає автор.
  */
 import { execFileSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, rmdirSync, symlinkSync, unlinkSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
-import { CLAUDE_MODEL, claudeRunner, runTask, type Task } from './run-task';
+import { CLAUDE_MODEL, claudeRunner, relocate, runTask, type Task } from './run-task';
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--id') ?? 'docs/lab3/tasks.jsonl';
@@ -52,9 +52,12 @@ for (const task of tasks) {
   try {
     const rec = runTask(task, { runner: claudeRunner, agentPath: 'claude-code -p', model: CLAUDE_MODEL, worktree: tree, outDir: join(ROOT, 'runs') });
     // артефакт — у репозиторій; сира runs/ лишається поза git
-    const keep = join(ROOT, 'docs', 'lab3', 'runs', basename(rec.artifact_dir));
+    const keepRel = join('docs', 'lab3', 'runs', basename(rec.artifact_dir));
+    const keep = join(ROOT, keepRel);
     mkdirSync(keep, { recursive: true });
     cpSync(rec.artifact_dir, keep, { recursive: true });
+    // журнал копії вказує на саму копію (шлях від кореня репозиторію); сирий шлях — у raw_artifact_dir
+    writeFileSync(join(keep, 'run.json'), `${JSON.stringify(relocate(rec, keepRel), null, 2)}\n`, 'utf8');
     // комітимо лише проіндексоване виконавцем (без .agent-log): -a тут не можна
     if (git(['diff', '--cached', '--name-only'], tree).trim() !== '') {
       git(['commit', '-m', `harness: ${task.id}`], tree);
@@ -63,7 +66,8 @@ for (const task of tasks) {
     const leaked = dirtyMain().filter((p) => !before.has(p));
     console.log(
       `${task.id}: ${rec.exit_status} (exit ${rec.exit_code}, ${rec.result_subtype ?? '—'}), ` +
-        `acceptance ${rec.acceptance_passed ? 'pass' : 'fail'}, ${rec.duration_s} с → ${keep}`,
+        `acceptance ${rec.acceptance_passed ? 'pass' : 'fail'}, ${rec.duration_s} с, ходів ${rec.num_turns ?? '—'}, ` +
+        `відхилено dontAsk ${rec.permission_denials ?? '—'}, оцінка $${rec.cost_usd_estimate ?? '—'} → ${keepRel}`,
     );
     console.log(leaked.length === 0 ? '  основний checkout чистий' : `  УВАГА: змінено основний checkout: ${leaked.join(', ')}`);
   } finally {
