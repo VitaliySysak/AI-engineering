@@ -1,0 +1,224 @@
+/**
+ * Виконавець фабрики задач (Лабораторна 3, крок 00). Каркас курсу з відхиленнями, позначеними нижче.
+ * Один виклик = одна задача = один артефакт + один журнал прогону.
+ *
+ * Виконавець не має власного інтелекту: запускає агента в ГОТОВОМУ робочому дереві (його створює
+ * run-queue.ts), забирає артефакт і ЗАВЖДИ пише run.json — навіть коли агент упав або кинув виняток.
+ * Запуск агента — параметр (AgentRunner), тому тести працюють з підставним агентом без мережі.
+ */
+import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export interface Task {
+  readonly id: string;
+  readonly input: string;
+  readonly acceptance: readonly string[];
+  readonly budget: { readonly max_turns: number; readonly max_usd: number; readonly timeout_s: number };
+  readonly files?: readonly string[];
+}
+
+export interface AgentResult {
+  readonly exitCode: number;
+  readonly stdout: string;
+  readonly stderr: string;
+  /** true, якщо процес убив таймаут, а не агент завершився сам */
+  readonly timedOut: boolean;
+}
+
+/** Запуск агента. У тестах підмінюється підставним. */
+export type AgentRunner = (task: Task, cwd: string) => AgentResult;
+
+export interface RunRecord {
+  readonly task_id: string;
+  readonly agent_path: string;
+  readonly model: string | null;
+  readonly artifact_dir: string;
+  readonly started_at: string;
+  readonly ended_at: string;
+  readonly duration_s: number;
+  readonly exit_status: 'ok' | 'agent_failed' | 'timeout';
+  readonly exit_code: number;
+  readonly acceptance: readonly { readonly cmd: string; readonly exit: number }[];
+  readonly acceptance_passed: boolean;
+  readonly session_id: string | null;
+  /** subtype результату Claude Code (наприклад, 'success'); розрізняє вичерпаний бюджет і падіння — крок 03 */
+  readonly result_subtype: string | null;
+  readonly num_turns: number | null;
+  readonly input_tokens: number | null;
+  readonly output_tokens: number | null;
+  /** total_cost_usd — КЛІЄНТСЬКА ОЦІНКА Claude Code, не рахунок (за підпискою Pro грошей не списано) */
+  readonly cost_usd_estimate: number | null;
+  readonly trace_id: string | null; // крок 06
+  readonly gates: Record<string, 'pass' | 'fail' | 'skipped'>; // крок 01
+}
+
+/** Модель виконавця — рішення автора 2026-11-06 (factory.md): Haiku, бо задачі дрібні й однакової форми. */
+export const CLAUDE_MODEL = 'haiku';
+
+/**
+ * Спільна обв'язка процесу: таймаут задачі тримає сам процес.
+ * Відхилення від курсу: shell лише для .cmd-обгорток. Claude Code тут — нативний claude.exe (WinGet), і оболонка
+ * розбила б input задачі з пробілами й лапками на окремі аргументи.
+ */
+function spawnAgent(bin: string, args: readonly string[], cwd: string, timeoutS: number, shell = false): AgentResult {
+  const r = spawnSync(bin, [...args], {
+    cwd,
+    encoding: 'utf8',
+    timeout: timeoutS * 1000,
+    // SIGINT дає агентові завершити хід; на Windows процес завершується безумовно
+    killSignal: 'SIGINT',
+    shell,
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  return {
+    exitCode: r.status ?? 1,
+    stdout: r.stdout ?? '',
+    stderr: r.stderr ?? (r.error ? String(r.error) : ''),
+    timedOut: r.error !== undefined && (r.error as NodeJS.ErrnoException).code === 'ETIMEDOUT',
+  };
+}
+
+/** Безкоштовний шлях курсу: Gemini CLI (у нас не встановлено; лишено для порівняння у factory.md). */
+export const geminiRunner: AgentRunner = (task, cwd) =>
+  spawnAgent('gemini', ['-p', task.input, '-o', 'json'], cwd, task.budget.timeout_s, process.platform === 'win32');
+
+/**
+ * Дозволи агента: читати й шукати — будь-де в дереві; змінювати — лише файли задачі; з оболонки — лише команди
+ * перевірки. Пробіл перед * значущий: Bash(npm test *) — збіг за префіксом.
+ */
+export function allowedToolsFor(task: Task): string[] {
+  const files = task.files ?? [];
+  return [
+    'Read',
+    'Glob',
+    'Grep',
+    ...(files.length > 0 ? files.flatMap((f) => [`Edit(${f})`, `Write(${f})`]) : ['Edit', 'Write']),
+    'Bash(npm test *)',
+    'Bash(npm run typecheck)',
+    'Bash(npm run lint)',
+    'Bash(npx tsx scripts/validate-golden.ts *)',
+    'Bash(git diff *)',
+    'Bash(git status *)',
+  ];
+}
+
+/** Аргументи claude -p. Прапорці звірено з claude --help 2.1.302 і https://code.claude.com/docs/en/cli-reference. */
+export function claudeArgs(task: Task): string[] {
+  return [
+    '-p', task.input,
+    '--output-format', 'json',
+    '--model', CLAUDE_MODEL,
+    // набір доступних інструментів; --allowedTools лише дозволяє їх без запитання
+    '--tools', 'Read,Glob,Grep,Edit,Write,Bash',
+    '--allowedTools', allowedToolsFor(task).join(','),
+    // усе, чого немає в --allowedTools, відхиляється без запитання; обходу дозволів немає
+    '--permission-mode', 'dontAsk',
+    // .mcp.json кореня підняв би в -p наш MCP-сервер lab2-corpus без запиту — агентові він не потрібен
+    '--strict-mcp-config',
+    '--max-turns', String(task.budget.max_turns),
+    '--max-budget-usd', String(task.budget.max_usd),
+  ];
+}
+
+/** Платний шлях (підписка Pro): Claude Code у режимі -p. */
+export const claudeRunner: AgentRunner = (task, cwd) => spawnAgent('claude', claudeArgs(task), cwd, task.budget.timeout_s);
+
+/**
+ * Поля з claude -p --output-format json: session_id, subtype, num_turns, total_cost_usd, usage.input_tokens,
+ * usage.output_tokens. Назви токенів звірити з першим справжнім output.txt і записати у factory.md.
+ */
+export function readMeta(stdout: string) {
+  const empty = { session_id: null, result_subtype: null, num_turns: null, input_tokens: null, output_tokens: null, cost_usd_estimate: null };
+  try {
+    const j = JSON.parse(stdout) as Record<string, unknown>;
+    const usage = (typeof j.usage === 'object' && j.usage !== null ? j.usage : {}) as Record<string, unknown>;
+    const num = (v: unknown) => (typeof v === 'number' ? v : null);
+    return {
+      session_id: typeof j.session_id === 'string' ? j.session_id : null,
+      result_subtype: typeof j.subtype === 'string' ? j.subtype : null,
+      num_turns: num(j.num_turns),
+      input_tokens: num(usage.input_tokens),
+      output_tokens: num(usage.output_tokens),
+      cost_usd_estimate: num(j.total_cost_usd),
+    };
+  } catch {
+    return empty;
+  }
+}
+
+/** Критерії приймання — це КОМАНДИ. Виконуємо їх у дереві прогону. */
+export function checkAcceptance(task: Task, cwd: string) {
+  return task.acceptance.map((cmd) => {
+    const r = spawnSync(cmd, { cwd, encoding: 'utf8', shell: true, timeout: task.budget.timeout_s * 1000 });
+    return { cmd, exit: r.status ?? 1 };
+  });
+}
+
+/** Журнал дій агента: hook пише його в .agent-log/ робочого дерева. Це не зміна задачі, тому з patch.diff його виключено. */
+const AGENT_LOG = '.agent-log';
+
+export function runTask(
+  task: Task,
+  opts: {
+    runner: AgentRunner;
+    agentPath: string;
+    model?: string | null;
+    worktree: string;
+    outDir: string;
+    check?: typeof checkAcceptance;
+  },
+): RunRecord {
+  const started = new Date();
+  const dir = join(opts.outDir, `${task.id}-${started.getTime()}`);
+  mkdirSync(dir, { recursive: true });
+
+  let res: AgentResult;
+  try {
+    res = opts.runner(task, opts.worktree);
+  } catch (error) {
+    // журнал пишемо завжди — і тоді, коли сам запуск агента кинув виняток
+    res = { exitCode: 1, stdout: '', stderr: `runner кинув виняток: ${String(error)}`, timedOut: false };
+  }
+
+  // Артефакт: спершу git add, бо `git diff` без індексу НЕ показує нових файлів,
+  // а задача «дописати тест» саме новий файл і створює. Журнал дій агента — окремо.
+  let patch = '';
+  let actions = '';
+  try {
+    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AGENT_LOG}`], { cwd: opts.worktree });
+    patch = execFileSync('git', ['diff', '--cached'], { cwd: opts.worktree, encoding: 'utf8' });
+    actions = execFileSync('git', ['diff', '--', AGENT_LOG], { cwd: opts.worktree, encoding: 'utf8' })
+      .split('\n')
+      .filter((l) => l.startsWith('+') && !l.startsWith('+++'))
+      .map((l) => l.slice(1))
+      .join('\n');
+  } catch {
+    patch = '';
+  }
+  writeFileSync(join(dir, 'patch.diff'), patch, 'utf8');
+  writeFileSync(join(dir, 'output.txt'), res.stdout, 'utf8');
+  writeFileSync(join(dir, 'agent.log'), res.stderr, 'utf8');
+  writeFileSync(join(dir, 'agent-actions.jsonl'), actions === '' ? '' : `${actions}\n`, 'utf8');
+
+  const acceptance = (opts.check ?? checkAcceptance)(task, opts.worktree);
+  const ended = new Date();
+  const record: RunRecord = {
+    task_id: task.id,
+    agent_path: opts.agentPath,
+    model: opts.model ?? null,
+    artifact_dir: dir, // ← зв'язок журналу з артефактом
+    started_at: started.toISOString(),
+    ended_at: ended.toISOString(),
+    duration_s: (ended.getTime() - started.getTime()) / 1000,
+    exit_status: res.timedOut ? 'timeout' : res.exitCode === 0 ? 'ok' : 'agent_failed',
+    exit_code: res.exitCode,
+    acceptance,
+    acceptance_passed: acceptance.length > 0 && acceptance.every((a) => a.exit === 0),
+    ...readMeta(res.stdout),
+    trace_id: null, // ← крок 06
+    gates: {}, // ← крок 01
+  };
+  writeFileSync(join(dir, 'run.json'), `${JSON.stringify(record, null, 2)}\n`, 'utf8');
+  return record;
+}
