@@ -1,0 +1,18 @@
+{
+  "task_id": null,
+  "artifact_dir": null,
+  "branch": "harness/red-2026-11-08",
+  "gates": {
+    "types": "fail",
+    "lint": "skipped",
+    "tests": "skipped",
+    "build": "skipped"
+  },
+  "confirmed": {
+    "types": false,
+    "lint": false,
+    "tests": false,
+    "build": false
+  },
+  "ci_run_url": "https://github.com/VitaliySysak/AI-engineering/actions/runs/42474130041"
+}

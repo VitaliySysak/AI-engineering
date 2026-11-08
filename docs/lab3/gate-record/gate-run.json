@@ -1,0 +1,35 @@
+{
+  "task_id": "t-06",
+  "agent_path": "claude-code -p",
+  "model": "haiku",
+  "artifact_dir": "docs/lab3/runs/t-06-1794135046162",
+  "started_at": "2026-11-08T10:50:46.162Z",
+  "ended_at": "2026-11-08T10:51:11.742Z",
+  "duration_s": 25.58,
+  "exit_status": "ok",
+  "exit_code": 0,
+  "acceptance": [
+    {
+      "cmd": "npm test -- tests/metrics-ci.test.ts",
+      "exit": 0
+    }
+  ],
+  "acceptance_passed": true,
+  "session_id": "c1788480-9e72-4bcb-ba83-c1e06871a398",
+  "result_subtype": "success",
+  "num_turns": 8,
+  "input_tokens": 90361,
+  "cache_read_tokens": 72934,
+  "output_tokens": 2866,
+  "permission_denials": 1,
+  "cost_usd_estimate": 0.00564654,
+  "trace_id": null,
+  "gates": {
+    "types": "pass",
+    "lint": "pass",
+    "tests": "pass",
+    "build": "pass"
+  },
+  "raw_artifact_dir": "C:\\Users\\User\\Desktop\\ITStep\\AI-engineering\\runs\\t-06-1794135046162",
+  "ci_run_url": "https://github.com/VitaliySysak/AI-engineering/actions/runs/42473171157"
+}

@@ -1,0 +1,18 @@
+{
+  "task_id": "t-06",
+  "artifact_dir": "docs/lab3/runs/t-06-1794135046162",
+  "branch": "harness/t-06",
+  "gates": {
+    "types": "pass",
+    "lint": "pass",
+    "tests": "pass",
+    "build": "pass"
+  },
+  "confirmed": {
+    "types": true,
+    "lint": true,
+    "tests": true,
+    "build": true
+  },
+  "ci_run_url": "https://github.com/VitaliySysak/AI-engineering/actions/runs/42473171157"
+}
