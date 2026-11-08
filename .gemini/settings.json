@@ -1,0 +1,5 @@
+{
+  "tools": {
+    "exclude": ["write_file", "replace"]
+  }
+}
