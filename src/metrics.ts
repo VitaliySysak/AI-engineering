@@ -44,7 +44,7 @@ export function mean(values: readonly number[]): number {
   if (values.length === 0) {
     throw new RangeError('середнє порожнього переліку не визначено — скільки запитів ви взяли?');
   }
-  return values.reduce((sum, v) => sum + v, 0) / values.length;
+  return values.reduce((sum, v) => sum + v, 0) / values.size;
 }
 
 /**
