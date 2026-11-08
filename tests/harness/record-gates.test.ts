@@ -94,7 +94,8 @@ describe('record-gates', () => {
 });
 
 describe('gates.yml — те, що ламається тихо', () => {
-  const yml = readFileSync('.github/workflows/gates.yml', 'utf8');
+  // свіжий worktree на Windows віддає файл із CRLF (autocrlf), а пошук задач нижче йде по '\n'
+  const yml = readFileSync('.github/workflows/gates.yml', 'utf8').replace(/\r\n/g, '\n');
   const job = (name: string, next?: string): string => {
     const from = yml.indexOf(`\n  ${name}:\n`);
     const to = next === undefined ? yml.length : yml.indexOf(`\n  ${next}:\n`);
