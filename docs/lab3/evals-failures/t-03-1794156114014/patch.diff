@@ -1,0 +1,44 @@
+diff --git a/scripts/validate-golden.ts b/scripts/validate-golden.ts
+index 1d0d014..3156ef0 100644
+--- a/scripts/validate-golden.ts
++++ b/scripts/validate-golden.ts
+@@ -34,6 +34,7 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+   const problems: string[] = [];
+   const entries: Entry[] = [];
+   const seen = new Set<string>();
++  const queryIds = new Map<string, string>();
+ 
+   // BOM і CRLF: файл міг бути створений у Windows-редакторі
+   const lines = text.replace(/^﻿/, '').split(/\r?\n/);
+@@ -57,6 +58,14 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+     if (seen.has(entry.id)) problems.push(`рядок ${n}: id "${entry.id}" повторюється`);
+     seen.add(entry.id);
+ 
++    const query = entry.query.trim();
++    const firstId = queryIds.get(query);
++    if (firstId !== undefined) {
++      problems.push(`${entry.id}: запит дослівно повторює запит ${firstId}`);
++    } else {
++      queryIds.set(query, entry.id);
++    }
++
+     const unanswerable = entry.tags.includes('unanswerable');
+     if (unanswerable && entry.must_cite.length > 0) {
+       problems.push(`${entry.id}: unanswerable не може мати must_cite`);
+diff --git a/tests/validate-golden.test.ts b/tests/validate-golden.test.ts
+index a6d1e93..fea698f 100644
+--- a/tests/validate-golden.test.ts
++++ b/tests/validate-golden.test.ts
+@@ -58,6 +58,12 @@ describe('validateGolden', () => {
+     expect(problems).toEqual([expect.stringContaining('id "q-01" повторюється')]);
+   });
+ 
++  it('ловить повторений текст запиту з різними id', () => {
++    const copy = { ...easy, id: 'q-07', query: `  ${easy.query}  ` };
++    const problems = validateGolden(jsonl(easy, copy), NO_LIMITS);
++    expect(problems).toEqual([expect.stringContaining('q-07: запит дослівно повторює запит q-01')]);
++  });
++
+   it('ловить витік очікуваного факту в текст запиту', () => {
+     const leak = { ...easy, query: 'Чи правда, що команда sudo ss -tulpn показує порти?' };
+     const problems = validateGolden(jsonl(leak), NO_LIMITS);

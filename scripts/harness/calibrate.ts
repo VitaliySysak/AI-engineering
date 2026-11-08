@@ -19,8 +19,9 @@ async function main(): Promise<void> {
   const run = at > 0 ? process.argv[at + 1] : undefined;
   if (run === undefined) throw new Error('потрібен номер прогону: --run 1');
 
-  const criteria = [...parseCriteriaFile(readFileSync('docs/lab3/criteria.jsonl', 'utf8')).values()].flat();
-  const inputs = new Map(read('docs/lab3/tasks.jsonl').map((t) => [t.id as string, t.input as string]));
+  // випадок 6 судить t-03, викинуту з банку на кроці 04: її вхід і критерії лежать у файлах викинутих задач
+  const criteria = ['docs/lab3/criteria.jsonl', 'docs/lab3/criteria-rejected.jsonl'].flatMap((f) => [...parseCriteriaFile(readFileSync(f, 'utf8')).values()].flat());
+  const inputs = new Map([...read('docs/lab3/tasks.jsonl'), ...read('docs/lab3/tasks-rejected.jsonl')].map((t) => [t.id as string, t.input as string]));
   const labels = new Map(read(join(DIR, 'labels.jsonl')).map((l) => [l.case as number, l.mine as string]));
   const cases = read(join(DIR, 'cases.jsonl')) as unknown as { case: number; task: string; criterion: string; patch: string }[];
   const { model, modelId } = verifierModel();

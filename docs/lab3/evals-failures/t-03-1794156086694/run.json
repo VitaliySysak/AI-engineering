@@ -1,0 +1,37 @@
+{
+  "task_id": "t-03",
+  "agent_path": "claude-code -p",
+  "model": "haiku",
+  "artifact_dir": "C:\\Users\\User\\Desktop\\ITStep\\AI-engineering\\runs\\t-03-1794156086694",
+  "started_at": "2026-11-08T16:41:26.694Z",
+  "ended_at": "2026-11-08T16:41:53.568Z",
+  "duration_s": 26.874,
+  "exit_status": "ok",
+  "exit_code": 0,
+  "acceptance": [
+    {
+      "cmd": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "cmd": "npm test -- tests/validate-golden.test.ts",
+      "exit": 1
+    },
+    {
+      "cmd": "npx tsx scripts/validate-golden.ts docs/lab2/golden/queries.jsonl",
+      "exit": 0
+    }
+  ],
+  "acceptance_passed": false,
+  "session_id": "c6d11951-bb28-4946-bffd-342bd0b1a8de",
+  "result_subtype": "success",
+  "num_turns": 10,
+  "input_tokens": 116840,
+  "cache_read_tokens": 102229,
+  "output_tokens": 3659,
+  "permission_denials": 1,
+  "cost_usd_estimate": 0.00577259,
+  "quota_hit": false,
+  "trace_id": null,
+  "gates": {}
+}

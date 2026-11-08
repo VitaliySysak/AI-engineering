@@ -1,0 +1,25 @@
+diff --git a/src/rag/search.ts b/src/rag/search.ts
+index 29eeda4..6db014c 100644
+--- a/src/rag/search.ts
++++ b/src/rag/search.ts
+@@ -29,6 +29,20 @@ export async function hybridSearch(
+   topK = 5,
+ ): Promise<Hit[]> {
+   const qv = await embedder.embedQuery(query);
++  return hybridSearchFromVector(index, words, qv, query, topK);
++}
++
++/**
++ * Те саме, що hybridSearch, але з уже готовим вектором запиту: скрипт, який і показує ранги, і відповідає,
++ * не має платити за ембедінг того самого запиту двічі (ліміт безкоштовного рівня — 15 запитів на хвилину).
++ */
++export function hybridSearchFromVector(
++  index: IndexFile,
++  words: Bm25Index,
++  qv: readonly number[],
++  query: string,
++  topK = 5,
++): Hit[] {
+   const cosines = new Map(index.chunks.map((c) => [c.id, cosineSimilarity(qv, c.vector)]));
+ 
+   const vectorList = [...cosines.entries()]

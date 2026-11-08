@@ -1,0 +1,44 @@
+diff --git a/tests/render-citation.test.ts b/tests/render-citation.test.ts
+new file mode 100644
+index 0000000..e535d6d
+--- /dev/null
++++ b/tests/render-citation.test.ts
+@@ -0,0 +1,38 @@
++import { describe, expect, it } from 'vitest';
++
++import { type Citation, renderCitation } from '../src/rag/cite';
++
++const base: Citation = {
++  chunkId: 'doc-01#0003',
++  docId: 'doc-01',
++  heading: '',
++  start: 120,
++  end: 480,
++  quote: 'дослівний уривок',
++};
++
++describe('renderCitation', () => {
++  it('без заголовка немає символу ›', () => {
++    expect(renderCitation(base)).not.toContain('›');
++  });
++
++  it('без заголовка виводить id, docId і діапазон одразу після docId', () => {
++    expect(renderCitation(base)).toBe('[doc-01#0003] doc-01 · символи 120–480');
++  });
++
++  it('із заголовком › стоїть між docId і заголовком', () => {
++    const out = renderCitation({ ...base, heading: 'Інструкція › Розділ 1' });
++    expect(out).toBe('[doc-01#0003] doc-01 › Інструкція › Розділ 1 · символи 120–480');
++
++    const docEnd = out.indexOf('doc-01') + 'doc-01'.length;
++    const arrowAt = out.indexOf(' › Інструкція');
++    expect(arrowAt).toBe(docEnd);
++  });
++
++  it('діапазон символів виводиться як start–end з en dash', () => {
++    const out = renderCitation(base);
++    expect(out).toContain('символи 120–480');
++    expect(out).toContain('120–480');
++    expect(out).not.toContain('120-480');
++  });
++});

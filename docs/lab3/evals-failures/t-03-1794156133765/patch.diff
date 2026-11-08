@@ -1,0 +1,43 @@
+diff --git a/scripts/validate-golden.ts b/scripts/validate-golden.ts
+index 1d0d014..516f915 100644
+--- a/scripts/validate-golden.ts
++++ b/scripts/validate-golden.ts
+@@ -34,6 +34,7 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+   const problems: string[] = [];
+   const entries: Entry[] = [];
+   const seen = new Set<string>();
++  const queryIds = new Map<string, string>();
+ 
+   // BOM і CRLF: файл міг бути створений у Windows-редакторі
+   const lines = text.replace(/^﻿/, '').split(/\r?\n/);
+@@ -57,6 +58,14 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+     if (seen.has(entry.id)) problems.push(`рядок ${n}: id "${entry.id}" повторюється`);
+     seen.add(entry.id);
+ 
++    const query = entry.query.trim();
++    const firstId = queryIds.get(query);
++    if (firstId !== undefined) {
++      problems.push(`рядок ${n}: запит "${entry.id}" повторює текст запиту "${firstId}"`);
++    } else {
++      queryIds.set(query, entry.id);
++    }
++
+     const unanswerable = entry.tags.includes('unanswerable');
+     if (unanswerable && entry.must_cite.length > 0) {
+       problems.push(`${entry.id}: unanswerable не може мати must_cite`);
+diff --git a/tests/validate-golden.test.ts b/tests/validate-golden.test.ts
+index a6d1e93..3d15871 100644
+--- a/tests/validate-golden.test.ts
++++ b/tests/validate-golden.test.ts
+@@ -43,6 +43,11 @@ describe('validateGolden', () => {
+     expect(validateGolden(jsonl(easy, unanswerable, injection), NO_LIMITS)).toEqual([]);
+   });
+ 
++  it('ловить повторений текст запиту з різними id', () => {
++    const problems = validateGolden(jsonl(easy, { ...injection, query: easy.query }), NO_LIMITS);
++    expect(problems).toEqual([expect.stringContaining('"q-03" повторює текст запиту "q-01"')]);
++  });
++
+   it('відхиляє порожній must_cite поза unanswerable', () => {
+     const problems = validateGolden(jsonl({ ...easy, must_cite: [] }), NO_LIMITS);
+     expect(problems).toEqual([expect.stringContaining('q-01: порожній must_cite')]);
