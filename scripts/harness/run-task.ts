@@ -10,6 +10,8 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { CATALOG } from '../../src/models';
+
 export interface Task {
   readonly id: string;
   readonly input: string;
@@ -94,9 +96,21 @@ function spawnAgent(bin: string, args: readonly string[], cwd: string, timeoutS:
   };
 }
 
-/** Безкоштовний шлях курсу: Gemini CLI (у нас не встановлено; лишено для порівняння у factory.md). */
+/** Модель безкоштовного рівня для Gemini CLI: та сама, що в судді; типова модель CLI має меншу квоту. */
+export const GEMINI_CLI_MODEL = CATALOG['gemini-3.5-flash-lite'].id;
+
+/**
+ * Аргументи Gemini CLI (звірено з docs/cli/cli-reference.md, 0.67.0). auto_edit схвалює лише replace і write_file;
+ * усе, що потребує підтвердження, у headless-режимі відхиляється, тож yolo не потрібен. --skip-trust — вимога
+ * неінтерактивного запуску: без довіри до теки CLI завершується з FatalUntrustedWorkspaceError (docs/cli/trusted-folders.md).
+ */
+export function geminiArgs(task: Task): string[] {
+  return ['-p', task.input, '-o', 'json', '-m', GEMINI_CLI_MODEL, '--approval-mode', 'auto_edit', '--skip-trust'];
+}
+
+/** Безкоштовний шлях курсу: Gemini CLI. Локально не встановлено, запускається в CI (крок 04). */
 export const geminiRunner: AgentRunner = (task, cwd) =>
-  spawnAgent('gemini', ['-p', task.input, '-o', 'json'], cwd, task.budget.timeout_s, process.platform === 'win32');
+  spawnAgent('gemini', geminiArgs(task), cwd, task.budget.timeout_s, process.platform === 'win32');
 
 /**
  * Дозволи агента: читати й шукати — будь-де в дереві; змінювати — лише файли задачі; з оболонки — лише команди
@@ -182,10 +196,12 @@ export function relocate(record: RunRecord, keptDir: string): RunRecord & { read
 
 /** Критерії приймання — це КОМАНДИ. Виконуємо їх у дереві прогону. */
 export function quotaHit(stdout: string): boolean {
-  const QUOTA = /HTTP 429|rate.?limit|usage limit|quota/i;
+  const QUOTA = /HTTP 429|RESOURCE_EXHAUSTED|rate.?limit|usage limit|quota/i;
   try {
     const j = JSON.parse(stdout) as Record<string, unknown>;
-    return j.api_error_status === 429 || (j.is_error === true && QUOTA.test(String(j.result ?? '')));
+    // error.code — форма помилки Gemini CLI
+    const geminiCode = typeof j.error === 'object' && j.error !== null ? (j.error as { code?: unknown }).code : undefined;
+    return j.api_error_status === 429 || geminiCode === 429 || (j.is_error === true && QUOTA.test(String(j.result ?? '')));
   } catch {
     return QUOTA.test(stdout);
   }
@@ -239,7 +255,8 @@ export function runTask(
   let patch = '';
   let actions = '';
   try {
-    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AGENT_LOG}`], { cwd: opts.worktree });
+    // node_modules — посилання: правило .gitignore зі слешем у кінці не діє на symlink у Linux, і воно потрапило б у patch
+    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AGENT_LOG}`, ':(exclude)node_modules'], { cwd: opts.worktree });
     patch = execFileSync('git', ['diff', '--cached'], { cwd: opts.worktree, encoding: 'utf8' });
     actions = execFileSync('git', ['diff', '--', AGENT_LOG], { cwd: opts.worktree, encoding: 'utf8' })
       .split('\n')
@@ -269,7 +286,8 @@ export function runTask(
     acceptance,
     acceptance_passed: acceptance.length > 0 && acceptance.every((a) => a.exit === 0),
     ...readMeta(res.stdout),
-    quota_hit: quotaHit(res.stdout),
+    // stderr — лише для невдалого запуску: успішний Gemini CLI може згадати 429 про повтор, після якого все минуло
+    quota_hit: quotaHit(res.stdout) || (res.exitCode !== 0 && quotaHit(res.stderr)),
     trace_id: null, // ← крок 06
     gates: {}, // ← крок 01
   };
