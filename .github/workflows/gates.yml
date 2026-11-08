@@ -138,3 +138,29 @@ jobs:
             gate-record.json
             gate-run.json
           if-no-files-found: warn
+
+  verify:
+    # Остання брама (крок 02): суддя іншої родини (Gemini) проти критеріїв задачі. Без функції статусу в if діє
+    # неявний success(): на червоних брамах не стартує. Лише на гілках задач: деінде немає ні задачі, ні артефакту.
+    needs: [types, lint, tests, build]
+    if: ${{ startsWith(github.ref, 'refs/heads/harness/t-') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Верифікатор задачі
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BRANCH: ${{ github.ref_name }}
+        run: npx tsx scripts/harness/verify-task.ts --branch "$BRANCH"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: verdicts
+          path: docs/lab3/verdicts/
+          if-no-files-found: ignore

@@ -120,6 +120,15 @@ describe('gates.yml — те, що ламається тихо', () => {
     expect(yml).not.toContain('always()');
   });
 
+  it('verify — після всіх чотирьох брам, лише на harness/t-*, без функції статусу (неявний success()), секрет лише тут', () => {
+    const verify = yml.slice(yml.indexOf('\n  verify:\n'));
+    expect(verify).toMatch(/needs: \[types, lint, tests, build\]/);
+    expect(verify).toContain("if: ${{ startsWith(github.ref, 'refs/heads/harness/t-') }}");
+    expect(verify).toMatch(/timeout-minutes: \d+/);
+    expect(verify).toContain('secrets.GEMINI_API_KEY');
+    expect(yml.slice(0, yml.indexOf('\n  verify:\n'))).not.toContain('secrets.');
+  });
+
   it('новий push скасовує попередній прогін', () => {
     expect(yml).toContain('group: ${{ github.workflow }}-${{ github.ref }}');
     expect(yml).toContain('cancel-in-progress: true');
