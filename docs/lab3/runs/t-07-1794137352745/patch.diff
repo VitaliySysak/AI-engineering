@@ -1,0 +1,30 @@
+diff --git a/scripts/verify.ts b/scripts/verify.ts
+index b4b8639..1c7f28e 100644
+--- a/scripts/verify.ts
++++ b/scripts/verify.ts
+@@ -17,6 +17,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+ 
+ import { chatCompletionsModel } from '../src/agent/adapters';
+ import type { Model } from '../src/agent/agent-loop';
++import { sleep } from '../src/sleep';
+ import { criterionVerdict, isBlocked, verifyReport, type VerifyReport } from '../src/verify/schema';
+ import { isTransient } from './baseline';
+ 
+@@ -142,7 +143,6 @@ export function parseVerdict(text: string, expectedId: string, files?: readonly
+   return verdict;
+ }
+ 
+-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+ const MAX_DIFF_CHARS = 60_000;
+ const PAUSE_MS = Number(process.env.VERIFY_PAUSE_MS ?? 4_000);
+ const RETRY_AFTER_MS = 60_000;
+diff --git a/src/sleep.ts b/src/sleep.ts
+new file mode 100644
+index 0000000..880e54a
+--- /dev/null
++++ b/src/sleep.ts
+@@ -0,0 +1,4 @@
++/** Пауза на `ms` мілісекунд; використовується між запитами до провайдера і перед повтором після 429/5xx. */
++export function sleep(ms: number): Promise<void> {
++  return new Promise((resolve) => setTimeout(resolve, ms));
++}

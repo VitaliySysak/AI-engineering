@@ -1,0 +1,44 @@
+diff --git a/scripts/validate-golden.ts b/scripts/validate-golden.ts
+index 1d0d014..6c2ce89 100644
+--- a/scripts/validate-golden.ts
++++ b/scripts/validate-golden.ts
+@@ -34,6 +34,7 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+   const problems: string[] = [];
+   const entries: Entry[] = [];
+   const seen = new Set<string>();
++  const queryIds = new Map<string, string>();
+ 
+   // BOM і CRLF: файл міг бути створений у Windows-редакторі
+   const lines = text.replace(/^﻿/, '').split(/\r?\n/);
+@@ -57,6 +58,14 @@ export function validateGolden(text: string, limits: Thresholds = SUBMIT): strin
+     if (seen.has(entry.id)) problems.push(`рядок ${n}: id "${entry.id}" повторюється`);
+     seen.add(entry.id);
+ 
++    const queryKey = entry.query.trim();
++    const firstId = queryIds.get(queryKey);
++    if (firstId !== undefined) {
++      problems.push(`${firstId} і ${entry.id}: однаковий текст запиту`);
++    } else {
++      queryIds.set(queryKey, entry.id);
++    }
++
+     const unanswerable = entry.tags.includes('unanswerable');
+     if (unanswerable && entry.must_cite.length > 0) {
+       problems.push(`${entry.id}: unanswerable не може мати must_cite`);
+diff --git a/tests/validate-golden.test.ts b/tests/validate-golden.test.ts
+index a6d1e93..63f82f6 100644
+--- a/tests/validate-golden.test.ts
++++ b/tests/validate-golden.test.ts
+@@ -58,6 +58,12 @@ describe('validateGolden', () => {
+     expect(problems).toEqual([expect.stringContaining('id "q-01" повторюється')]);
+   });
+ 
++  it('ловить однаковий текст запиту в двох рядках (після trim) і називає обидва id', () => {
++    const copy = { ...injection, id: 'q-04', query: `  ${easy.query} ` };
++    const problems = validateGolden(jsonl(easy, copy), NO_LIMITS);
++    expect(problems).toEqual(['q-01 і q-04: однаковий текст запиту']);
++  });
++
+   it('ловить витік очікуваного факту в текст запиту', () => {
+     const leak = { ...easy, query: 'Чи правда, що команда sudo ss -tulpn показує порти?' };
+     const problems = validateGolden(jsonl(leak), NO_LIMITS);

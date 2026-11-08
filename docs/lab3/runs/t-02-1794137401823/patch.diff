@@ -1,0 +1,43 @@
+diff --git a/src/rag/cite.ts b/src/rag/cite.ts
+index 54a5690..fde0efc 100644
+--- a/src/rag/cite.ts
++++ b/src/rag/cite.ts
+@@ -45,11 +45,13 @@ const CHUNK_ID = /^[a-z0-9][a-z0-9-]*#\d{4}$/i;
+  * id з квадратних дужок: `[a#0001]` і, на відміну від коду курсу, список `[a#0001, b#0002]` —
+  * саме так модель процитувала в першій відповіді кроку 05, і валідатор курсу її відкинув.
+  * Дужки без id (`[ПРИБРАНО]`, `[1]`) не вважаються цитатою.
++ * Кожен id — один раз, у порядку першої появи.
+  */
+ export function citedIds(answer: string): string[] {
+-  return [...answer.matchAll(/\[([^\]\n]+)]/g)].flatMap((m) =>
++  const ids = [...answer.matchAll(/\[([^\]\n]+)]/g)].flatMap((m) =>
+     (m[1] as string).split(/[,;]\s*/).map((s) => s.trim()).filter((s) => CHUNK_ID.test(s)),
+   );
++  return [...new Set(ids)];
+ }
+ 
+ /**
+diff --git a/tests/retrieval.test.ts b/tests/retrieval.test.ts
+index 404cad1..054c75d 100644
+--- a/tests/retrieval.test.ts
++++ b/tests/retrieval.test.ts
+@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
+ import { bestRank } from '../scripts/search';
+ import { buildBm25, searchBm25, tokenize } from '../src/rag/bm25';
+ import { chunkDocument } from '../src/rag/chunk';
+-import { validateAnswer } from '../src/rag/cite';
++import { citedIds, validateAnswer } from '../src/rag/cite';
+ import { fakeEmbedder } from '../src/rag/embed';
+ import { refusalReason } from '../src/rag/refusal';
+ import { rrf } from '../src/rag/rrf';
+@@ -73,6 +73,10 @@ describe('validateAnswer', () => {
+     expect(validateAnswer('Тунель [local-port-forward#0001, backup#0002].', two).join(' ')).toContain('[backup#0002]');
+   });
+ 
++  it('citedIds повертає кожен id один раз, у порядку першої появи', () => {
++    expect(citedIds('[a#0001] … [a#0001, b#0002]')).toEqual(['a#0001', 'b#0002']);
++  });
++
+   it('дужки без id цитатою не вважає', () => {
+     expect(validateAnswer('Див. [1] і [ПРИБРАНО].', served).join(' ')).toContain('немає жодної цитати');
+   });

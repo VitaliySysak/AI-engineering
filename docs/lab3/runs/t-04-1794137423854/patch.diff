@@ -1,0 +1,42 @@
+diff --git a/tests/bm25-tokenize.test.ts b/tests/bm25-tokenize.test.ts
+new file mode 100644
+index 0000000..17bd168
+--- /dev/null
++++ b/tests/bm25-tokenize.test.ts
+@@ -0,0 +1,36 @@
++import { describe, expect, it } from 'vitest';
++
++import { tokenize } from '../src/rag/bm25';
++
++describe('tokenize', () => {
++  it('переводить у нижній регістр', () => {
++    expect(tokenize('Hello WORLD')).toEqual(['hello', 'world']);
++    expect(tokenize('Документи ПРО Пошук')).toEqual(['документи', 'про', 'пошук']);
++  });
++
++  it('зберігає кирилицю як токени', () => {
++    expect(tokenize('Інструкція з встановлення')).toEqual(['інструкція', 'встановлення']);
++    expect(tokenize('їжак ґудзик єдність')).toEqual(['їжак', 'ґудзик', 'єдність']);
++  });
++
++  it('зберігає цифри як токени', () => {
++    expect(tokenize('версія 2024 року')).toEqual(['версія', '2024', 'року']);
++    expect(tokenize('BM25 та k1')).toEqual(['bm25', 'та', 'k1']);
++  });
++
++  it('розбиває за пунктуацією', () => {
++    expect(tokenize('кошик, склад; доставка!')).toEqual(['кошик', 'склад', 'доставка']);
++    expect(tokenize('кросс-платформний (тест)?')).toEqual(['кросс', 'платформний', 'тест']);
++    expect(tokenize('текст.текст')).toEqual(['текст', 'текст']);
++  });
++
++  it('відкидає токени коротші за 2 символи', () => {
++    expect(tokenize('а я до ок тест')).toEqual(['до', 'ок', 'тест']);
++    expect(tokenize('x y z ab')).toEqual(['ab']);
++  });
++
++  it('повертає порожній масив для порожнього рядка і рядка без слів', () => {
++    expect(tokenize('')).toEqual([]);
++    expect(tokenize(' ,.;!? ')).toEqual([]);
++  });
++});
