@@ -66,7 +66,8 @@ for (const task of tasks) {
     // комітимо лише проіндексоване виконавцем (без .agent-log): -a тут не можна
     if (git(['diff', '--cached', '--name-only'], tree).trim() !== '') {
       git(['commit', '-m', `harness: ${task.id}`], tree);
-      if (push) git(['push', '-u', 'origin', branch], tree);
+      // -B вище починає гілку заново від main, тож повторний push задачі не є fast-forward; лише гілки harness/*
+      if (push) git(['push', '--force-with-lease', '-u', 'origin', branch], tree);
     }
     const leaked = dirtyMain().filter((p) => !before.has(p));
     console.log(
