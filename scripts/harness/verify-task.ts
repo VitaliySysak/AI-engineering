@@ -139,6 +139,21 @@ export function assertOtherFamily(modelId: string): void {
   if (/^(claude|anthropic)/i.test(modelId)) throw new Error(`верифікатор ${modelId} — тієї самої родини, що й виконавець (Claude)`);
 }
 
+/** Суддя: Gemini з VERIFIER_MODEL (типово gemini-3.5-flash-lite), temperature 0, родина перевіряється. */
+export function verifierModel(): { model: Model; modelId: string } {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error('GEMINI_API_KEY порожній');
+  const modelId = process.env.VERIFIER_MODEL?.trim() || 'gemini-3.5-flash-lite';
+  assertOtherFamily(modelId);
+  const model = chatCompletionsModel({
+    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    model: modelId,
+    headers: { authorization: `Bearer ${key}` },
+    temperature: 0,
+  });
+  return { model, modelId };
+}
+
 const flag = (name: string): string | undefined => {
   const at = process.argv.indexOf(`--${name}`);
   return at > 0 ? process.argv[at + 1] : undefined;
@@ -158,16 +173,7 @@ async function main(): Promise<void> {
   const patchFile = flag('patch') ?? (runDir === null ? null : join(runDir, 'patch.diff'));
   if (patchFile === null) throw new Error(`немає прогону задачі ${id} у docs/lab3/runs`);
 
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error('GEMINI_API_KEY порожній');
-  const modelId = process.env.VERIFIER_MODEL?.trim() || 'gemini-3.5-flash-lite';
-  assertOtherFamily(modelId);
-  const model = chatCompletionsModel({
-    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-    model: modelId,
-    headers: { authorization: `Bearer ${key}` },
-    temperature: 0,
-  });
+  const { model, modelId } = verifierModel();
 
   console.log(`Суддя: ${modelId} · temperature 0 · задача ${id} · артефакт ${patchFile} · критеріїв ${criteria.length}\n`);
   const report = await verifyPatch({ model, retryAfterMs: 60_000, pauseMs: 4_000 }, criteria, task.input, readFileSync(patchFile, 'utf8'));
