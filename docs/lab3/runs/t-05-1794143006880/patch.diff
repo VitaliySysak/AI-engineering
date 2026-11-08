@@ -1,0 +1,73 @@
+diff --git a/src/rag/rrf.ts b/src/rag/rrf.ts
+index 468d15a..ef3f223 100644
+--- a/src/rag/rrf.ts
++++ b/src/rag/rrf.ts
+@@ -5,6 +5,7 @@
+  */
+ export const RRF_K = 60;
+ 
++// score(d) = Σ_i 1 / (k + rank_i(d)), rank_i з 1; якщо d немає у списку i, внесок 0
+ export function rrf(lists: readonly (readonly string[])[], k = RRF_K): { id: string; score: number }[] {
+   const total = new Map<string, number>();
+   for (const list of lists) {
+diff --git a/tests/rrf.test.ts b/tests/rrf.test.ts
+new file mode 100644
+index 0000000..923540d
+--- /dev/null
++++ b/tests/rrf.test.ts
+@@ -0,0 +1,55 @@
++import { describe, expect, it } from 'vitest';
++
++import { rrf, RRF_K } from '../src/rag/rrf';
++
++// Три ранжування (ранги з 1):
++//   A: a=1, b=2, c=3
++//   B: a=1, c=2, d=3
++//   C: c=1, b=2
++// Бали при RRF_K = 60:
++//   a = 1/61 + 1/61            = 2/61
++//   b = 1/62 + 1/62            = 2/62
++//   c = 1/63 + 1/62 + 1/61
++//   d = 1/63                   (є лише в B)
++const LISTS = [
++  ['a', 'b', 'c'],
++  ['a', 'c', 'd'],
++  ['c', 'b'],
++];
++
++describe('rrf', () => {
++  it('використовує RRF_K = 60', () => {
++    expect(RRF_K).toBe(60);
++  });
++
++  it('сумує 1/(RRF_K + ранг) по всіх списках з рангами від 1', () => {
++    const result = rrf(LISTS);
++    const score = (id: string) => result.find((r) => r.id === id)?.score;
++
++    expect(score('a')).toBeCloseTo(2 / 61, 12);
++    expect(score('b')).toBeCloseTo(2 / 62, 12);
++    expect(score('c')).toBeCloseTo(1 / 63 + 1 / 62 + 1 / 61, 12);
++    expect(score('d')).toBeCloseTo(1 / 63, 12);
++  });
++
++  it('документ, відсутній у списку, нічого до балу не додає', () => {
++    // d є лише в B на позиції 3; у A та C його немає, тож бал = 1/63, а не більший
++    const result = rrf(LISTS);
++    const d = result.find((r) => r.id === 'd');
++
++    expect(d?.score).toBeCloseTo(1 / 63, 12);
++    expect(d?.score).toBeLessThan(1 / 61);
++  });
++
++  it('повертає документи, відсортовані за спаданням балу', () => {
++    const ids = rrf(LISTS).map((r) => r.id);
++
++    // c ≈ 0.04839 > a ≈ 0.03279 > b ≈ 0.03226 > d ≈ 0.01587
++    expect(ids).toEqual(['c', 'a', 'b', 'd']);
++  });
++
++  it('повертає порожній результат для порожніх списків', () => {
++    expect(rrf([])).toEqual([]);
++    expect(rrf([[]])).toEqual([]);
++  });
++});
