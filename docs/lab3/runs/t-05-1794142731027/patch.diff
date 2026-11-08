@@ -1,0 +1,75 @@
+diff --git a/src/rag/rrf.ts b/src/rag/rrf.ts
+index 468d15a..fc74c1d 100644
+--- a/src/rag/rrf.ts
++++ b/src/rag/rrf.ts
+@@ -5,6 +5,7 @@
+  */
+ export const RRF_K = 60;
+ 
++// score(d) = Σ 1/(k + rank_i(d)), rank_i з 1; відсутність у списку додає 0
+ export function rrf(lists: readonly (readonly string[])[], k = RRF_K): { id: string; score: number }[] {
+   const total = new Map<string, number>();
+   for (const list of lists) {
+diff --git a/tests/rrf.test.ts b/tests/rrf.test.ts
+new file mode 100644
+index 0000000..cbe9a70
+--- /dev/null
++++ b/tests/rrf.test.ts
+@@ -0,0 +1,57 @@
++import { describe, expect, it } from 'vitest';
++
++import { rrf, RRF_K } from '../src/rag/rrf';
++
++// Три ранжування; ранги з 1 у кожному списку:
++// A: a(1) b(2) c(3)
++// B: b(1) d(2)
++// C: c(1) b(2) e(3)
++const A = ['a', 'b', 'c'];
++const B = ['b', 'd'];
++const C = ['c', 'b', 'e'];
++
++const score = (out: { id: string; score: number }[], id: string) => out.find((r) => r.id === id)?.score;
++
++describe('rrf', () => {
++  it('RRF_K дорівнює 60', () => {
++    expect(RRF_K).toBe(60);
++  });
++
++  it('бал документа — сума 1/(60 + ранг) по всіх списках, де він є', () => {
++    const out = rrf([A, B, C]);
++    // a: лише A, ранг 1 → 1/61
++    expect(score(out, 'a')).toBeCloseTo(1 / 61, 12);
++    // b: A ранг 2, B ранг 1, C ранг 2 → 1/62 + 1/61 + 1/62
++    expect(score(out, 'b')).toBeCloseTo(1 / 62 + 1 / 61 + 1 / 62, 12);
++    // c: A ранг 3, C ранг 1 → 1/63 + 1/61
++    expect(score(out, 'c')).toBeCloseTo(1 / 63 + 1 / 61, 12);
++    // d: лише B, ранг 2 → 1/62
++    expect(score(out, 'd')).toBeCloseTo(1 / 62, 12);
++    // e: лише C, ранг 3 → 1/63
++    expect(score(out, 'e')).toBeCloseTo(1 / 63, 12);
++  });
++
++  it('документ, відсутній у списку, нічого до балу не додає', () => {
++    // a є лише у першому списку: порожні B і C не змінюють його балу
++    const out = rrf([A, [], []]);
++    expect(score(out, 'a')).toBeCloseTo(1 / 61, 12);
++    // d відсутній у A і C, тож його бал — лише 1/62 з B
++    const withB = rrf([A, B, C]);
++    expect(score(withB, 'd')).toBeCloseTo(1 / 62, 12);
++    // e відсутній у A і B: якби відсутність давала внесок, бал був би іншим
++    expect(score(withB, 'e')).toBeCloseTo(1 / 63, 12);
++  });
++
++  it('результат відсортовано за спаданням балу', () => {
++    const out = rrf([A, B, C]);
++    // b ≈ 0,0487 > c ≈ 0,0323 > a ≈ 0,0164 > d ≈ 0,0161 > e ≈ 0,0159
++    expect(out.map((r) => r.id)).toEqual(['b', 'c', 'a', 'd', 'e']);
++    for (let i = 1; i < out.length; i++) {
++      expect(out[i - 1].score).toBeGreaterThanOrEqual(out[i].score);
++    }
++  });
++
++  it('порожній вхід дає порожній результат', () => {
++    expect(rrf([])).toEqual([]);
++  });
++});
