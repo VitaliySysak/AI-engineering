@@ -1,0 +1,14 @@
+{"case":1,"criterion":"t-01.c1","mine":"pass","first_pass":"fail"}
+{"case":2,"criterion":"t-04.c2","mine":"pass","first_pass":"pass"}
+{"case":3,"criterion":"t-02.c3","mine":"pass","first_pass":"fail"}
+{"case":4,"criterion":"t-05.c1","mine":"pass","first_pass":"fail"}
+{"case":5,"criterion":"t-06.c2","mine":"pass","first_pass":"pass"}
+{"case":6,"criterion":"t-03.c3","mine":"pass","first_pass":"fail"}
+{"case":7,"criterion":"t-07.c1","mine":"pass","first_pass":"pass"}
+{"case":8,"criterion":"t-01.c2","mine":"pass","first_pass":"pass"}
+{"case":9,"criterion":"t-02.c1","mine":"pass","first_pass":"pass"}
+{"case":10,"criterion":"t-04.c3","mine":"pass","first_pass":"fail"}
+{"case":11,"criterion":"t-04.c2","mine":"fail","first_pass":"fail"}
+{"case":12,"criterion":"t-05.c3","mine":"fail","first_pass":"fail"}
+{"case":13,"criterion":"t-02.c1","mine":"fail","first_pass":"pass"}
+{"case":14,"criterion":"t-07.c3","mine":"fail","first_pass":"fail"}

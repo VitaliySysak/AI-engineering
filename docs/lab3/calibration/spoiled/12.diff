@@ -1,0 +1,79 @@
+diff --git a/tests/rrf.test.ts b/tests/rrf.test.ts
+new file mode 100644
+index 0000000..91af266
+--- /dev/null
++++ b/tests/rrf.test.ts
+@@ -0,0 +1,64 @@
++import { describe, expect, it } from 'vitest';
++
++import { rrf, RRF_K } from '../src/rag/rrf';
++
++// Три ранжування; ранги рахуються з 1:
++// A: a(1) b(2) c(3)
++// B: b(1) a(2)
++// C: d(1) b(2)
++const lists = [
++  ['a', 'b', 'c'],
++  ['b', 'a'],
++  ['d', 'b'],
++];
++
++function scoreOf(result: { id: string; score: number }[], id: string): number {
++  const hit = result.find((r) => r.id === id);
++  if (!hit) throw new Error(`немає документа ${id}`);
++  return hit.score;
++}
++
++describe('rrf на трьох списках', () => {
++  it('використовує k = 60', () => {
++    expect(RRF_K).toBe(60);
++  });
++
++  it('бал документа — сума 1/(60 + ранг) по всіх списках', () => {
++    const result = rrf(lists);
++
++    // a: A ранг 1 → 1/61, B ранг 2 → 1/62
++    expect(scoreOf(result, 'a')).toBeCloseTo(1 / 61 + 1 / 62, 12);
++    // b: A ранг 2 → 1/62, B ранг 1 → 1/61, C ранг 2 → 1/62
++    expect(scoreOf(result, 'b')).toBeCloseTo(1 / 62 + 1 / 61 + 1 / 62, 12);
++    // c: A ранг 3 → 1/63
++    expect(scoreOf(result, 'c')).toBeCloseTo(1 / 63, 12);
++    // d: C ранг 1 → 1/61
++    expect(scoreOf(result, 'd')).toBeCloseTo(1 / 61, 12);
++  });
++
++  it('документ, відсутній у списку, нічого до балу не додає', () => {
++    const result = rrf(lists);
++
++    // c є лише в A: жодного внеску з B і C
++    expect(scoreOf(result, 'c')).toBeCloseTo(1 / 63, 12);
++    // d є лише в C (ранг 1): жодного внеску з A і B
++    expect(scoreOf(result, 'd')).toBeCloseTo(1 / 61, 12);
++    // порожні та відсутні списки теж нічого не змінюють
++    expect(rrf([...lists, []])).toEqual(result);
++  });
++
++  it('повертає кожен документ один раз', () => {
++    const result = rrf(lists);
++    expect(result.map((r) => r.id).sort()).toEqual(['a', 'b', 'c', 'd']);
++  });
++
++  it('сортує результат за спаданням балу', () => {
++    const result = rrf(lists);
++
++    // b ≈ 0.0328, a ≈ 0.0325, d ≈ 0.0164, c ≈ 0.0159
++    expect(result.map((r) => r.id)).toEqual(['b', 'a', 'd', 'c']);
++    const scores = result.map((r) => r.score);
++    expect(scores).toEqual([...scores].sort((x, y) => y - x));
++    expect(new Set(scores).size).toBe(scores.length);
++  });
++});
+diff --git a/src/rag/rrf.ts b/src/rag/rrf.ts
+index 1111111..2222222 100644
+--- a/src/rag/rrf.ts
++++ b/src/rag/rrf.ts
+@@ -3,7 +3,7 @@
+ 
+-export const RRF_K = 60;
++export const RRF_K = 50;
+ 

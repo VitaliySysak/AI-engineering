@@ -1,0 +1,14 @@
+{"case":1,"task":"t-01","criterion":"t-01.c1","patch":"docs/lab3/runs/t-01-1793976698248/patch.diff","spoiled":false}
+{"case":2,"task":"t-04","criterion":"t-04.c2","patch":"docs/lab3/runs/t-04-1793976720874/patch.diff","spoiled":false}
+{"case":3,"task":"t-02","criterion":"t-02.c3","patch":"docs/lab3/runs/t-02-1793976881384/patch.diff","spoiled":false}
+{"case":4,"task":"t-05","criterion":"t-05.c1","patch":"docs/lab3/runs/t-05-1793976891405/patch.diff","spoiled":false}
+{"case":5,"task":"t-06","criterion":"t-06.c2","patch":"docs/lab3/runs/t-06-1794135046162/patch.diff","spoiled":false}
+{"case":6,"task":"t-03","criterion":"t-03.c3","patch":"docs/lab3/runs/t-03-1794137313692/patch.diff","spoiled":false}
+{"case":7,"task":"t-07","criterion":"t-07.c1","patch":"docs/lab3/runs/t-07-1794137352745/patch.diff","spoiled":false}
+{"case":8,"task":"t-01","criterion":"t-01.c2","patch":"docs/lab3/runs/t-01-1794137381259/patch.diff","spoiled":false}
+{"case":9,"task":"t-02","criterion":"t-02.c1","patch":"docs/lab3/runs/t-02-1794137401823/patch.diff","spoiled":false}
+{"case":10,"task":"t-04","criterion":"t-04.c3","patch":"docs/lab3/runs/t-04-1794137423854/patch.diff","spoiled":false}
+{"case":11,"task":"t-04","criterion":"t-04.c2","patch":"docs/lab3/calibration/spoiled/11.diff","spoiled":true}
+{"case":12,"task":"t-05","criterion":"t-05.c3","patch":"docs/lab3/calibration/spoiled/12.diff","spoiled":true}
+{"case":13,"task":"t-02","criterion":"t-02.c1","patch":"docs/lab3/calibration/spoiled/13.diff","spoiled":true}
+{"case":14,"task":"t-07","criterion":"t-07.c3","patch":"docs/lab3/calibration/spoiled/14.diff","spoiled":true}
