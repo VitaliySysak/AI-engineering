@@ -1,0 +1,43 @@
+diff --git a/tests/metrics-ci.test.ts b/tests/metrics-ci.test.ts
+new file mode 100644
+index 0000000..ca9c7b2
+--- /dev/null
++++ b/tests/metrics-ci.test.ts
+@@ -0,0 +1,37 @@
++import { describe, expect, it } from 'vitest';
++
++import { proportionCI95 } from '../src/metrics';
++
++// Нормальне наближення: лише арифметика, без мережі й без ключів.
++describe('proportionCI95', () => {
++  it('0 успіхів дає lo = 0', () => {
++    const ci = proportionCI95(0, 17);
++    expect(ci.p).toBe(0);
++    expect(ci.lo).toBe(0);
++  });
++
++  it('усі успіхи дають hi = 1', () => {
++    const ci = proportionCI95(17, 17);
++    expect(ci.p).toBe(1);
++    expect(ci.hi).toBe(1);
++  });
++
++  it('halfWidth = 1.96·sqrt(p(1−p)/n) на прикладі 9 із 17', () => {
++    const ci = proportionCI95(9, 17);
++    const p = 9 / 17;
++    expect(ci.p).toBeCloseTo(p, 12);
++    expect(ci.halfWidth).toBeCloseTo(1.96 * Math.sqrt((p * (1 - p)) / 17), 12);
++    // Контрольне число, обчислене вручну: ≈ 0,2373.
++    expect(ci.halfWidth).toBeCloseTo(0.2373, 4);
++    expect(ci.lo).toBeCloseTo(p - ci.halfWidth, 12);
++    expect(ci.hi).toBeCloseTo(p + ci.halfWidth, 12);
++  });
++
++  it('n = 0 кидає RangeError', () => {
++    expect(() => proportionCI95(0, 0)).toThrow(RangeError);
++  });
++
++  it('successes > n кидає RangeError', () => {
++    expect(() => proportionCI95(18, 17)).toThrow(RangeError);
++  });
++});
