@@ -1,0 +1,140 @@
+# Ланцюг детермінованих брам (Лабораторна 3, крок 01): types → lint → tests → build, далі record.
+# Від найдешевшої до найдорожчої; поки попередня не зелена, наступна пропускається. Опис — docs/lab3/gates.md.
+name: gates
+
+on:
+  push:
+  pull_request:
+
+# новий push у ту саму гілку скасовує попередній прогін
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  types:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5 # без цього діє типове значення 360 хвилин
+    outputs:
+      verdict: ${{ steps.g.outputs.verdict }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - id: g
+        run: |
+          npm run typecheck
+          echo "verdict=pass" >> "$GITHUB_OUTPUT"
+
+  lint:
+    needs: types # типи зелені — тільки тоді лінт
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      verdict: ${{ steps.g.outputs.verdict }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - id: g
+        run: |
+          npm run lint
+          echo "verdict=pass" >> "$GITHUB_OUTPUT"
+
+  tests:
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      verdict: ${{ steps.g.outputs.verdict }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - id: g
+        run: |
+          npm test
+          echo "verdict=pass" >> "$GITHUB_OUTPUT"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: gate-tests
+          path: docs/lab3/runs/**
+          if-no-files-found: ignore
+
+  build:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      verdict: ${{ steps.g.outputs.verdict }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - id: g
+        run: |
+          npm run build
+          echo "verdict=pass" >> "$GITHUB_OUTPUT"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: gate-build
+          # у Next.js результат збірки — .next/, а не dist/ з каркаса; беремо лише ідентифікатор і маніфест
+          path: |
+            .next/BUILD_ID
+            .next/build-manifest.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+
+  record:
+    # складається й на червоному прогоні; needs бачить ЛИШЕ прямі залежності,
+    # тому тут перелічені всі чотири брами, а не одна остання
+    needs: [types, lint, tests, build]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8 # інший мажор, ніж в upload
+        with:
+          path: incoming
+          merge-multiple: true
+      - name: Вердикти брам у журнал прогону
+        env:
+          # result — факт (є завжди, зокрема на впалій брамі); outputs.verdict — підтвердження, що брама дійшла до кінця
+          V_TYPES: ${{ needs.types.result }}
+          V_LINT: ${{ needs.lint.result }}
+          V_TESTS: ${{ needs.tests.result }}
+          V_BUILD: ${{ needs.build.result }}
+          O_TYPES: ${{ needs.types.outputs.verdict }}
+          O_LINT: ${{ needs.lint.outputs.verdict }}
+          O_TESTS: ${{ needs.tests.outputs.verdict }}
+          O_BUILD: ${{ needs.build.outputs.verdict }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node scripts/harness/record-gates.mjs \
+            --types "$V_TYPES" --lint "$V_LINT" --tests "$V_TESTS" --build "$V_BUILD" \
+            --types-output "$O_TYPES" --lint-output "$O_LINT" --tests-output "$O_TESTS" --build-output "$O_BUILD" \
+            --branch "$BRANCH" --run-url "$RUN_URL"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: gate-record
+          # gate-run.json — run.json задачі з доповненим полем gates (є лише на гілках harness/<id> із прогоном)
+          path: |
+            gate-record.json
+            gate-run.json
+          if-no-files-found: warn
