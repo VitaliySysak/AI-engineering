@@ -1,0 +1,52 @@
+diff --git a/tests/metrics-ci.test.ts b/tests/metrics-ci.test.ts
+new file mode 100644
+index 0000000..0604fb6
+--- /dev/null
++++ b/tests/metrics-ci.test.ts
+@@ -0,0 +1,46 @@
++import { describe, expect, it } from 'vitest';
++
++import { proportionCI95 } from '../src/metrics';
++
++// Чисті арифметичні перевірки 95% інтервалу для частки; мережі й ключів не потрібно.
++
++describe('proportionCI95 — межі', () => {
++  it('0 успіхів дає lo = 0', () => {
++    const r = proportionCI95(0, 17);
++    expect(r.p).toBe(0);
++    expect(r.halfWidth).toBe(0);
++    expect(r.lo).toBe(0);
++    expect(r.hi).toBe(0);
++  });
++
++  it('усі успіхи дають hi = 1', () => {
++    const r = proportionCI95(17, 17);
++    expect(r.p).toBe(1);
++    expect(r.halfWidth).toBe(0);
++    expect(r.lo).toBe(1);
++    expect(r.hi).toBe(1);
++  });
++});
++
++describe('proportionCI95 — halfWidth', () => {
++  it('на прикладі 9 із 17: halfWidth = 1.96 · sqrt(p(1−p)/n)', () => {
++    const n = 17;
++    const p = 9 / n;
++    const expected = 1.96 * Math.sqrt((p * (1 - p)) / n);
++    const r = proportionCI95(9, n);
++    expect(r.p).toBeCloseTo(p, 12);
++    expect(r.halfWidth).toBeCloseTo(expected, 12);
++    expect(r.lo).toBeCloseTo(p - expected, 12);
++    expect(r.hi).toBeCloseTo(p + expected, 12);
++  });
++});
++
++describe('proportionCI95 — некоректний вхід', () => {
++  it('n = 0 кидає RangeError', () => {
++    expect(() => proportionCI95(0, 0)).toThrow(RangeError);
++  });
++
++  it('successes > n кидає RangeError', () => {
++    expect(() => proportionCI95(18, 17)).toThrow(RangeError);
++  });
++});

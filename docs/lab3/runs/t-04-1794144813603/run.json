@@ -1,0 +1,30 @@
+{
+  "task_id": "t-04",
+  "agent_path": "claude-code -p",
+  "model": "haiku",
+  "artifact_dir": "docs/lab3/runs/t-04-1794144813603",
+  "started_at": "2026-11-08T13:33:33.603Z",
+  "ended_at": "2026-11-08T13:33:39.624Z",
+  "duration_s": 6.021,
+  "exit_status": "agent_failed",
+  "exit_code": 1,
+  "acceptance": [
+    {
+      "cmd": "npm test -- tests/bm25-tokenize.test.ts",
+      "exit": 1
+    }
+  ],
+  "acceptance_passed": false,
+  "session_id": "70a6fb04-9660-4aa8-a3de-510fa7b720d4",
+  "result_subtype": "error_max_turns",
+  "num_turns": 3,
+  "input_tokens": 22666,
+  "cache_read_tokens": 17870,
+  "output_tokens": 505,
+  "permission_denials": 0,
+  "cost_usd_estimate": 0.0013900000000000002,
+  "quota_hit": false,
+  "trace_id": null,
+  "gates": {},
+  "raw_artifact_dir": "C:\\Users\\User\\Desktop\\ITStep\\AI-engineering\\runs\\t-04-1794144813603"
+}

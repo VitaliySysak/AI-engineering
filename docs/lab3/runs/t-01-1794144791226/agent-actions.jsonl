@@ -1,0 +1,4 @@
+{"ts":"2026-11-08T13:33:14.077Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\src\\mcp\\tools.ts"},"result":"ok","session":"4b2da653-5edd-424e-8dd6-0390a8f06729","source":"claude-code"}
+{"ts":"2026-11-08T13:33:14.249Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\tests\\mcp.test.ts"},"result":"ok","session":"4b2da653-5edd-424e-8dd6-0390a8f06729","source":"claude-code"}
+{"ts":"2026-11-08T13:33:17.632Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\src\\mcp\\tools.ts"},"result":"ok","session":"4b2da653-5edd-424e-8dd6-0390a8f06729","source":"claude-code"}
+{"ts":"2026-11-08T13:33:18.636Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\tests\\mcp.test.ts"},"result":"ok","session":"4b2da653-5edd-424e-8dd6-0390a8f06729","source":"claude-code"}

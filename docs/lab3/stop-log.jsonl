@@ -1,0 +1,7 @@
+{"at":"2026-11-08T13:33:23.117Z","taskId":"t-01","limit":"error_max_turns","num_turns":3,"cost_usd_estimate":0.0024992300000000003,"artifact":"docs/lab3/runs/t-01-1794144791226"}
+{"at":"2026-11-08T13:33:33.167Z","taskId":"t-02","limit":"error_max_turns","num_turns":3,"cost_usd_estimate":0.0019071000000000001,"artifact":"docs/lab3/runs/t-02-1794144803571"}
+{"at":"2026-11-08T13:33:39.784Z","taskId":"t-04","limit":"error_max_turns","num_turns":3,"cost_usd_estimate":0.0013900000000000002,"artifact":"docs/lab3/runs/t-04-1794144813603"}
+{"at":"2026-11-08T13:33:39.785Z","taskId":"t-04","limit":"breaker-opened","trip":"3 однакових відмов підряд: max_turns","cooldownMin":30}
+{"at":"2026-11-08T13:33:39.907Z","taskId":"t-06","limit":"breaker","why":"open: 3 однакових відмов підряд: max_turns; перепочинок ще 30 хв"}
+{"at":"2026-11-08T13:45:26.940Z","taskId":"stop-demo","limit":"isStepCount","n":2}
+{"at":"2026-11-08T13:47:25.196Z","taskId":"t-06","limit":"breaker","why":"open: 3 однакових відмов підряд: max_turns; перепочинок ще 17 хв"}
