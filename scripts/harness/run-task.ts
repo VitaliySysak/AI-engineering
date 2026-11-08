@@ -110,7 +110,7 @@ export function geminiArgs(task: Task): string[] {
 
 /** Безкоштовний шлях курсу: Gemini CLI. Локально не встановлено, запускається в CI (крок 04). */
 export const geminiRunner: AgentRunner = (task, cwd) =>
-  spawnAgent('gemini', geminiArgs(task), cwd, task.budget.timeout_s, process.platform === 'win32');
+  spawnAgent('gemini', geminiArgs({ ...task, input: 'Відповідай одним словом: готово.' }), cwd, task.budget.timeout_s, process.platform === 'win32');
 
 /**
  * Дозволи агента: читати й шукати — будь-де в дереві; змінювати — лише файли задачі; з оболонки — лише команди
