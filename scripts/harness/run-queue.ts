@@ -58,6 +58,11 @@ for (const task of tasks) {
     cpSync(rec.artifact_dir, keep, { recursive: true });
     // журнал копії вказує на саму копію (шлях від кореня репозиторію); сирий шлях — у raw_artifact_dir
     writeFileSync(join(keep, 'run.json'), `${JSON.stringify(relocate(rec, keepRel), null, 2)}\n`, 'utf8');
+    // той самий артефакт — і в гілку задачі: брами кроку 01 дописують вердикти саме в цей run.json (record-gates.mjs)
+    const inTree = join(tree, keepRel);
+    mkdirSync(inTree, { recursive: true });
+    cpSync(keep, inTree, { recursive: true });
+    git(['add', '--', keepRel.replace(/\\/g, '/')], tree);
     // комітимо лише проіндексоване виконавцем (без .agent-log): -a тут не можна
     if (git(['diff', '--cached', '--name-only'], tree).trim() !== '') {
       git(['commit', '-m', `harness: ${task.id}`], tree);
