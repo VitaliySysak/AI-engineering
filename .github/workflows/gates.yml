@@ -182,7 +182,7 @@ jobs:
       - run: npm ci
       - run: npm install -g @google/gemini-cli@0.67.0
       - name: Регресійний кошик на замороженому банку
-        timeout-minutes: 12
+        timeout-minutes: 15 # у курсі 12; найгірший час шести спроб у прогоні базового рівня — 11,7 хв
         env:
           # лише regression і k=1: денна квота безкоштовного ключа одна на всі прогони; повні числа k=3 — у evals.md
           EVAL_AGENT: gemini
