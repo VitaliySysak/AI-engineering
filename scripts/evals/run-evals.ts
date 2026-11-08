@@ -85,6 +85,13 @@ export function doneAttempts(logText: string, sha: string): Set<string> {
   return done;
 }
 
+/** Порожній patch.diff при змінах в індексі — збій знімання артефакту, а не «агент нічого не зробив»: такий вердикт хибний. */
+export function assertPatchCaptured(patch: string, stagedNames: string): void {
+  if (patch.trim() === '' && stagedNames.trim() !== '') {
+    throw new Error(`patch.diff порожній, хоча змінено: ${stagedNames.trim().split(/\r?\n/).join(', ')}`);
+  }
+}
+
 function main(): void {
   const k = Number(process.env.EVAL_K ?? 3);
   if (!Number.isInteger(k) || k < 1) throw new Error(`EVAL_K має бути цілим >= 1: ${process.env.EVAL_K}`);
@@ -128,7 +135,9 @@ function main(): void {
         const rec = runTask(task, { runner: agent.runner, agentPath: agent.path, model: agent.model, worktree: tree, outDir: join(ROOT, 'runs') });
         quota = rec.quota_hit;
         if (!quota) {
-          const graders = grade({ task, patch: read(rec.artifact_dir, 'patch.diff'), output: read(rec.artifact_dir, 'output.txt'), acceptance: rec.acceptance });
+          const patch = read(rec.artifact_dir, 'patch.diff');
+          assertPatchCaptured(patch, git(['diff', '--cached', '--name-only', '--', '.', ':(exclude).agent-log', ':(exclude)node_modules'], tree));
+          const graders = grade({ task, patch, output: read(rec.artifact_dir, 'output.txt'), acceptance: rec.acceptance });
           // спроба успішна, лише якщо зелені всі оцінювачі з мітки; exit_status не оцінюється, але лишається в журналі
           const pass = graders.length > 0 && graders.every((g) => g.pass);
           appendFileSync(

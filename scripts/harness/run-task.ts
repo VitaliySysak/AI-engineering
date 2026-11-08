@@ -255,8 +255,10 @@ export function runTask(
   let patch = '';
   let actions = '';
   try {
-    // node_modules — посилання: правило .gitignore зі слешем у кінці не діє на symlink у Linux, і воно потрапило б у patch
-    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AGENT_LOG}`, ':(exclude)node_modules'], { cwd: opts.worktree });
+    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AGENT_LOG}`], { cwd: opts.worktree });
+    // node_modules — посилання: правило .gitignore зі слешем у кінці не діє на symlink у Linux, і воно потрапило б у patch.
+    // Саме reset, а не :(exclude) в add: для вже ігнорованого шляху (junction у Windows) такий add завершується кодом 1.
+    execFileSync('git', ['reset', '-q', '--', 'node_modules'], { cwd: opts.worktree });
     patch = execFileSync('git', ['diff', '--cached'], { cwd: opts.worktree, encoding: 'utf8' });
     actions = execFileSync('git', ['diff', '--', AGENT_LOG], { cwd: opts.worktree, encoding: 'utf8' })
       .split('\n')
