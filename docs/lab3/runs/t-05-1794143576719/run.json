@@ -1,0 +1,33 @@
+{
+  "task_id": "t-05",
+  "agent_path": "claude-code -p",
+  "model": "haiku",
+  "artifact_dir": "docs/lab3/runs/t-05-1794143576719",
+  "started_at": "2026-11-08T13:12:56.719Z",
+  "ended_at": "2026-11-08T13:13:26.112Z",
+  "duration_s": 29.393,
+  "exit_status": "ok",
+  "exit_code": 0,
+  "acceptance": [
+    {
+      "cmd": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "cmd": "npm test -- tests/rrf.test.ts",
+      "exit": 0
+    }
+  ],
+  "acceptance_passed": true,
+  "session_id": "62c54715-ec8f-4983-acda-19691034160a",
+  "result_subtype": "success",
+  "num_turns": 7,
+  "input_tokens": 73008,
+  "cache_read_tokens": 63097,
+  "output_tokens": 5052,
+  "permission_denials": 1,
+  "cost_usd_estimate": 0.00513817,
+  "trace_id": null,
+  "gates": {},
+  "raw_artifact_dir": "C:\\Users\\User\\Desktop\\ITStep\\AI-engineering\\runs\\t-05-1794143576719"
+}
