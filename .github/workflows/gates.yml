@@ -165,3 +165,36 @@ jobs:
           name: verdicts
           path: docs/lab3/verdicts/
           if-no-files-found: ignore
+
+  evals:
+    # Крок 04. На main той самий коміт уже перевірено на гілці, а гілка базового рівня ще не має з чим порівнювати.
+    # Без функції статусу в if діє неявний success(): на червоних тестах не стартує.
+    needs: tests
+    if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/evals-baseline/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm install -g @google/gemini-cli@0.67.0
+      - name: Регресійний кошик на замороженому банку
+        timeout-minutes: 12
+        env:
+          # лише regression і k=1: денна квота безкоштовного ключа одна на всі прогони; повні числа k=3 — у evals.md
+          EVAL_AGENT: gemini
+          EVAL_K: '1'
+          EVAL_BUCKET: regression
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          npx tsx scripts/evals/run-evals.ts docs/lab3/tasks.jsonl
+          npx tsx scripts/evals/gate.ts --baseline docs/lab3/evals-baseline-ci.json
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: evals
+          path: docs/lab3/evals.jsonl
+          if-no-files-found: ignore

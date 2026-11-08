@@ -1,0 +1,40 @@
+# Базовий рівень evals для CI (Лабораторна 3, крок 04): Gemini CLI, регресійний кошик, k=3. У CI агент інший, ніж локально
+# (там Haiku), тому базовий рівень окремий. Запускається пушем у гілку evals-baseline/*: кнопка workflow_dispatch працює
+# лише для файлів, що вже є в main. Результат — артефакт, який людина завантажує і комітить навмисно.
+name: evals-baseline
+
+on:
+  push:
+    branches:
+      - 'evals-baseline/**'
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm install -g @google/gemini-cli@0.67.0
+      - name: Регресійний кошик, k=3
+        timeout-minutes: 35
+        env:
+          EVAL_AGENT: gemini
+          EVAL_K: '3'
+          EVAL_BUCKET: regression
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          npx tsx scripts/evals/run-evals.ts docs/lab3/tasks.jsonl
+          npx tsx scripts/evals/gate.ts --write-baseline --baseline docs/lab3/evals-baseline-ci.json
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: evals-baseline-ci
+          path: |
+            docs/lab3/evals-baseline-ci.json
+            docs/lab3/evals.jsonl
+          if-no-files-found: warn
