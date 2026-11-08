@@ -52,6 +52,8 @@ export interface RunRecord {
   readonly output_tokens: number | null;
   /** скільки викликів інструментів відхилив dontAsk (permission_denials у JSON Claude Code) */
   readonly permission_denials: number | null;
+  /** Відмова провайдера за квотою (HTTP 429 / usage limit) — для брейкера це умова спрацювання, а не невдача задачі. */
+  readonly quota_hit: boolean;
   /** total_cost_usd — КЛІЄНТСЬКА ОЦІНКА Claude Code, не рахунок (за підпискою Pro грошей не списано) */
   readonly cost_usd_estimate: number | null;
   readonly trace_id: string | null; // крок 06
@@ -171,6 +173,26 @@ export function relocate(record: RunRecord, keptDir: string): RunRecord & { read
 }
 
 /** Критерії приймання — це КОМАНДИ. Виконуємо їх у дереві прогону. */
+export function quotaHit(stdout: string): boolean {
+  const QUOTA = /HTTP 429|rate.?limit|usage limit|quota/i;
+  try {
+    const j = JSON.parse(stdout) as Record<string, unknown>;
+    return j.api_error_status === 429 || (j.is_error === true && QUOTA.test(String(j.result ?? '')));
+  } catch {
+    return QUOTA.test(stdout);
+  }
+}
+
+/** Результат задачі мовою брейкера (src/harness/breaker.ts): причина — те, за чим порівнюються відмови підряд. */
+export function classifyOutcome(rec: Pick<RunRecord, 'exit_status' | 'acceptance_passed' | 'quota_hit' | 'result_subtype'>): { ok: boolean; reason: string | null } {
+  if (rec.exit_status === 'ok' && rec.acceptance_passed) return { ok: true, reason: null };
+  if (rec.quota_hit) return { ok: false, reason: 'quota' };
+  if (rec.result_subtype === 'error_max_budget_usd') return { ok: false, reason: 'budget' };
+  if (rec.result_subtype === 'error_max_turns') return { ok: false, reason: 'max_turns' };
+  if (rec.exit_status === 'timeout') return { ok: false, reason: 'timeout' };
+  return { ok: false, reason: rec.exit_status === 'agent_failed' ? 'agent_failed' : 'acceptance_failed' };
+}
+
 export function checkAcceptance(task: Task, cwd: string) {
   return task.acceptance.map((cmd) => {
     const r = spawnSync(cmd, { cwd, encoding: 'utf8', shell: true, timeout: task.budget.timeout_s * 1000 });
@@ -239,6 +261,7 @@ export function runTask(
     acceptance,
     acceptance_passed: acceptance.length > 0 && acceptance.every((a) => a.exit === 0),
     ...readMeta(res.stdout),
+    quota_hit: quotaHit(res.stdout),
     trace_id: null, // ← крок 06
     gates: {}, // ← крок 01
   };

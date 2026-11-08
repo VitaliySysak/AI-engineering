@@ -8,6 +8,7 @@ import {
   Output,
   type LanguageModel,
   type ModelMessage,
+  type StopCondition,
   type ToolApprovalResponse,
 } from 'ai';
 import { google } from '@ai-sdk/google'; // ключ: GOOGLE_GENERATIVE_AI_API_KEY
@@ -35,7 +36,7 @@ export function pickModel(): LanguageModel {
 
 export const Report = z.object({ summary: z.string(), written: z.array(z.string()) });
 
-export function createAgent(model: LanguageModel, fs: FileOps, maxSteps = 5) {
+export function createAgent(model: LanguageModel, fs: FileOps, maxSteps = 5, stopWhen?: StopCondition<any, any>) {
   return new ToolLoopAgent({
     model,
     instructions: 'Ти файловий асистент. Якщо запис відхилено, не повторюй його.',
@@ -61,7 +62,7 @@ export function createAgent(model: LanguageModel, fs: FileOps, maxSteps = 5) {
       }),
     },
     toolApproval: { write_file: 'user-approval' }, // драбина довіри в коді: запис — лише після «так» людини
-    stopWhen: isStepCount(maxSteps),
+    stopWhen: stopWhen ?? isStepCount(maxSteps), // власна умова — Лабораторна 3, крок 03 (src/harness/stop.ts)
     output: Output.object({ schema: Report }),
   });
 }

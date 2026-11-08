@@ -154,6 +154,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Верифікатор задачі
+        timeout-minutes: 10 # для кроку типового значення документація не називає
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BRANCH: ${{ github.ref_name }}

@@ -12,7 +12,9 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
-import { CLAUDE_MODEL, claudeRunner, relocate, runTask, type Task } from './run-task';
+import { mayRun, recordOutcome } from '../../src/harness/breaker';
+import { logStop } from '../../src/harness/stop';
+import { CLAUDE_MODEL, classifyOutcome, claudeRunner, relocate, runTask, type Task } from './run-task';
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--id') ?? 'docs/lab3/tasks.jsonl';
@@ -32,7 +34,7 @@ const ROOT = resolve('.');
 const git = (gitArgs: string[], cwd = ROOT) => execFileSync('git', gitArgs, { cwd, encoding: 'utf8' });
 
 /** Що змінено в основному checkout — крім очікуваних шляхів (артефакти, журнал дій сесії автора). */
-const EXPECTED = /^(docs\/lab3\/runs\/|runs\/|\.agent-log\/)/;
+const EXPECTED = /^(docs\/lab3\/runs\/|docs\/lab3\/stop-log\.jsonl|\.harness\/|runs\/|\.agent-log\/)/;
 const dirtyMain = () =>
   git(['status', '--porcelain'])
     .split('\n')
@@ -40,6 +42,14 @@ const dirtyMain = () =>
     .filter((p) => p !== '' && !EXPECTED.test(p));
 
 for (const task of tasks) {
+  // Шар харнеса: відкритий брейкер знімає чергу з конвеєра, а не лише цю задачу
+  const gate = mayRun();
+  if (!gate.allow) {
+    logStop({ taskId: task.id, limit: 'breaker', why: gate.why });
+    console.log(`Брейкер не пускає ${task.id}: ${gate.why}. Чергу зупинено.`);
+    break;
+  }
+  if (gate.probe) console.log(`Брейкер: ${gate.why} — ${task.id}`);
   const branch = `harness/${task.id}`;
   const tree = resolve(ROOT, '..', 'harness-runs', task.id);
   const before = new Set(dirtyMain());
@@ -68,6 +78,15 @@ for (const task of tasks) {
       git(['commit', '-m', `harness: ${task.id}`], tree);
       // -B вище починає гілку заново від main, тож повторний push задачі не є fast-forward; лише гілки harness/*
       if (push) git(['push', '--force-with-lease', '-u', 'origin', branch], tree);
+    }
+    // Шар задачі: який ліміт спрацював; брейкер рахує результат і, якщо треба, відкривається
+    if (rec.result_subtype?.startsWith('error_max') || rec.exit_status === 'timeout') {
+      logStop({ taskId: task.id, limit: rec.result_subtype ?? 'timeout', num_turns: rec.num_turns, cost_usd_estimate: rec.cost_usd_estimate, artifact: keepRel.replace(/\\/g, '/') });
+    }
+    const breaker = recordOutcome(classifyOutcome(rec));
+    if (breaker.state === 'open') {
+      logStop({ taskId: task.id, limit: 'breaker-opened', trip: breaker.trip, cooldownMin: breaker.cooldownMin });
+      console.log(`Брейкер ВІДКРИТО: ${breaker.trip}; перепочинок ${breaker.cooldownMin} хв.`);
     }
     const leaked = dirtyMain().filter((p) => !before.has(p));
     console.log(
