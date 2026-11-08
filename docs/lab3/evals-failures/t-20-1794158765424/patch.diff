@@ -1,0 +1,56 @@
+diff --git a/src/rag/bm25.ts b/src/rag/bm25.ts
+index baad101..2c06731 100644
+--- a/src/rag/bm25.ts
++++ b/src/rag/bm25.ts
+@@ -15,13 +15,49 @@ export const BM25: Bm25Options = { k1: 1.2, b: 0.75 };
+ /**
+  * Токенізація під українську. \w у JavaScript НЕ бачить кирилиці — з ним
+  * індекс вийшов би порожнім. Беремо \p{L} і \p{N} з прапорцем u.
+- * Стемінгу немає: «документи» і «документ» — різні терміни. Це ваша відома
+- * межа, і на кроці 06 вона зʼявиться серед причин помилок.
++ * Стемінг і стоп-слова — окремо, у bm25Terms(): tokenize лишається «сирим».
+  */
+ export function tokenize(text: string): string[] {
+   return (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter((t) => t.length > 1);
+ }
+ 
++/**
++ * Частотні службові слова: без них гілка слів знаходить «як», «та», «що» у половині фрагментів
++ * і тягне шум. Список короткий навмисно — лише те, що точно нічого не несе.
++ */
++const STOPWORDS = new Set([
++  'як', 'що', 'та', 'або', 'але', 'чи', 'це', 'цей', 'ця', 'ці', 'так', 'які', 'який', 'яка', 'яке',
++  'його', 'її', 'їх', 'він', 'вона', 'вони', 'ми', 'ви', 'при', 'для', 'від', 'до', 'за', 'по', 'на', 'не',
++  'також', 'є', 'має', 'можна',
++]);
++
++/**
++ * Легкий стемінг українських слів: знімає найтиповіші закінчення, щоб «порт» і «портів»,
++ * «документ» і «документи» збігалися. Не лінгвістичний стемер: основа має лишатися
++ * щонайменше з 4 символів, а слова з латиниці (nginx, ssh) не чіпаються.
++ */
++const UK_SUFFIXES = [
++  'ями', 'ами', 'ому', 'ого', 'ими', 'іми', 'ові', 'еві', 'ів', 'ах', 'ях', 'ам', 'ям', 'ої', 'ій', 'ий', 'ою',
++  'ею', 'ти', 'ся', 'и', 'і', 'у', 'ю', 'а', 'я', 'е', 'о', 'ї',
++].sort((a, b) => b.length - a.length);
++const MIN_STEM = 4;
++const CYRILLIC = /^\p{Script=Cyrillic}+$/u;
++
++export function stem(token: string): string {
++  if (!CYRILLIC.test(token)) return token;
++  for (const suffix of UK_SUFFIXES) {
++    if (token.endsWith(suffix) && token.length - suffix.length >= MIN_STEM) {
++      return token.slice(0, -suffix.length);
++    }
++  }
++  return token;
++}
++
++/** Терміни, за якими індексується фрагмент і шукається запит: токени → без стоп-слів → стем. */
++export function bm25Terms(text: string): string[] {
++  return tokenize(text).filter((t) => !STOPWORDS.has(t)).map(stem);
++}
++
+ export interface Bm25Index {
+   readonly docs: { readonly id: string; readonly length: number; readonly tf: Map<string, number> }[];
+   readonly df: Map<string, number>;
