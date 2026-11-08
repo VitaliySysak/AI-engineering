@@ -1,0 +1,64 @@
+diff --git a/tests/rrf.test.ts b/tests/rrf.test.ts
+new file mode 100644
+index 0000000..06a0160
+--- /dev/null
++++ b/tests/rrf.test.ts
+@@ -0,0 +1,58 @@
++import { describe, expect, it } from 'vitest';
++
++import { RRF_K, rrf } from '../src/rag/rrf';
++
++// Три ранжування; ранги з 1:
++//   A: a(1) b(2) c(3)
++//   B: b(1) d(2) a(3)
++//   C: b(1) c(2) e(3)
++const LISTS = [
++  ['a', 'b', 'c'],
++  ['b', 'd', 'a'],
++  ['b', 'c', 'e'],
++];
++
++function scoresById(result: { id: string; score: number }[]): Map<string, number> {
++  return new Map(result.map((r) => [r.id, r.score]));
++}
++
++describe('rrf', () => {
++  it('використовує k = 60 за замовчуванням', () => {
++    expect(RRF_K).toBe(60);
++  });
++
++  it('сумує 1/(60 + ранг) по всіх списках, ранги з 1', () => {
++    const scores = scoresById(rrf(LISTS));
++
++    // b: A ранг 2, B ранг 1, C ранг 1
++    expect(scores.get('b')).toBeCloseTo(1 / (60 + 2) + 1 / (60 + 1) + 1 / (60 + 1), 12);
++    // a: A ранг 1, B ранг 3
++    expect(scores.get('a')).toBeCloseTo(1 / (60 + 1) + 1 / (60 + 3), 12);
++    // c: A ранг 3, C ранг 2
++    expect(scores.get('c')).toBeCloseTo(1 / (60 + 3) + 1 / (60 + 2), 12);
++    // d: лише B, ранг 2
++    expect(scores.get('d')).toBeCloseTo(1 / (60 + 2), 12);
++    // e: лише C, ранг 3
++    expect(scores.get('e')).toBeCloseTo(1 / (60 + 3), 12);
++  });
++
++  it('документ, відсутній у списку, нічого до балу не додає', () => {
++    const result = rrf(LISTS);
++    const scores = scoresById(result);
++
++    // d відсутній у A і C: бал рівний лише внеску з B, без нулів чи штрафів
++    expect(scores.get('d')).toBe(1 / (60 + 2));
++    // кожен документ зустрічається в результаті рівно один раз
++    expect(result).toHaveLength(5);
++    expect(new Set(result.map((r) => r.id)).size).toBe(5);
++  });
++
++  it('сортує результат за спаданням балу', () => {
++    const result = rrf(LISTS);
++
++    expect(result.map((r) => r.id)).toEqual(['b', 'a', 'c', 'd', 'e']);
++    for (let i = 1; i < result.length; i++) {
++      expect(result[i - 1]!.score).toBeGreaterThan(result[i]!.score);
++    }
++  });
++});

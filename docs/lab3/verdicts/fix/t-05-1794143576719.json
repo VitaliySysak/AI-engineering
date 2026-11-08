@@ -1,0 +1,26 @@
+{
+  "task_id": "t-05",
+  "model": "gemini-3.5-flash-lite",
+  "patch": "docs/lab3/runs/t-05-1794143576719/patch.diff",
+  "blocked": false,
+  "results": [
+    {
+      "id": "t-05.c1",
+      "verdict": "pass",
+      "reason": "Новий файл tests/rrf.test.ts містить тести для rrf на трьох списках із перевіркою балів як суми 1/(60 + ранг).",
+      "evidence": "tests/rrf.test.ts:24-37"
+    },
+    {
+      "id": "t-05.c2",
+      "verdict": "pass",
+      "reason": "Тести у файлі tests/rrf.test.ts явно перевіряють, що документ, відсутній у списках, не додає зайвого балу, а також що результат відсортовано за спаданням балу.",
+      "evidence": "tests/rrf.test.ts:37"
+    },
+    {
+      "id": "t-05.c3",
+      "verdict": "pass",
+      "reason": "Файл src/rag/rrf.ts відсутній серед змінених файлів у diff, отже він не був змінений.",
+      "evidence": "tests/rrf.test.ts: src/rag/rrf.ts серед змінених файлів немає"
+    }
+  ]
+}
