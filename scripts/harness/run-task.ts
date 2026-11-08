@@ -16,6 +16,14 @@ export interface Task {
   readonly acceptance: readonly string[];
   readonly budget: { readonly max_turns: number; readonly max_usd: number; readonly timeout_s: number };
   readonly files?: readonly string[];
+  // Поля evals (крок 04); необов'язкові, щоб черги кроків 00–03 парсились без змін.
+  /** Еталонна мітка: ключ — id оцінювача, значення — очікуваний результат. */
+  readonly label?: Readonly<Record<string, boolean>>;
+  /** З якого прогону взялася задача. */
+  readonly source?: string;
+  readonly bucket?: 'regression' | 'new' | 'edge';
+  /** Дата заморозки банку, РРРР-ММ-ДД. */
+  readonly frozen_at?: string;
 }
 
 export interface AgentResult {
