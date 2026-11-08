@@ -1,0 +1,149 @@
+{
+  "t-01": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-02": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-04": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-05": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-06": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-07": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "regression",
+    "agent": "claude-code -p"
+  },
+  "t-08": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-09": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-10": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-11": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-12": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-13": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-14": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-15": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-16": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-17": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "edge",
+    "agent": "claude-code -p"
+  },
+  "t-18": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "edge",
+    "agent": "claude-code -p"
+  },
+  "t-19": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "edge",
+    "agent": "claude-code -p"
+  },
+  "t-20": {
+    "pow_k": 0.6666666666666666,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "edge",
+    "agent": "claude-code -p"
+  },
+  "t-21": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  },
+  "t-22": {
+    "pow_k": 1,
+    "k": 3,
+    "frozen_at": "2026-11-08",
+    "bucket": "new",
+    "agent": "claude-code -p"
+  }
+}
