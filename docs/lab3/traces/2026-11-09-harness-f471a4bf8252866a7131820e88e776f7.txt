@@ -1,0 +1,19 @@
+trace_id: f471a4bf8252866a7131820e88e776f7
+клас: harness
+корінь: task t-01
+час: 2026-11-09T10:57:11.832Z
+спанів: 13
+
+task t-01 [SPAN] 8976 мс · gen_ai.agent.name=harness-run-task harness.acceptance_passed=true harness.exit_status=agent_failed harness.agent_path=claude-code -p harness.task_id=t-01
+  claude_code.interaction [AGENT] 3400 мс · duration_ms=3400 source=env gen_ai.operation.name=invoke_agent span.type=interaction gen_ai.provider.name=anthropic
+    claude_code.llm_request [GENERATION] 1810 мс · gen_ai.response.finish_reasons=["tool_use"] attempt=1 success=true cache_creation_tokens=2805 cache_read_tokens=7524 output_tokens=346 input_tokens=2 duration_ms=1810 gen_ai.request.model=claude-haiku-5-5 model=claude-haiku-5-5 span.type=llm_request gen_ai.provider.name=anthropic
+    Grep [TOOL] 78 мс · duration_ms=78 gen_ai.tool.name=Grep gen_ai.operation.name=execute_tool tool_name=Grep span.type=tool gen_ai.provider.name=anthropic
+      claude_code.tool.blocked_on_user [SPAN] 11 мс · source=config decision=accept duration_ms=11 span.type=tool.blocked_on_user gen_ai.provider.name=anthropic
+      claude_code.tool.execution [TOOL] 66 мс · success=true duration_ms=67 span.type=tool.execution gen_ai.provider.name=anthropic
+    Read [TOOL] 9 мс · duration_ms=10 gen_ai.tool.name=Read gen_ai.operation.name=execute_tool tool_name=Read span.type=tool gen_ai.provider.name=anthropic
+      claude_code.tool.blocked_on_user [SPAN] 6 мс · source=config decision=accept duration_ms=6 span.type=tool.blocked_on_user gen_ai.provider.name=anthropic
+      claude_code.tool.execution [TOOL] 3 мс · success=true duration_ms=3 span.type=tool.execution gen_ai.provider.name=anthropic
+    claude_code.llm_request [GENERATION] 1097 мс · gen_ai.response.finish_reasons=["tool_use"] attempt=1 success=true cache_creation_tokens=12124 cache_read_tokens=10329 output_tokens=110 input_tokens=2 duration_ms=1097 gen_ai.request.model=claude-haiku-5-5 model=claude-haiku-5-5 span.type=llm_request gen_ai.provider.name=anthropic
+    Read [TOOL] 8 мс · duration_ms=9 gen_ai.tool.name=Read gen_ai.operation.name=execute_tool tool_name=Read span.type=tool gen_ai.provider.name=anthropic
+      claude_code.tool.blocked_on_user [SPAN] 5 мс · source=config decision=accept duration_ms=6 span.type=tool.blocked_on_user gen_ai.provider.name=anthropic
+      claude_code.tool.execution [TOOL] 2 мс · success=true duration_ms=2 span.type=tool.execution gen_ai.provider.name=anthropic

@@ -40,8 +40,8 @@ export function safeAttributes(metadata: unknown): Record<string, string> {
     for (const [k, v] of Object.entries(value)) {
       if (typeof v === 'object' && v !== null && !Array.isArray(v)) walk(v);
       else if (v !== null && v !== undefined) {
-        // бекенд може додавати префікс (attributes.tool_name); порівнюємо за точною назвою або кінцем після крапки
-        const name = [...ALLOWED].find((a) => k === a || k.endsWith(`.${a}`));
+        // бекенд додає префікс attributes.; будь-який інший кінець назви не підходить: gen_ai.usage.cache_read.input_tokens — не input_tokens
+        const name = [...ALLOWED].find((a) => k === a || k === `attributes.${a}`);
         if (name !== undefined) out[name] = (Array.isArray(v) ? JSON.stringify(v) : String(v)).slice(0, 120);
       }
     }

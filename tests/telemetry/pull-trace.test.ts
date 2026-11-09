@@ -15,6 +15,10 @@ describe('атрибути витяжки', () => {
     expect(safeAttributes({ 'attributes.tool_name': 'Bash', 'attributes.success': false })).toEqual({ tool_name: 'Bash', success: 'false' });
   });
 
+  it('атрибут лише зі схожим кінцем назви не видається за інший', () => {
+    expect(safeAttributes({ 'attributes.gen_ai.usage.cache_read.input_tokens': 0, 'attributes.gen_ai.usage.input_tokens': 640 })).toEqual({ 'gen_ai.usage.input_tokens': '640' });
+  });
+
   it('префікс не відкриває вміст', () => {
     expect(JSON.stringify(safeAttributes({ 'attributes.full_command': 'ТАЄМНИЦЯ', 'attributes.gen_ai.input.messages': 'ТАЄМНИЦЯ', 'attributes.user_prompt': 'ТАЄМНИЦЯ' }))).not.toContain('ТАЄМНИЦЯ');
   });
