@@ -65,7 +65,7 @@ export function toBaseline(now: ReadonlyMap<string, Tally>, k: number): Baseline
 }
 
 /** Чому прогін не можна порівнювати з базовим рівнем; порожній перелік — можна. */
-export function comparability(now: ReadonlyMap<string, Tally>, base: Baseline, k: number): string[] {
+export function comparability(now: ReadonlyMap<string, Tally>, base: Baseline, k: number, confirm = 0): string[] {
   const problems: string[] = [];
   if (now.size === 0) return ['у журналі немає жодної спроби'];
   const frozen = new Set([...now.values()].map((t) => t.frozen_at));
@@ -75,20 +75,31 @@ export function comparability(now: ReadonlyMap<string, Tally>, base: Baseline, k
   const agents = new Set([...now.values()].map((t) => t.agent));
   const baseAgents = new Set(Object.values(base).map((b) => b.agent));
   for (const a of agents) if (!baseAgents.has(a)) problems.push(`агент ${a} не той, на якому записано базовий рівень (${[...baseAgents].join(', ')})`);
-  for (const [id, t] of now) if (t.n !== k) problems.push(`${id}: спроб ${t.n}, а очікувалось ${k}`);
+  for (const [id, t] of now) if (t.n !== k && t.n !== k + confirm) problems.push(`${id}: спроб ${t.n}, а очікувалось ${k}`);
   return problems;
 }
 
-/** Поіменно: regression-задача, що мала pass^k = 1, має менше або зникла з прогону. Edge і new не беруть участі. */
-export function regressions(now: ReadonlyMap<string, Tally>, base: Baseline, k: number): string[] {
+/** Чи підтвердили повторні спроби падіння: при перепробуванні рахується більшість, без нього — будь-яка відмова. */
+const isBroken = (t: Tally, k: number, confirm: number): boolean => (confirm > 0 && t.n === k + confirm ? t.ok * 2 < t.n : powK(t) < 1);
+
+/**
+ * Поіменно: regression-задача, що мала pass^k = 1, має менше або зникла з прогону. Edge і new не беруть участі.
+ * При k=1 один збій моделі не є регресією: задача, що впала, повторюється confirm разів і має пройти більшість спроб.
+ */
+export function regressions(now: ReadonlyMap<string, Tally>, base: Baseline, k: number, confirm = 0): string[] {
   const broke: string[] = [];
   for (const [id, b] of Object.entries(base)) {
     if (b.bucket !== 'regression' || b.pow_k !== 1) continue;
     const t = now.get(id);
     if (t === undefined) broke.push(`${id}: була в базовому рівні, у прогоні її немає`);
-    else if (powK(t) < 1) broke.push(`${id}: було pass^${b.k}=1, стало ${t.ok}/${t.n} при k=${k}`);
+    else if (isBroken(t, k, confirm)) broke.push(`${id}: було pass^${b.k}=1, стало ${t.ok}/${t.n} при k=${k}`);
   }
   return broke;
+}
+
+/** Задачі з відмовою, яку перепробування не підтвердило: їх треба бачити, а не губити в зеленому підсумку. */
+export function unconfirmedFailures(now: ReadonlyMap<string, Tally>, k: number, confirm: number): string[] {
+  return confirm === 0 ? [] : [...now].filter(([, t]) => t.n === k + confirm && t.ok < t.n && !isBroken(t, k, confirm)).map(([id, t]) => `${id}: ${t.ok}/${t.n}`);
 }
 
 function main(): void {
@@ -108,12 +119,15 @@ function main(): void {
   }
 
   const base = JSON.parse(readFileSync(baselineFile, 'utf8')) as Baseline;
-  const problems = comparability(now, base, k);
+  const confirm = Number(process.env.EVAL_CONFIRM ?? 0);
+  const problems = comparability(now, base, k, confirm);
   if (problems.length > 0) {
     console.error(`Прогін не можна порівняти з базовим рівнем:\n${problems.join('\n')}`);
     process.exit(1);
   }
-  const broke = regressions(now, base, k);
+  const broke = regressions(now, base, k, confirm);
+  const flaky = unconfirmedFailures(now, k, confirm);
+  if (flaky.length > 0) console.log(`Падіння не підтвердилось при повторі (нестабільність, не регресія): ${flaky.join('; ')}`);
   if (broke.length > 0) {
     console.error(`РЕГРЕСІЯ на ${broke.length} задачах:\n${broke.join('\n')}`);
     process.exit(1);

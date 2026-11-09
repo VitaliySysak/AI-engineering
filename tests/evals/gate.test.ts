@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { geminiArgs, quotaHit, type Task } from '../../scripts/harness/run-task';
-import { comparability, parseLog, regressions, tally, toBaseline, type EvalLine } from '../../scripts/evals/gate';
+import { comparability, parseLog, regressions, tally, toBaseline, unconfirmedFailures, type EvalLine } from '../../scripts/evals/gate';
 import { doneAttempts, median, parseBank, summarize } from '../../scripts/evals/run-evals';
 
 const line = (task_id: string, pass: boolean, over: Partial<EvalLine> = {}): EvalLine => ({ task_id, bucket: 'regression', frozen_at: '2026-11-08', agent: 'a', pass, ...over });
@@ -43,6 +43,42 @@ describe('брама', () => {
   it('у CI k = 1 порівнюється з базовим рівнем k = 3', () => {
     expect(regressions(run({ a: [true], b: [true] }), base, 1)).toEqual([]);
     expect(regressions(run({ a: [false], b: [true] }), base, 1)).toHaveLength(1);
+  });
+});
+
+describe('брама з перепробуванням', () => {
+  const base = toBaseline(run({ a: [true, true, true] }), 3);
+
+  it('поодинокий збій, не підтверджений повторами, не є регресією, але його видно', () => {
+    const now = run({ a: [false, true, true] });
+    expect(regressions(now, base, 1, 2)).toEqual([]);
+    expect(unconfirmedFailures(now, 1, 2)).toEqual(['a: 2/3']);
+  });
+
+  it('падіння більшістю спроб — регресія', () => {
+    expect(regressions(run({ a: [false, true, false] }), base, 1, 2)[0]).toMatch(/стало 1\/3/);
+    expect(regressions(run({ a: [false, false, false] }), base, 1, 2)).toHaveLength(1);
+  });
+
+  it('зелена задача без повторів не вважається нестабільною', () => {
+    expect(regressions(run({ a: [true] }), base, 1, 2)).toEqual([]);
+    expect(unconfirmedFailures(run({ a: [true] }), 1, 2)).toEqual([]);
+  });
+
+  it('відмова без повторів лишається регресією: неповне перепробування не рятує', () => {
+    expect(regressions(run({ a: [false] }), base, 1, 2)).toHaveLength(1);
+  });
+
+  it('без перепробування правило старе: будь-яка відмова', () => {
+    expect(regressions(run({ a: [false, true, true] }), base, 3)).toHaveLength(1);
+    expect(unconfirmedFailures(run({ a: [false, true, true] }), 3, 0)).toEqual([]);
+  });
+
+  it('кількість спроб: k або k + повтори, інакше неповний прогін', () => {
+    const b1 = toBaseline(run({ a: [true] }), 1);
+    expect(comparability(run({ a: [true] }), b1, 1, 2)).toEqual([]);
+    expect(comparability(run({ a: [false, true, true] }), b1, 1, 2)).toEqual([]);
+    expect(comparability(run({ a: [false, true] }), b1, 1, 2)[0]).toMatch(/спроб 2/);
   });
 });
 

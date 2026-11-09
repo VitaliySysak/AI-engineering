@@ -172,7 +172,7 @@ jobs:
     needs: tests
     if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/evals-baseline/') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -182,11 +182,13 @@ jobs:
       - run: npm ci
       - run: npm install -g @google/gemini-cli@0.67.0
       - name: Регресійний кошик на замороженому банку
-        timeout-minutes: 15 # у курсі 12; найгірший час шести спроб у прогоні базового рівня — 11,7 хв
+        timeout-minutes: 20 # у курсі 12; найгірший час шести спроб — 11,7 хв, і ще запас на повторні спроби
         env:
           # лише regression і k=1: денна квота безкоштовного ключа одна на всі прогони; повні числа k=3 — у evals.md
           EVAL_AGENT: gemini
           EVAL_K: '1'
+          # при k=1 близько кожного четвертого прогону дає хибну регресію; задача, що впала, повторюється двічі
+          EVAL_CONFIRM: '2'
           EVAL_BUCKET: regression
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |

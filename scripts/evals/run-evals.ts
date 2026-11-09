@@ -5,7 +5,8 @@
  *   npx tsx scripts/evals/run-evals.ts docs/lab3/tasks.jsonl
  *
  * Змінні: EVAL_K (типово 3), EVAL_BUCKET (один кошик), EVAL_ONLY (t-01,t-02), EVAL_AGENT (claude | gemini),
- * EVAL_RESUME=1 (дописати незавершений прогін того самого коміту замість почати заново), EVAL_LOG (інший файл журналу).
+ * EVAL_RESUME=1 (дописати незавершений прогін того самого коміту замість почати заново), EVAL_LOG (інший файл журналу),
+ * EVAL_CONFIRM (скільки разів повторити задачу, що впала; типово 0).
  *
  * Код виходу 2: вичерпана квота. Така спроба не є відмовою задачі, тому в журнал вона не пишеться.
  */
@@ -96,6 +97,8 @@ export function assertPatchCaptured(patch: string, stagedNames: string): void {
 async function main(): Promise<void> {
   const k = Number(process.env.EVAL_K ?? 3);
   if (!Number.isInteger(k) || k < 1) throw new Error(`EVAL_K має бути цілим >= 1: ${process.env.EVAL_K}`);
+  const confirm = Number(process.env.EVAL_CONFIRM ?? 0);
+  if (!Number.isInteger(confirm) || confirm < 0) throw new Error(`EVAL_CONFIRM має бути цілим >= 0: ${process.env.EVAL_CONFIRM}`);
   const agentName = process.env.EVAL_AGENT ?? 'claude';
   const agent = AGENTS[agentName];
   if (agent === undefined) throw new Error(`невідомий EVAL_AGENT: ${agentName}`);
@@ -124,7 +127,9 @@ async function main(): Promise<void> {
   };
 
   for (const task of tasks) {
-    for (let attempt = 1; attempt <= k; attempt += 1) {
+    // задача, що впала, отримує ще confirm спроб: при k=1 один збій моделі не має бути регресією
+    let failed = false;
+    for (let attempt = 1; attempt <= k + (failed ? confirm : 0); attempt += 1) {
       if (done.has(`${task.id}#${attempt}`)) continue;
       // чисте середовище на кожну спробу, а не на задачу: інакше друга спроба бачить файли першої
       const branch = `eval/${task.id}-${attempt}-${Date.now()}`;
@@ -144,6 +149,7 @@ async function main(): Promise<void> {
           const graders = grade({ task, patch, output: read(rec.artifact_dir, 'output.txt'), acceptance: rec.acceptance });
           // спроба успішна, лише якщо зелені всі оцінювачі з мітки; exit_status не оцінюється, але лишається в журналі
           const pass = graders.length > 0 && graders.every((g) => g.pass);
+          if (!pass) failed = true;
           appendFileSync(
             LOG,
             `${JSON.stringify({
@@ -153,6 +159,7 @@ async function main(): Promise<void> {
               agent: agent.path,
               model: agent.model,
               attempt,
+              confirm: attempt > k,
               sha,
               pass,
               graders,
@@ -186,8 +193,9 @@ async function main(): Promise<void> {
     }
   }
 
-  const lines = readFileSync(LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as SummaryLine);
-  console.table(summarize(lines, k));
+  const lines = readFileSync(LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as SummaryLine & { attempt: number });
+  // повторні спроби не входять у pass@k і pass^k: вони лише уточнюють вердикт брами
+  console.table(summarize(lines.filter((l) => l.attempt <= k), k));
   await telemetry.shutdown();
 }
 
