@@ -7,7 +7,7 @@ import { trace, type Span, type Tracer } from '@opentelemetry/api';
 import { afterAll, beforeAll, beforeEach, afterEach, describe, expect, it } from 'vitest';
 
 import { runTask, runTaskTraced, type Task } from '../../scripts/harness/run-task';
-import { claudeTraceEnv, otlpTarget, parseHeaders, startTelemetry, telemetryEnv, traceparent, validTraceId, type Telemetry } from '../../src/telemetry/otel';
+import { claudeTraceEnv, describeTarget, otlpTarget, parseHeaders, startTelemetry, telemetryEnv, traceparent, validTraceId, type Telemetry } from '../../src/telemetry/otel';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 
@@ -21,6 +21,13 @@ describe('куди слати траси', () => {
   it('LANGFUSE_BASE_URL без кінцевого слеша, явні OTEL_* мають перевагу', () => {
     expect(otlpTarget({ LANGFUSE_PUBLIC_KEY: 'a', LANGFUSE_SECRET_KEY: 'b', LANGFUSE_BASE_URL: 'https://us.cloud.langfuse.com/' })?.endpoint).toBe('https://us.cloud.langfuse.com/api/public/otel');
     expect(otlpTarget({ LANGFUSE_PUBLIC_KEY: 'a', LANGFUSE_SECRET_KEY: 'b', OTEL_EXPORTER_OTLP_ENDPOINT: 'http://x/', OTEL_EXPORTER_OTLP_HEADERS: 'h=1' })).toEqual({ endpoint: 'http://x', headers: 'h=1' });
+  });
+
+  it('стан експорту видно в консолі, а ключів там немає', () => {
+    expect(describeTarget(null)).toMatch(/без експорту/);
+    const line = describeTarget(otlpTarget({ LANGFUSE_PUBLIC_KEY: 'pk-secret', LANGFUSE_SECRET_KEY: 'sk-secret' }));
+    expect(line).toBe('Траси: експорт у https://cloud.langfuse.com');
+    expect(line).not.toMatch(/secret/);
   });
 
   it('без ключів цілі немає', () => {

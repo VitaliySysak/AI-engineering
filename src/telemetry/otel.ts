@@ -7,6 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { parseEnv } from 'node:util';
 
 import { OpenTelemetry } from '@ai-sdk/otel';
+import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { registerTelemetry } from 'ai';
@@ -52,6 +53,11 @@ export function parseHeaders(headers: string): Record<string, string> {
   return out;
 }
 
+/** Рядок для консолі: куди йдуть траси. Без значень ключів. */
+export function describeTarget(target: OtlpTarget | null): string {
+  return target === null ? 'Траси: без експорту (немає LANGFUSE_PUBLIC_KEY і LANGFUSE_SECRET_KEY)' : `Траси: експорт у ${new URL(target.endpoint).origin}`;
+}
+
 export const traceparent = (traceId: string, spanId: string): string => `00-${traceId}-${spanId}-01`;
 
 /** Нульовий ідентифікатор означає, що трасувальника немає: у журнал такий не пишемо. */
@@ -90,8 +96,11 @@ export interface Telemetry {
 export function startTelemetry(env: Env = telemetryEnv()): Telemetry {
   const target = otlpTarget(env);
   const traceExporter = target === null ? DISCARD : new OTLPTraceExporter({ url: `${target.endpoint}/v1/traces`, headers: parseHeaders(target.headers) });
+  // без цього помилки експорту зникають мовчки: процес зелений, бекенд порожній
+  diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ERROR);
   const sdk = new NodeSDK({ serviceName: 'harness', traceExporter });
   sdk.start();
+  console.log(describeTarget(target));
   // Саме ця інтеграція дотримується конвенцій GenAI; LegacyOpenTelemetry шле старі спани ai.*
   registerTelemetry(new OpenTelemetry());
   return {
