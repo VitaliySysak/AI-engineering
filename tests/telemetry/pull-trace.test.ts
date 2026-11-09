@@ -11,6 +11,14 @@ describe('атрибути витяжки', () => {
     expect(safeAttributes({ attributes: { tool_name: 'Bash', success: 'false', error: 'denied' } })).toEqual({ tool_name: 'Bash', success: 'false', error: 'denied' });
   });
 
+  it('ключ із префіксом бекенда розпізнається, а не відкидається', () => {
+    expect(safeAttributes({ 'attributes.tool_name': 'Bash', 'attributes.success': false })).toEqual({ tool_name: 'Bash', success: 'false' });
+  });
+
+  it('префікс не відкриває вміст', () => {
+    expect(JSON.stringify(safeAttributes({ 'attributes.full_command': 'ТАЄМНИЦЯ', 'attributes.gen_ai.input.messages': 'ТАЄМНИЦЯ', 'attributes.user_prompt': 'ТАЄМНИЦЯ' }))).not.toContain('ТАЄМНИЦЯ');
+  });
+
   it('вміст не потрапляє у витяжку', () => {
     const attrs = JSON.stringify(safeAttributes({ attributes: { 'gen_ai.input.messages': 'ТАЄМНИЦЯ', 'gen_ai.output.messages': 'ТАЄМНИЦЯ', full_command: 'cat ТАЄМНИЦЯ', user_prompt: 'ТАЄМНИЦЯ', 'gen_ai.tool.call.arguments': 'ТАЄМНИЦЯ', tool_input: 'ТАЄМНИЦЯ' } }));
     expect(attrs).not.toContain('ТАЄМНИЦЯ');

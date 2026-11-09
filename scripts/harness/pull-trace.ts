@@ -39,7 +39,11 @@ export function safeAttributes(metadata: unknown): Record<string, string> {
     if (typeof value !== 'object' || value === null) return;
     for (const [k, v] of Object.entries(value)) {
       if (typeof v === 'object' && v !== null && !Array.isArray(v)) walk(v);
-      else if (ALLOWED.has(k) && v !== null && v !== undefined) out[k] = (Array.isArray(v) ? JSON.stringify(v) : String(v)).slice(0, 120);
+      else if (v !== null && v !== undefined) {
+        // бекенд може додавати префікс (attributes.tool_name); порівнюємо за точною назвою або кінцем після крапки
+        const name = [...ALLOWED].find((a) => k === a || k.endsWith(`.${a}`));
+        if (name !== undefined) out[name] = (Array.isArray(v) ? JSON.stringify(v) : String(v)).slice(0, 120);
+      }
     }
   };
   walk(metadata);
@@ -102,6 +106,8 @@ async function main(): Promise<void> {
   writeFileSync(file, lines.join('\n'), 'utf8');
   console.log(lines.join('\n'));
   console.log(`Записано: ${file}`);
+  // лише назви ключів, без значень: щоб звірити перелік дозволених атрибутів
+  if (args.includes('--keys')) console.log(`Ключі metadata: ${[...new Set(observations.flatMap((o) => (typeof o.metadata === 'object' && o.metadata !== null ? Object.keys(o.metadata) : [])))].sort().join(', ')}`);
 }
 
 if (process.argv[1]?.endsWith('pull-trace.ts')) {
