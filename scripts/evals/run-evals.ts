@@ -13,7 +13,8 @@ import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync, rmdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
-import { CLAUDE_MODEL, claudeRunner, GEMINI_CLI_MODEL, geminiRunner, runTask, type AgentRunner, type Task } from '../harness/run-task';
+import { startTelemetry } from '../../src/telemetry/otel';
+import { CLAUDE_MODEL, claudeRunner, GEMINI_CLI_MODEL, geminiRunner, runTaskTraced, type AgentRunner, type Task } from '../harness/run-task';
 import { DEFAULT_LOG } from './gate';
 import { grade } from './graders';
 
@@ -92,7 +93,7 @@ export function assertPatchCaptured(patch: string, stagedNames: string): void {
   }
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const k = Number(process.env.EVAL_K ?? 3);
   if (!Number.isInteger(k) || k < 1) throw new Error(`EVAL_K має бути цілим >= 1: ${process.env.EVAL_K}`);
   const agentName = process.env.EVAL_AGENT ?? 'claude';
@@ -103,6 +104,7 @@ function main(): void {
   const tasks = parseBank(readFileSync(bankFile, 'utf8'), process.env.EVAL_BUCKET ?? '', only);
   if (tasks.length === 0) throw new Error(`у ${bankFile} немає задач для цього фільтра`);
 
+  const telemetry = startTelemetry();
   const ROOT = resolve('.');
   const git = (args: string[], cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8' });
   const sha = git(['rev-parse', '--short', 'HEAD']).trim();
@@ -132,7 +134,7 @@ function main(): void {
       symlinkSync(join(ROOT, 'node_modules'), modules, 'junction');
       let quota = false;
       try {
-        const rec = runTask(task, { runner: agent.runner, agentPath: agent.path, model: agent.model, worktree: tree, outDir: join(ROOT, 'runs') });
+        const rec = runTaskTraced(task, { runner: agent.runner, agentPath: agent.path, model: agent.model, worktree: tree, outDir: join(ROOT, 'runs') }, telemetry.target);
         quota = rec.quota_hit;
         if (!quota) {
           const patch = read(rec.artifact_dir, 'patch.diff');
@@ -176,6 +178,7 @@ function main(): void {
       }
       if (quota) {
         console.error(`${task.id} #${attempt}: вичерпано квоту. Прогін зупинено, дописати потім можна з EVAL_RESUME=1`);
+        await telemetry.shutdown();
         process.exit(2);
       }
     }
@@ -183,6 +186,12 @@ function main(): void {
 
   const lines = readFileSync(DEFAULT_LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as SummaryLine);
   console.table(summarize(lines, k));
+  await telemetry.shutdown();
 }
 
-if (process.argv[1]?.endsWith('run-evals.ts')) main();
+if (process.argv[1]?.endsWith('run-evals.ts')) {
+  main().catch((error: unknown) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}

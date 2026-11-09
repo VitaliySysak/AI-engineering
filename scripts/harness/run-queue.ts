@@ -14,7 +14,8 @@ import { basename, join, resolve } from 'node:path';
 
 import { mayRun, recordOutcome } from '../../src/harness/breaker';
 import { logStop } from '../../src/harness/stop';
-import { CLAUDE_MODEL, classifyOutcome, claudeRunner, relocate, runTask, type Task } from './run-task';
+import { startTelemetry } from '../../src/telemetry/otel';
+import { CLAUDE_MODEL, classifyOutcome, claudeRunner, relocate, runTaskTraced, type Task } from './run-task';
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--id') ?? 'docs/lab3/tasks.jsonl';
@@ -30,6 +31,7 @@ const tasks: Task[] = readFileSync(file, 'utf8')
 
 if (tasks.length === 0) throw new Error(`у ${file} немає задач${onlyId ? ` з id ${onlyId}` : ''}`);
 
+const telemetry = startTelemetry();
 const ROOT = resolve('.');
 const git = (gitArgs: string[], cwd = ROOT) => execFileSync('git', gitArgs, { cwd, encoding: 'utf8' });
 
@@ -60,7 +62,7 @@ for (const task of tasks) {
   const modules = join(tree, 'node_modules');
   symlinkSync(join(ROOT, 'node_modules'), modules, 'junction');
   try {
-    const rec = runTask(task, { runner: claudeRunner, agentPath: 'claude-code -p', model: CLAUDE_MODEL, worktree: tree, outDir: join(ROOT, 'runs') });
+    const rec = runTaskTraced(task, { runner: claudeRunner, agentPath: 'claude-code -p', model: CLAUDE_MODEL, worktree: tree, outDir: join(ROOT, 'runs') }, telemetry.target);
     // артефакт — у репозиторій; сира runs/ лишається поза git
     const keepRel = join('docs', 'lab3', 'runs', basename(rec.artifact_dir));
     const keep = join(ROOT, keepRel);
@@ -102,3 +104,5 @@ for (const task of tasks) {
     git(['worktree', 'remove', tree, '--force']);
   }
 }
+
+await telemetry.shutdown();

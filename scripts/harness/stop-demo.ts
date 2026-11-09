@@ -15,8 +15,10 @@ import { createAgent } from '../../src/agent/agent-aisdk';
 import { resolveInside } from '../../src/agent/tools';
 import { STOP_LOG, stepLimit } from '../../src/harness/stop';
 import { CATALOG } from '../../src/models';
+import { startTelemetry } from '../../src/telemetry/otel';
 
 const N = 2;
+const telemetry = startTelemetry();
 const root = process.cwd();
 const agent = createAgent(
   // та сама модель безкоштовного рівня, що й у судді: перша спроба на gemini-3.8-flash впала з AI_RetryError
@@ -30,6 +32,8 @@ const agent = createAgent(
   },
   N,
   stepLimit(N, 'stop-demo'),
+  // крок 06: functionId лягає в gen_ai.agent.name; вміст промптів у публічний репозиторій не йде
+  { functionId: 'harness-stop-demo', recordInputs: false, recordOutputs: false },
 );
 
 const prompt = 'Прочитай по черзі кожен файл у теці corpus (спершу list_files, потім read_file для кожного) і дай підсумок: назва файлу — одне речення.';
@@ -48,4 +52,5 @@ await new Promise((resolve) => setTimeout(resolve, 50)); // stepLimit пише �
 // Висновок — лише за журналом: збій провайдера теж перериває цикл, але межа тоді не спрацювала
 const hit = stops() > before;
 console.log(hit ? `Межа isStepCount(${N}) спрацювала: новий рядок у ${STOP_LOG}` : `Межа isStepCount(${N}) НЕ спрацювала: нового рядка в журналі немає`);
+await telemetry.shutdown();
 if (!hit) process.exit(1);

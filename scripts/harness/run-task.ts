@@ -10,7 +10,10 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { trace, type Tracer } from '@opentelemetry/api';
+
 import { CATALOG } from '../../src/models';
+import { claudeTraceEnv, traceparent, validTraceId, type OtlpTarget } from '../../src/telemetry/otel';
 
 export interface Task {
   readonly id: string;
@@ -295,4 +298,31 @@ export function runTask(
   };
   writeFileSync(join(dir, 'run.json'), `${JSON.stringify(record, null, 2)}\n`, 'utf8');
   return record;
+}
+
+/**
+ * Задача всередині власного спана (крок 06): ідентифікатор траси лягає і в run.json, і в evals.jsonl. Для Claude Code
+ * спан стає батьком його власних спанів через TRACEPARENT; змінні діють лише на час задачі.
+ */
+export function runTaskTraced(task: Task, opts: Parameters<typeof runTask>[1], target: OtlpTarget | null, tracer: Tracer = trace.getTracer('harness')): RunRecord {
+  return tracer.startActiveSpan(`task ${task.id}`, (span) => {
+    const ctx = span.spanContext();
+    const childEnv = target !== null && opts.agentPath.startsWith('claude') ? claudeTraceEnv(target, traceparent(ctx.traceId, ctx.spanId)) : {};
+    const saved = Object.keys(childEnv).map((k) => [k, process.env[k]] as const);
+    Object.assign(process.env, childEnv);
+    try {
+      const rec = runTask(task, opts);
+      span.setAttributes({ 'harness.task_id': task.id, 'harness.agent_path': opts.agentPath, 'harness.exit_status': rec.exit_status, 'harness.acceptance_passed': rec.acceptance_passed, 'gen_ai.agent.name': 'harness-run-task' });
+      const withTrace: RunRecord = { ...rec, trace_id: validTraceId(ctx.traceId) };
+      // runTask уже записав run.json із trace_id: null, тож журнал перезаписуємо
+      writeFileSync(join(withTrace.artifact_dir, 'run.json'), `${JSON.stringify(withTrace, null, 2)}\n`, 'utf8');
+      return withTrace;
+    } finally {
+      for (const [k, v] of saved) {
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      }
+      span.end();
+    }
+  });
 }

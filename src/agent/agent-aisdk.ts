@@ -36,7 +36,13 @@ export function pickModel(): LanguageModel {
 
 export const Report = z.object({ summary: z.string(), written: z.array(z.string()) });
 
-export function createAgent(model: LanguageModel, fs: FileOps, maxSteps = 5, stopWhen?: StopCondition<any, any>) {
+export function createAgent(
+  model: LanguageModel,
+  fs: FileOps,
+  maxSteps = 5,
+  stopWhen?: StopCondition<any, any>,
+  telemetry?: ConstructorParameters<typeof ToolLoopAgent>[0]['telemetry'], // крок 06 Лаб3
+) {
   return new ToolLoopAgent({
     model,
     instructions: 'Ти файловий асистент. Якщо запис відхилено, не повторюй його.',
@@ -64,6 +70,7 @@ export function createAgent(model: LanguageModel, fs: FileOps, maxSteps = 5, sto
     toolApproval: { write_file: 'user-approval' }, // драбина довіри в коді: запис — лише після «так» людини
     stopWhen: stopWhen ?? isStepCount(maxSteps), // власна умова — Лабораторна 3, крок 03 (src/harness/stop.ts)
     output: Output.object({ schema: Report }),
+    ...(telemetry === undefined ? {} : { telemetry }),
   });
 }
 
