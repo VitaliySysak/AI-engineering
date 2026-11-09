@@ -1,0 +1,5 @@
+{"ts":"2026-11-09T10:47:46.516Z","tool":"Grep","input":{"path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01","pattern":"Refusal"},"result":"ok","session":"3587e1ac-c915-4b35-b026-a369ca3f0998","source":"claude-code"}
+{"ts":"2026-11-09T10:47:46.633Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\src\\mcp\\tools.ts"},"result":"ok","session":"3587e1ac-c915-4b35-b026-a369ca3f0998","source":"claude-code"}
+{"ts":"2026-11-09T10:47:46.850Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\tests\\mcp.test.ts"},"result":"ok","session":"3587e1ac-c915-4b35-b026-a369ca3f0998","source":"claude-code"}
+{"ts":"2026-11-09T10:47:50.529Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\src\\mcp\\tools.ts"},"result":"ok","session":"3587e1ac-c915-4b35-b026-a369ca3f0998","source":"claude-code"}
+{"ts":"2026-11-09T10:47:51.435Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\harness-runs\\t-01\\tests\\mcp.test.ts"},"result":"ok","session":"3587e1ac-c915-4b35-b026-a369ca3f0998","source":"claude-code"}

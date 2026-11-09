@@ -5,3 +5,5 @@
 {"at":"2026-11-08T13:33:39.907Z","taskId":"t-06","limit":"breaker","why":"open: 3 однакових відмов підряд: max_turns; перепочинок ще 30 хв"}
 {"at":"2026-11-08T13:45:26.940Z","taskId":"stop-demo","limit":"isStepCount","n":2}
 {"at":"2026-11-08T13:47:25.196Z","taskId":"t-06","limit":"breaker","why":"open: 3 однакових відмов підряд: max_turns; перепочинок ще 17 хв"}
+{"at":"2026-11-09T10:40:24.901Z","taskId":"stop-demo","limit":"isStepCount","n":2}
+{"at":"2026-11-09T10:48:15.893Z","taskId":"stop-demo","limit":"isStepCount","n":2}

@@ -5,7 +5,7 @@
  *   npx tsx scripts/evals/run-evals.ts docs/lab3/tasks.jsonl
  *
  * Змінні: EVAL_K (типово 3), EVAL_BUCKET (один кошик), EVAL_ONLY (t-01,t-02), EVAL_AGENT (claude | gemini),
- * EVAL_RESUME=1 (дописати незавершений прогін того самого коміту замість почати заново).
+ * EVAL_RESUME=1 (дописати незавершений прогін того самого коміту замість почати заново), EVAL_LOG (інший файл журналу).
  *
  * Код виходу 2: вичерпана квота. Така спроба не є відмовою задачі, тому в журнал вона не пишеться.
  */
@@ -108,10 +108,12 @@ async function main(): Promise<void> {
   const ROOT = resolve('.');
   const git = (args: string[], cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8' });
   const sha = git(['rev-parse', '--short', 'HEAD']).trim();
-  const resume = process.env.EVAL_RESUME === '1' && existsSync(DEFAULT_LOG);
-  const done = resume ? doneAttempts(readFileSync(DEFAULT_LOG, 'utf8'), sha) : new Set<string>();
+  // окремий журнал — щоб діагностичні прогони кроку 06 не перезаписали журнал замороженого банку
+  const LOG = process.env.EVAL_LOG ?? DEFAULT_LOG;
+  const resume = process.env.EVAL_RESUME === '1' && existsSync(LOG);
+  const done = resume ? doneAttempts(readFileSync(LOG, 'utf8'), sha) : new Set<string>();
   // журнал — лише останній прогін: брама рахує всі рядки файлу, старі спроби змішалися б із новими
-  if (!resume) writeFileSync(DEFAULT_LOG, '', 'utf8');
+  if (!resume) writeFileSync(LOG, '', 'utf8');
 
   const read = (dir: string, name: string) => {
     try {
@@ -143,7 +145,7 @@ async function main(): Promise<void> {
           // спроба успішна, лише якщо зелені всі оцінювачі з мітки; exit_status не оцінюється, але лишається в журналі
           const pass = graders.length > 0 && graders.every((g) => g.pass);
           appendFileSync(
-            DEFAULT_LOG,
+            LOG,
             `${JSON.stringify({
               task_id: task.id,
               bucket: task.bucket,
@@ -167,7 +169,7 @@ async function main(): Promise<void> {
               at: new Date().toISOString(),
             })}\n`,
           );
-          console.log(`${task.id} #${attempt}: ${pass ? 'pass' : 'FAIL'} (${graders.filter((g) => !g.pass).map((g) => g.id).join(', ') || 'усі зелені'}), ${rec.exit_status}, ${rec.duration_s} с`);
+          console.log(`${task.id} #${attempt}: ${pass ? 'pass' : 'FAIL'} (${graders.filter((g) => !g.pass).map((g) => g.id).join(', ') || 'усі зелені'}), ${rec.exit_status}, ${rec.duration_s} с · trace ${rec.trace_id ?? '—'}`);
         }
       } finally {
         // спершу знімаємо посилання, інакше видалення дерева могло б піти в справжній node_modules
@@ -184,7 +186,7 @@ async function main(): Promise<void> {
     }
   }
 
-  const lines = readFileSync(DEFAULT_LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as SummaryLine);
+  const lines = readFileSync(LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as SummaryLine);
   console.table(summarize(lines, k));
   await telemetry.shutdown();
 }
