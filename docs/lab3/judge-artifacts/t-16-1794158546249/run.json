@@ -1,0 +1,33 @@
+{
+  "task_id": "t-16",
+  "agent_path": "claude-code -p",
+  "model": "haiku",
+  "artifact_dir": "C:\\Users\\User\\Desktop\\ITStep\\AI-engineering\\runs\\t-16-1794158546249",
+  "started_at": "2026-11-08T17:22:26.249Z",
+  "ended_at": "2026-11-08T17:22:47.527Z",
+  "duration_s": 21.278,
+  "exit_status": "ok",
+  "exit_code": 0,
+  "acceptance": [
+    {
+      "cmd": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "cmd": "npm test -- tests/chunk-normalize.test.ts",
+      "exit": 0
+    }
+  ],
+  "acceptance_passed": true,
+  "session_id": "7b3090db-683a-46a8-b8d8-61eb3446b1f4",
+  "result_subtype": "success",
+  "num_turns": 6,
+  "input_tokens": 73436,
+  "cache_read_tokens": 64207,
+  "output_tokens": 2908,
+  "permission_denials": 1,
+  "cost_usd_estimate": 0.00394087,
+  "quota_hit": false,
+  "trace_id": null,
+  "gates": {}
+}

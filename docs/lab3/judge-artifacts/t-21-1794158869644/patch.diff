@@ -1,0 +1,69 @@
+diff --git a/tests/transitions.test.ts b/tests/transitions.test.ts
+new file mode 100644
+index 0000000..0c37067
+--- /dev/null
++++ b/tests/transitions.test.ts
+@@ -0,0 +1,63 @@
++import { describe, expect, it } from 'vitest';
++
++import { transitions, type Verdict } from '../src/metrics';
++
++describe('transitions', () => {
++  it('запит, якого немає в after, пропускається', () => {
++    const before: Record<string, Verdict> = { 'q-01': 'wrong', 'q-02': 'wrong', 'q-03': 'partial' };
++    const after: Record<string, Verdict> = { 'q-01': 'correct', 'q-02': 'correct' };
++
++    const rows = transitions(before, after);
++
++    expect(rows).toEqual([{ from: 'wrong', to: 'correct', ids: ['q-01', 'q-02'] }]);
++    expect(rows.flatMap((row) => row.ids)).not.toContain('q-03');
++  });
++
++  it('переходи згруповано за парою from→to', () => {
++    const before: Record<string, Verdict> = {
++      'q-01': 'wrong',
++      'q-02': 'partial',
++      'q-03': 'wrong',
++      'q-04': 'partial',
++    };
++    const after: Record<string, Verdict> = {
++      'q-01': 'correct',
++      'q-02': 'correct',
++      'q-03': 'correct',
++      'q-04': 'wrong',
++    };
++
++    const rows = transitions(before, after);
++
++    expect(rows).toHaveLength(3);
++    expect(rows).toContainEqual({ from: 'wrong', to: 'correct', ids: ['q-01', 'q-03'] });
++    expect(rows).toContainEqual({ from: 'partial', to: 'correct', ids: ['q-02'] });
++    expect(rows).toContainEqual({ from: 'partial', to: 'wrong', ids: ['q-04'] });
++  });
++
++  it('групи відсортовано за спаданням кількості id', () => {
++    const before: Record<string, Verdict> = {
++      'q-01': 'wrong',
++      'q-02': 'correct',
++      'q-03': 'correct',
++      'q-04': 'correct',
++      'q-05': 'partial',
++      'q-06': 'partial',
++    };
++    const after: Record<string, Verdict> = {
++      'q-01': 'partial',
++      'q-02': 'wrong',
++      'q-03': 'wrong',
++      'q-04': 'wrong',
++      'q-05': 'correct',
++      'q-06': 'correct',
++    };
++
++    const rows = transitions(before, after);
++
++    expect(rows.map((row) => row.ids.length)).toEqual([3, 2, 1]);
++    expect(rows[0]).toEqual({ from: 'correct', to: 'wrong', ids: ['q-02', 'q-03', 'q-04'] });
++    expect(rows[1]).toEqual({ from: 'partial', to: 'correct', ids: ['q-05', 'q-06'] });
++    expect(rows[2]).toEqual({ from: 'wrong', to: 'partial', ids: ['q-01'] });
++  });
++});

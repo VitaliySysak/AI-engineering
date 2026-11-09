@@ -1,0 +1,28 @@
+diff --git a/src/metrics.ts b/src/metrics.ts
+index 0704dff..2dbf5b1 100644
+--- a/src/metrics.ts
++++ b/src/metrics.ts
+@@ -15,6 +15,7 @@ export type Verdict = 'correct' | 'partial' | 'wrong' | 'refused';
+ 
+ /** Документи за топ-k ФРАГМЕНТАМИ, у порядку першої появи, без повторів. */
+ export function docsAtK(hits: readonly Hit[], k: number): string[] {
++  if (k < 1) throw new RangeError('k має бути не меншим за 1');
+   const out: string[] = [];
+   for (const hit of hits.slice(0, k)) {
+     if (!out.includes(hit.docId)) out.push(hit.docId);
+diff --git a/tests/metrics.test.ts b/tests/metrics.test.ts
+index 95383c5..7c46209 100644
+--- a/tests/metrics.test.ts
++++ b/tests/metrics.test.ts
+@@ -25,6 +25,11 @@ describe('docsAtK', () => {
+     // топ-2 фрагменти — обидва з doc-07, тож документів усього один
+     expect(docsAtK(hits, 2)).toEqual(['doc-07']);
+   });
++
++  it('для k < 1 кидає RangeError, а не мовчки повертає порожній перелік', () => {
++    expect(() => docsAtK(hits, 0)).toThrow(RangeError);
++    expect(() => docsAtK(hits, -1)).toThrow(RangeError);
++  });
+ });
+ 
+ describe('recall@k', () => {

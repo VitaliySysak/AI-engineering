@@ -1,0 +1,22 @@
+diff --git a/src/metrics.ts b/src/metrics.ts
+index 0704dff..413a975 100644
+--- a/src/metrics.ts
++++ b/src/metrics.ts
+@@ -47,12 +47,16 @@ export function mean(values: readonly number[]): number {
+   return values.reduce((sum, v) => sum + v, 0) / values.length;
+ }
+ 
++/** Дисконтований сумарний приріст для переліку оцінок у порядку ранжування. */
++function dcg(gs: readonly number[]): number {
++  return gs.reduce((s, g, i) => s + g / Math.log2(i + 2), 0);
++}
++
+ /**
+  * nDCG@k для НЕбінарної релевантності: `gains` — оцінка кожного документа (0, 1, 2…).
+  * Беріть лише тоді, коли ці оцінки у вас справді розставлені рукою.
+  */
+ export function ndcgAtK(hits: readonly Hit[], gains: Readonly<Record<string, number>>, k: number): number {
+-  const dcg = (gs: readonly number[]): number => gs.reduce((s, g, i) => s + g / Math.log2(i + 2), 0);
+   const got = docsAtK(hits, k).map((id) => gains[id] ?? 0);
+   const ideal = Object.values(gains).sort((a, b) => b - a).slice(0, k);
+   const best = dcg(ideal);

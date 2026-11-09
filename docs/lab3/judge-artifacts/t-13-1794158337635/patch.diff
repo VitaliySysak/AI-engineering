@@ -1,0 +1,29 @@
+diff --git a/src/rag/refusal.ts b/src/rag/refusal.ts
+index b1e837a..46b95f7 100644
+--- a/src/rag/refusal.ts
++++ b/src/rag/refusal.ts
+@@ -29,6 +29,9 @@ export interface RefusalSignal {
+ 
+ /** null — відповідати; рядок — причина відмови. Чиста функція, без мережі. */
+ export function refusalReason(signal: RefusalSignal, rule: RefusalRule = REFUSAL): string | null {
++  if (Number.isNaN(signal.topCosine)) {
++    throw new RangeError('косинус найкращого фрагмента є NaN: рішення про відмову неможливе');
++  }
+   if (rule.minCosine !== null && signal.topCosine < rule.minCosine) {
+     return `найкращий фрагмент надто далекий: косинус ${signal.topCosine.toFixed(4)} < ${rule.minCosine}`;
+   }
+diff --git a/tests/retrieval.test.ts b/tests/retrieval.test.ts
+index 404cad1..04ae2af 100644
+--- a/tests/retrieval.test.ts
++++ b/tests/retrieval.test.ts
+@@ -133,4 +133,10 @@ describe('refusalReason', () => {
+     expect(refusalReason({ topCosine: 0.7, wordHits: 0 }, rule)).toContain('жодне слово');
+     expect(refusalReason({ topCosine: 0.7, wordHits: 3 }, rule)).toBeNull();
+   });
++
++  it('для NaN у косинусі кидає RangeError, а не мовчки відповідає', () => {
++    const rule = { minCosine: 0.6, requireWordHit: true };
++    expect(() => refusalReason({ topCosine: Number.NaN, wordHits: 3 }, rule)).toThrow(RangeError);
++    expect(() => refusalReason({ topCosine: Number.NaN, wordHits: 3 })).toThrow(RangeError);
++  });
+ });

@@ -1,0 +1,36 @@
+diff --git a/tests/chunk-normalize.test.ts b/tests/chunk-normalize.test.ts
+new file mode 100644
+index 0000000..cb1bf39
+--- /dev/null
++++ b/tests/chunk-normalize.test.ts
+@@ -0,0 +1,30 @@
++import { describe, expect, it } from 'vitest';
++
++import { normalize } from '../src/rag/chunk';
++
++describe('normalize', () => {
++  it('знімає BOM на початку, але не чіпає решту тексту', () => {
++    expect(normalize('﻿# Заголовок')).toBe('# Заголовок');
++    // лише один BOM на початку: другий лишається як є
++    expect(normalize('﻿﻿x')).toBe('﻿x');
++    // BOM посередині тексту не знімається
++    expect(normalize('a﻿b')).toBe('a﻿b');
++  });
++
++  it('замінює CRLF на LF і не чіпає одиничний CR', () => {
++    expect(normalize('рядок 1\r\nрядок 2\r\n')).toBe('рядок 1\nрядок 2\n');
++    expect(normalize('a\rb')).toBe('a\rb');
++  });
++
++  it('обрізає пробіли й табуляції в кінці кожного рядка', () => {
++    expect(normalize('abc  \ndef\t\t\nghi')).toBe('abc\ndef\nghi');
++    // пробіли на початку рядка і всередині лишаються
++    expect(normalize('  a b  ')).toBe('  a b');
++  });
++
++  it('ідемпотентна: повторний виклик нічого не змінює', () => {
++    const raw = '﻿## Розділ \r\nтекст  \r\n\r\n\tкод\t\n';
++    const once = normalize(raw);
++    expect(normalize(once)).toBe(once);
++  });
++});

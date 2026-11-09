@@ -1,0 +1,4 @@
+{"ts":"2026-11-08T17:18:59.985Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\eval-runs\\t-13-1\\tests\\retrieval.test.ts"},"result":"ok","session":"ce00b157-cb47-4f1f-a2aa-17e2c1fe73ac","source":"claude-code"}
+{"ts":"2026-11-08T17:18:59.985Z","tool":"Read","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\eval-runs\\t-13-1\\src\\rag\\refusal.ts"},"result":"ok","session":"ce00b157-cb47-4f1f-a2aa-17e2c1fe73ac","source":"claude-code"}
+{"ts":"2026-11-08T17:19:03.023Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\eval-runs\\t-13-1\\src\\rag\\refusal.ts"},"result":"ok","session":"ce00b157-cb47-4f1f-a2aa-17e2c1fe73ac","source":"claude-code"}
+{"ts":"2026-11-08T17:19:04.113Z","tool":"Edit","input":{"file_path":"C:\\Users\\User\\Desktop\\ITStep\\eval-runs\\t-13-1\\tests\\retrieval.test.ts"},"result":"ok","session":"ce00b157-cb47-4f1f-a2aa-17e2c1fe73ac","source":"claude-code"}

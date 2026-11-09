@@ -1,0 +1,15 @@
+diff --git a/tests/long-input-mean.test.ts b/tests/long-input-mean.test.ts
+new file mode 100644
+index 0000000..0ba576c
+--- /dev/null
++++ b/tests/long-input-mean.test.ts
+@@ -0,0 +1,9 @@
++import { describe, expect, it } from 'vitest';
++
++import { mean } from '../src/metrics';
++
++describe('mean', () => {
++  it('mean([1, 2, 3]) дорівнює 2', () => {
++    expect(mean([1, 2, 3])).toBe(2);
++  });
++});

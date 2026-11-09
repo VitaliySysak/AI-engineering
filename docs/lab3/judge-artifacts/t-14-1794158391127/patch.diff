@@ -1,0 +1,29 @@
+diff --git a/src/cost.ts b/src/cost.ts
+index c496e0e..fec14b3 100644
+--- a/src/cost.ts
++++ b/src/cost.ts
+@@ -87,6 +87,9 @@ export function errorPct(estimated: number, actual: number): number {
+ 
+ /** Критерій кроку 07 (лише для хмарної моделі): похибка не більша за 10%. */
+ export function withinTolerance(estimated: number, actual: number, maxPct = 10): boolean {
++  if (maxPct < 0) {
++    throw new RangeError('Допуск у відсотках не може бути від\'ємним');
++  }
+   return errorPct(estimated, actual) <= maxPct;
+ }
+ 
+diff --git a/tests/cost.test.ts b/tests/cost.test.ts
+index 754cb57..8ed5f34 100644
+--- a/tests/cost.test.ts
++++ b/tests/cost.test.ts
+@@ -53,6 +53,10 @@ describe('звірка оцінки з фактом', () => {
+     expect(withinTolerance(111, 100)).toBe(false);
+   });
+ 
++  it('від\'ємний допуск — помилка виклику, а не завжди false', () => {
++    expect(() => withinTolerance(100, 100, -1)).toThrow(RangeError);
++  });
++
+   it('пастка Messages-форми: без додавання кешу правильна оцінка виглядає як промах', () => {
+     const raw = { input_tokens: 24, cache_read_input_tokens: 4_000, output_tokens: 9 };
+     const estimate = 4_050;

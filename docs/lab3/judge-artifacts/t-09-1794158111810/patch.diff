@@ -1,0 +1,26 @@
+diff --git a/tests/extract-json.test.ts b/tests/extract-json.test.ts
+new file mode 100644
+index 0000000..5d0faeb
+--- /dev/null
++++ b/tests/extract-json.test.ts
+@@ -0,0 +1,20 @@
++import { describe, expect, it } from 'vitest';
++
++import { extractJson } from '../src/agent/agent-loop';
++
++describe('extractJson', () => {
++  it('повертає об’єкт із JSON усередині блоку ```json', () => {
++    const text = 'Ось відповідь:\n```json\n{"summary": "ок", "files": ["a.ts"]}\n```\nГотово.';
++    expect(extractJson(text)).toEqual({ summary: 'ок', files: ['a.ts'] });
++  });
++
++  it('повертає undefined для тексту без фігурних дужок', () => {
++    expect(extractJson('немає жодного об’єкта')).toBeUndefined();
++    expect(extractJson('')).toBeUndefined();
++  });
++
++  it('повертає undefined для зламаного JSON', () => {
++    expect(extractJson('```json\n{"summary": "ок",}\n```')).toBeUndefined();
++    expect(extractJson('```json\n{summary: "ок"}\n```')).toBeUndefined();
++  });
++});
