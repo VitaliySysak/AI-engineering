@@ -113,7 +113,13 @@ describe('задача в спані', () => {
     return { exitCode: 0, stdout: '{}', stderr: '', timedOut: false };
   };
 
+  // ізоляція від середовища, у якому запущено тести: під трасованим агентом TRACEPARENT уже задано (крок 07)
+  const OUTER = ['TRACEPARENT', 'CLAUDE_CODE_ENHANCED_TELEMETRY_BETA'] as const;
+  let outer: Record<string, string | undefined> = {};
+
   beforeEach(() => {
+    outer = Object.fromEntries(OUTER.map((k) => [k, process.env[k]]));
+    for (const k of OUTER) delete process.env[k];
     attrs = {};
     ended = 0;
     delete seen.parent;
@@ -124,7 +130,13 @@ describe('задача в спані', () => {
     execFileSync('git', ['init', '-q'], { cwd: repo });
     execFileSync('git', ['-c', 'user.email=a@a', '-c', 'user.name=a', 'commit', '-q', '--allow-empty', '-m', 'i'], { cwd: repo });
   });
-  afterEach(() => rmSync(root, { recursive: true, force: true }));
+  afterEach(() => {
+    rmSync(root, { recursive: true, force: true });
+    for (const k of OUTER) {
+      if (outer[k] === undefined) delete process.env[k];
+      else process.env[k] = outer[k];
+    }
+  });
 
   const target = { endpoint: 'https://l', headers: 'h=1' };
   const opts = (agentPath: string) => ({ runner, agentPath, worktree: repo, outDir: join(root, 'out') });
