@@ -79,7 +79,9 @@ for (const task of tasks) {
     if (git(['diff', '--cached', '--name-only'], tree).trim() !== '') {
       git(['commit', '-m', `harness: ${task.id}`], tree);
       // -B вище починає гілку заново від main, тож повторний push задачі не є fast-forward; лише гілки harness/*
-      if (push) git(['push', '--force-with-lease', '-u', 'origin', branch], tree);
+      // брама безпеки: зміну з мережевим викликом не відправляємо навіть із --push (крок 07)
+      if (push && rec.security?.ok === false) console.log(`  БРАМА БЕЗПЕКИ: ${branch} не відправлено — ${rec.security.findings.join('; ')}`);
+      else if (push) git(['push', '--force-with-lease', '-u', 'origin', branch], tree);
     }
     // Шар задачі: який ліміт спрацював; брейкер рахує результат і, якщо треба, відкривається
     if (rec.result_subtype?.startsWith('error_max') || rec.exit_status === 'timeout') {

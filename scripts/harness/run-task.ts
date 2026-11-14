@@ -14,6 +14,7 @@ import { trace, type Tracer } from '@opentelemetry/api';
 
 import { CATALOG } from '../../src/models';
 import { claudeTraceEnv, traceparent, validTraceId, type OtlpTarget } from '../../src/telemetry/otel';
+import { securityGate, type SecurityVerdict } from './security';
 
 export interface Task {
   readonly id: string;
@@ -53,7 +54,10 @@ export interface RunRecord {
   readonly exit_status: 'ok' | 'agent_failed' | 'timeout';
   readonly exit_code: number;
   readonly acceptance: readonly { readonly cmd: string; readonly exit: number }[];
+  /** Пройдено лише тоді, коли зелені всі команди acceptance і брама безпеки. */
   readonly acceptance_passed: boolean;
+  /** Брама безпеки (крок 07): зміна не додає мережевих викликів і зовнішніх адрес. */
+  readonly security?: SecurityVerdict;
   readonly session_id: string | null;
   /** subtype результату Claude Code (наприклад, 'success'); розрізняє вичерпаний бюджет і падіння — крок 03 */
   readonly result_subtype: string | null;
@@ -277,6 +281,8 @@ export function runTask(
   writeFileSync(join(dir, 'agent-actions.jsonl'), actions === '' ? '' : `${actions}\n`, 'utf8');
 
   const acceptance = (opts.check ?? checkAcceptance)(task, opts.worktree);
+  // брама безпеки дивиться на саму зміну: дозволений файл перелік інструментів не захищає (крок 07, r-11)
+  const security = securityGate(patch);
   const ended = new Date();
   const record: RunRecord = {
     task_id: task.id,
@@ -289,7 +295,8 @@ export function runTask(
     exit_status: res.timedOut ? 'timeout' : res.exitCode === 0 ? 'ok' : 'agent_failed',
     exit_code: res.exitCode,
     acceptance,
-    acceptance_passed: acceptance.length > 0 && acceptance.every((a) => a.exit === 0),
+    acceptance_passed: acceptance.length > 0 && acceptance.every((a) => a.exit === 0) && security.ok,
+    security,
     ...readMeta(res.stdout),
     // stderr — лише для невдалого запуску: успішний Gemini CLI може згадати 429 про повтор, після якого все минуло
     quota_hit: quotaHit(res.stdout) || (res.exitCode !== 0 && quotaHit(res.stderr)),
