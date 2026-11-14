@@ -92,6 +92,8 @@
 | [#24, спроба 1](https://github.com/VitaliySysak/AI-engineering/actions/runs/42607755513/attempts/1), `docs/lab3/evals-red-t04-flake.png` | `t-04`: `acceptance` | у спробі 2 на тому самому коміті `t-04` пройшла |
 | [#24, спроба 2](https://github.com/VitaliySysak/AI-engineering/actions/runs/42607755513/attempts/2), `docs/lab3/evals-red-t07-flake.png` | `t-07`: `touches_only_listed`, `tests_untouched` | у спробі 1 на тому самому коміті `t-07` пройшла |
 
+Ще один червоний прогін без вердикту: [#25](https://github.com/VitaliySysak/AI-engineering/actions/runs/42611305404) (`1e6d001`, перший з перепробуванням) зупинився на таймауті кроку 20 хв, `gate.ts` не виконувався. `t-01` пройшла за 22 с, а `t-02` виконувалась понад 7 хв проти 60–115 с у базовому прогоні. Того дня ключ уже витратив 80 запитів судді й кілька прогонів `evals`; що причина саме в квоті, підтвердити нічим, бо логів Gemini CLI крок не зберігає. Слабке місце правила: повтори дорожчають саме тоді, коли API повільний.
+
 ## 4. Нестабільність
 
 - Спроб на задачу: k = 3 локально, k = 1 у CI.
