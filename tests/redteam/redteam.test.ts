@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { Task } from '../../scripts/harness/run-task';
 import { BAD_REMOTE, CANARY, CASES, FAKE_TRACE_TARGET, TARGET_FILE } from '../../scripts/redteam/cases';
 import { checkAll, touchesCanaryFile } from '../../scripts/redteam/invariants';
-import { delivery, plantFiles, stampFile, taskFor } from '../../scripts/redteam/run-redteam';
+import { delivery, plantFiles, taskFor } from '../../scripts/redteam/run-redteam';
 
 describe('сценарії', () => {
   it('щонайменше 6, по два на кожну точку входу, унікальні id і маркери', () => {
@@ -42,19 +42,19 @@ describe('підкидання', () => {
     expect(taskFor(base, byChannel('task_text')).input).toContain(byChannel('task_text').marker);
     expect(taskFor(base, byChannel('doc_file')).input).toContain('docs/EXTERNAL.md');
     expect(taskFor(base, byChannel('doc_file')).input).not.toContain(byChannel('doc_file').marker);
-    expect(taskFor(base, byChannel('test_output'))).toEqual(base);
+    expect(taskFor(base, byChannel('check_output'))).toEqual(base);
   });
 
-  it('файли: документ, нотатки для пошуку, тест із міткою доставки', () => {
+  it('файли: документ, нотатки для пошуку, модуль із помилкою типу', () => {
     expect(plantFiles(byChannel('task_text'))).toEqual({});
     expect(Object.values(plantFiles(byChannel('doc_file')))[0]).toContain(byChannel('doc_file').marker);
     const notes = Object.entries(plantFiles(byChannel('search_result')))[0]!;
     expect(notes[0]).toMatch(/^scripts\//);
     expect(notes[1]).toMatch(/sleep/);
-    const test = Object.values(plantFiles(byChannel('test_output')))[0]!;
-    expect(test).toContain(`redteam-delivered-${byChannel('test_output').id}`);
-    expect(test).toContain('import.meta.url');
-    expect(test).toContain(byChannel('test_output').marker);
+    const [file, text] = Object.entries(plantFiles(byChannel('check_output')))[0]!;
+    expect(file).toMatch(/^src\//);
+    expect(text).toContain("ENVIRONMENT_NOTICE: 'ok' =");
+    expect(text).toContain(byChannel('check_output').marker);
   });
 });
 
@@ -126,10 +126,10 @@ describe('інваріанти', () => {
     expect(delivery(doc, ev()).delivered).toBe(false);
     write('agent-actions.jsonl', `${JSON.stringify({ tool: 'Read', input: { file_path: 'C:\\t\\docs\\EXTERNAL.md' }, result: 'ok' })}\n`);
     expect(delivery(doc, ev()).delivered).toBe(true);
-    const t = CASES.find((c) => c.channel === 'test_output')!;
-    // мітка, поставлена вже під час acceptance, доставкою агентові не вважається
-    writeFileSync(stampFile(t.id, tree), '1');
+    const t = CASES.find((c) => c.channel === 'check_output')!;
     expect(delivery(t, ev()).delivered).toBe(false);
-    expect(delivery(t, ev(), true).delivered).toBe(true);
+    write('agent-actions.jsonl', `${JSON.stringify({ tool: 'Bash', input: { command: 'npm run typecheck' }, result: 'error' })}
+`);
+    expect(delivery(t, ev()).delivered).toBe(true);
   });
 });
