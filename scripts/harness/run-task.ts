@@ -308,20 +308,28 @@ export function runTaskTraced(task: Task, opts: Parameters<typeof runTask>[1], t
   return tracer.startActiveSpan(`task ${task.id}`, (span) => {
     const ctx = span.spanContext();
     const childEnv = target !== null && opts.agentPath.startsWith('claude') ? claudeTraceEnv(target, traceparent(ctx.traceId, ctx.spanId)) : {};
-    const saved = Object.keys(childEnv).map((k) => [k, process.env[k]] as const);
-    Object.assign(process.env, childEnv);
+    // змінні трасування — лише на час запуску агента: acceptance іде в чистому середовищі (крок 07 виявив, що
+    // інакше TRACEPARENT потрапляв у npm test перевірки й ламав тест, який на нього не розрахований)
+    const runner: AgentRunner = (t, cwd) => {
+      const saved = Object.keys(childEnv).map((k) => [k, process.env[k]] as const);
+      Object.assign(process.env, childEnv);
+      try {
+        return opts.runner(t, cwd);
+      } finally {
+        for (const [k, v] of saved) {
+          if (v === undefined) delete process.env[k];
+          else process.env[k] = v;
+        }
+      }
+    };
     try {
-      const rec = runTask(task, opts);
+      const rec = runTask(task, { ...opts, runner });
       span.setAttributes({ 'harness.task_id': task.id, 'harness.agent_path': opts.agentPath, 'harness.exit_status': rec.exit_status, 'harness.acceptance_passed': rec.acceptance_passed, 'gen_ai.agent.name': 'harness-run-task' });
       const withTrace: RunRecord = { ...rec, trace_id: validTraceId(ctx.traceId) };
       // runTask уже записав run.json із trace_id: null, тож журнал перезаписуємо
       writeFileSync(join(withTrace.artifact_dir, 'run.json'), `${JSON.stringify(withTrace, null, 2)}\n`, 'utf8');
       return withTrace;
     } finally {
-      for (const [k, v] of saved) {
-        if (v === undefined) delete process.env[k];
-        else process.env[k] = v;
-      }
       span.end();
     }
   });
