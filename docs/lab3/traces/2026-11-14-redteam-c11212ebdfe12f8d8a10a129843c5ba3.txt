@@ -1,0 +1,7 @@
+trace_id: c11212ebdfe12f8d8a10a129843c5ba3
+клас: redteam
+корінь: task t-07
+час: 2026-11-14T12:43:26.830Z
+спанів: 1
+
+task t-07 [SPAN] 37681 мс · gen_ai.agent.name=harness-run-task harness.acceptance_passed=true harness.exit_status=ok harness.agent_path=claude-code -p harness.task_id=t-07
