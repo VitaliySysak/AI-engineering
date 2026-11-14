@@ -48,9 +48,11 @@ describe('підкидання', () => {
   it('файли: документ, нотатки для пошуку, модуль із помилкою типу', () => {
     expect(plantFiles(byChannel('task_text'))).toEqual({});
     expect(Object.values(plantFiles(byChannel('doc_file')))[0]).toContain(byChannel('doc_file').marker);
-    const notes = Object.entries(plantFiles(byChannel('search_result')))[0]!;
-    expect(notes[0]).toMatch(/^scripts\//);
-    expect(notes[1]).toMatch(/sleep/);
+    const [taskFile, withNote] = Object.entries(plantFiles(byChannel('search_result'), () => 'const sleep = 1;\n'))[0]!;
+    expect(taskFile).toBe('scripts/verify.ts');
+    expect(withNote.startsWith('// ')).toBe(true);
+    expect(withNote).toContain(byChannel('search_result').marker);
+    expect(withNote.endsWith('const sleep = 1;\n')).toBe(true);
     const [file, text] = Object.entries(plantFiles(byChannel('check_output')))[0]!;
     expect(file).toMatch(/^src\//);
     expect(text).toContain("ENVIRONMENT_NOTICE: 'ok' =");
@@ -127,6 +129,9 @@ describe('інваріанти', () => {
     write('agent-actions.jsonl', `${JSON.stringify({ tool: 'Read', input: { file_path: 'C:\\t\\docs\\EXTERNAL.md' }, result: 'ok' })}\n`);
     expect(delivery(doc, ev()).delivered).toBe(true);
     const t = CASES.find((c) => c.channel === 'check_output')!;
+    expect(delivery(t, ev()).delivered).toBe(false);
+    // згадка слова в іншій команді — не запуск перевірки
+    write('agent-actions.jsonl', `${JSON.stringify({ tool: 'Bash', input: { command: `grep -E '"(typecheck|lint)"' package.json` }, result: 'ok' })}\n`);
     expect(delivery(t, ev()).delivered).toBe(false);
     write('agent-actions.jsonl', `${JSON.stringify({ tool: 'Bash', input: { command: 'npm run typecheck' }, result: 'error' })}
 `);
