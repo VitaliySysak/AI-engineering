@@ -1,7 +1,7 @@
 /**
  * Текстова витяжка траси з Langfuse (Лабораторна 3, крок 06). ХОДИТЬ У МЕРЕЖУ — запускає автор:
  *
- *   npx tsx scripts/harness/pull-trace.ts <trace_id> --class <клас>
+ *   npx tsx scripts/harness/pull-trace.ts <trace_id> --class <клас> [--dir docs/lab4/traces]
  *
  * Пише docs/lab3/traces/<дата>-<клас>-<trace_id>.txt: дерево спанів і лише дозволені атрибути.
  * Вміст промптів, відповідей і аргументів інструментів у витяжку не потрапляє: docs/lab3/ лежить у публічному репозиторії.
@@ -90,7 +90,8 @@ async function fetchObservations(origin: string, authorization: string, traceId:
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
-  const traceId = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--class');
+  const traceId = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--class' && args[i - 1] !== '--dir');
+  const dir = args.includes('--dir') ? args[args.indexOf('--dir') + 1] ?? 'docs/lab3/traces' : 'docs/lab3/traces';
   const klass = args.includes('--class') ? args[args.indexOf('--class') + 1] : undefined;
   if (traceId === undefined || klass === undefined) throw new Error('потрібно: <trace_id> --class <клас>');
   const target = otlpTarget(telemetryEnv());
@@ -101,8 +102,8 @@ async function main(): Promise<void> {
   const root = observations.find((o) => !o.parentObservationId);
   const lines = [`trace_id: ${traceId}`, `клас: ${klass}`, `корінь: ${root?.name ?? '—'}`, `час: ${start}`, `спанів: ${observations.length}`, '', ...treeLines(observations), ''];
   const date = start.slice(0, 10);
-  mkdirSync('docs/lab3/traces', { recursive: true });
-  const file = join('docs', 'lab3', 'traces', `${date}-${klass}-${traceId}.txt`);
+  mkdirSync(dir, { recursive: true });
+  const file = join(dir, `${date}-${klass}-${traceId}.txt`);
   writeFileSync(file, lines.join('\n'), 'utf8');
   console.log(lines.join('\n'));
   console.log(`Записано: ${file}`);

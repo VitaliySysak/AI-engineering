@@ -1,0 +1,5 @@
+{"id":"q1","module":"lib/helpers/buildURL.js","gold_importers":["adapters/http.js","core/Axios.js","helpers/resolveConfig.js"],"gold_tests":["tests/unit/core/paramsMerge.test.js","tests/unit/helpers/buildURL.test.js","tests/unit/helpers/requestConsistency.test.js"]}
+{"id":"q2","module":"lib/helpers/speedometer.js","gold_importers":["helpers/progressEventReducer.js"],"gold_tests":[]}
+{"id":"q3","module":"lib/core/mergeConfig.js","gold_importers":["axios.js","core/Axios.js","helpers/resolveConfig.js"],"gold_tests":["tests/unit/api.test.js","tests/unit/core/mergeConfig.test.js","tests/unit/core/paramsMerge.test.js","tests/unit/prototypePollution.test.js"]}
+{"id":"q4","module":"lib/helpers/combineURLs.js","gold_importers":["core/buildFullPath.js"],"gold_tests":["tests/unit/adapters/fetch.test.js","tests/unit/helpers/combineURLs.test.js","tests/unit/prototypePollution.test.js"]}
+{"id":"q5","module":"lib/core/settle.js","gold_importers":["adapters/fetch.js","adapters/http.js","adapters/xhr.js"],"gold_tests":["tests/unit/adapters/http.test.js","tests/unit/adapters/xhr.test.js","tests/unit/core/settle.test.js","tests/unit/helpers/trackStream.test.js"]}
