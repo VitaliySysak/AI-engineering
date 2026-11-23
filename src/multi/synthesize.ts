@@ -31,6 +31,9 @@ export const draftSchema = z
   })
   .strict();
 
+/** Те, що просимо в моделі: без верхньої межі — зайві твердження відрізаємо самі, а не валимо звід. */
+export const synthOutputSchema = z.object({ answer: z.string().min(1), claims: z.array(claimSchema).min(1) });
+
 export type Claim = z.infer<typeof claimSchema>;
 export type Draft = z.infer<typeof draftSchema>;
 
@@ -51,11 +54,13 @@ export async function synthesize(opts: { model: Model; question: string; outs: B
   const r = await generateText({
     model: opts.model,
     prompt: synthesisPrompt(opts.question, opts.outs, opts.failed),
-    output: Output.object({ schema: draftSchema }),
+    output: Output.object({ schema: synthOutputSchema }),
     maxRetries: 0,
     ...(opts.abortSignal === undefined ? {} : { abortSignal: opts.abortSignal }),
     telemetry: { isEnabled: true, functionId: `${opts.taskId}/synthesize`, recordInputs: false, recordOutputs: false },
   });
   const usage: Usage = r.totalUsage;
-  return { draft: r.output as Draft, usage, ms: performance.now() - t0 };
+  const out = r.output as z.infer<typeof synthOutputSchema>;
+  const draft: Draft = draftSchema.parse({ answer: out.answer, claims: out.claims.slice(0, MAX_CLAIMS) });
+  return { draft, usage, ms: performance.now() - t0 };
 }

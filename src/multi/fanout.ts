@@ -8,7 +8,7 @@ import { performance } from 'node:perf_hooks';
 
 import { generateText, isStepCount, type ToolSet } from 'ai';
 
-import { add, addLost, empty, overBudget, type Budget, type Spent, type Stop } from './budget';
+import { add, addLost, describeError, empty, overBudget, type Budget, type Spent, type StageError, type Stop } from './budget';
 
 // Тип моделі беремо з самого generateText — власного підпису не вигадуємо.
 export type Model = Parameters<typeof generateText>[0]['model'];
@@ -18,7 +18,7 @@ export type BranchOut = { lane: string; text: string };
 
 export const STOP_LOG = 'docs/lab4/traces/budget-stop.jsonl';
 
-export type FanOutResult = { out: BranchOut[]; spent: Spent; wallMs: number; stop: Stop; stopRound: number | null; failed: string[] };
+export type FanOutResult = { out: BranchOut[]; spent: Spent; wallMs: number; stop: Stop; stopRound: number | null; failed: string[]; errors: StageError[] };
 
 export async function fanOut(opts: {
   model: Model;
@@ -40,6 +40,7 @@ export async function fanOut(opts: {
   let spent = opts.spent ?? empty();
   const out: BranchOut[] = [];
   const failed: string[] = [];
+  const errors: StageError[] = [];
   let stop: Stop = 'none';
   let stopRound: number | null = null;
   const halt = (i: number, s: Stop) => {
@@ -90,6 +91,7 @@ export async function fanOut(opts: {
       for (const [j, s] of settled.entries()) {
         if (s.status !== 'fulfilled') {
           failed.push(round[j]!.lane);
+          errors.push(describeError(`read:${round[j]!.lane}`, s.reason));
           spent = addLost(spent, 0);
           continue;
         }
@@ -98,6 +100,7 @@ export async function fanOut(opts: {
           out.push({ lane: s.value.lane, text: s.value.text });
         } else {
           failed.push(s.value.lane); // звід мусить побачити, чого немає
+          errors.push(describeError(`read:${s.value.lane}`, s.value.error));
           spent = addLost(spent, s.value.ms);
           if (isQuotaError(s.value.error)) throw new QuotaError(s.value.lane, s.value.error);
         }
@@ -112,7 +115,7 @@ export async function fanOut(opts: {
   } finally {
     clearTimeout(timer);
   }
-  return { out, spent, wallMs: performance.now() - wall0, stop, stopRound, failed };
+  return { out, spent, wallMs: performance.now() - wall0, stop, stopRound, failed, errors };
 }
 
 /** Відмова за квотою — умова спрацювання circuit breaker (Лабораторна 3, крок 03), а не несподіванка. */

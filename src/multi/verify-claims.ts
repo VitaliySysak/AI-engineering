@@ -9,8 +9,8 @@ import { performance } from 'node:perf_hooks';
 import { generateText } from 'ai';
 
 import { criterionVerdict, isTaskBlocked, type VerifyReport } from '../verify/schema';
-import type { Usage } from './budget';
-import type { Model } from './fanout';
+import { describeError, type StageError, type Usage } from './budget';
+import { isQuotaError, type Model } from './fanout';
 import { readLines } from './fork-tools';
 import type { Claim } from './synthesize';
 
@@ -63,21 +63,30 @@ export function parseVerdict(id: string, text: string) {
 
 export async function verifyClaims(opts: { model: Model; root: string; claims: Claim[]; taskId: string; abortSignal?: AbortSignal }) {
   const results: VerifyReport['results'] = [];
-  const calls: { usage: Usage; ms: number }[] = [];
+  const calls: { usage: Usage | null; ms: number }[] = [];
+  const errors: StageError[] = [];
   for (const [i, claim] of opts.claims.entries()) {
     const id = `c${i + 1}`;
     const t0 = performance.now();
-    const r = await generateText({
-      model: opts.model,
-      prompt: verifierPrompt(id, claim, resolveEvidence(opts.root, claim)),
-      temperature: 0,
-      maxRetries: 0,
-      ...(opts.abortSignal === undefined ? {} : { abortSignal: opts.abortSignal }),
-      telemetry: { isEnabled: true, functionId: `${opts.taskId}/verify-${id}`, recordInputs: false, recordOutputs: false },
-    });
-    calls.push({ usage: r.totalUsage, ms: performance.now() - t0 });
-    results.push(parseVerdict(id, r.text));
+    try {
+      const r = await generateText({
+        model: opts.model,
+        prompt: verifierPrompt(id, claim, resolveEvidence(opts.root, claim)),
+        temperature: 0,
+        maxRetries: 0,
+        ...(opts.abortSignal === undefined ? {} : { abortSignal: opts.abortSignal }),
+        telemetry: { isEnabled: true, functionId: `${opts.taskId}/verify-${id}`, recordInputs: false, recordOutputs: false },
+      });
+      calls.push({ usage: r.totalUsage, ms: performance.now() - t0 });
+      results.push(parseVerdict(id, r.text));
+    } catch (error) {
+      // Квота — справа брейкера; будь-яка інша помилка — unknown саме цього твердження, решта перевіряються далі.
+      if (isQuotaError(error)) throw error;
+      calls.push({ usage: null, ms: performance.now() - t0 });
+      errors.push(describeError(`verify:${id}`, error));
+      results.push({ id, verdict: 'unknown', reason: 'виклик верифікатора впав', evidence: '' });
+    }
   }
   const report: VerifyReport = { results };
-  return { report, blocked: results.length === 0 || isTaskBlocked(report), calls };
+  return { report, blocked: results.length === 0 || isTaskBlocked(report), calls, errors };
 }

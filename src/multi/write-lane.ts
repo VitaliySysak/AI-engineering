@@ -6,7 +6,7 @@ import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import type { VerifyReport } from '../verify/schema';
-import type { Budget, Spent, Stop } from './budget';
+import type { Budget, Spent, StageError, Stop } from './budget';
 import { refOf } from './verify-claims';
 import type { Draft } from './synthesize';
 
@@ -25,6 +25,8 @@ export type RunRow = {
   stop: Stop;
   stopRound: number | null;
   failed: string[];
+  /** Помилки етапів: без цього впалий виклик видно лише як «не повідомлено». */
+  errors: StageError[];
   incomplete: boolean;
   blocked: boolean;
   verdicts: { id: string; verdict: string; ref: string }[];

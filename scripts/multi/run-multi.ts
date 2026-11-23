@@ -2,7 +2,8 @@
  * Мультиагентне питання про чужий проєкт (Лабораторна 4, крок 03). ХОДИТЬ У МЕРЕЖУ — запускає автор:
  *
  *   npx tsx --env-file=.env.local scripts/multi/run-multi.ts --mode both
- *   npx tsx --env-file=.env.local scripts/multi/run-multi.ts --mode fanout --only q1 --max-turns 3   # зупинка бюджетом
+ *   npx tsx --env-file=.env.local scripts/multi/run-multi.ts --mode fanout --only q1 --token-ceiling 5000   # зупинка бюджетом
+ *   npx tsx --env-file=.env.local scripts/multi/run-multi.ts --check   # по одному короткому виклику кожної моделі
  *
  * Читачі й звідник — Gemini (CATALOG['gemini-3.5-flash-lite'], ключ GEMINI_API_KEY);
  * верифікатор — інша родина: OpenRouter, модель з OPENROUTER_MODEL (ключ OPENROUTER_API_KEY).
@@ -15,11 +16,12 @@ import { resolve } from 'node:path';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { trace } from '@opentelemetry/api';
+import { generateText } from 'ai';
 
 import { mayRun, recordOutcome } from '../../src/harness/breaker';
 import { CATALOG } from '../../src/models';
 import { ask, type Mode } from '../../src/multi/ask';
-import { DEFAULT_BUDGET, type Budget } from '../../src/multi/budget';
+import { DEFAULT_BUDGET, describeError, type Budget } from '../../src/multi/budget';
 import { QuotaError } from '../../src/multi/fanout';
 import { parseQuestions } from '../../src/multi/question';
 import { startTelemetry } from '../../src/telemetry/otel';
@@ -84,6 +86,19 @@ async function main(): Promise<void> {
   const gemini = google(CATALOG['gemini-3.5-flash-lite'].id);
   const verifier = createOpenRouter({ apiKey: orKey })(orModel);
 
+  if (process.argv.includes('--check')) {
+    // Доступність моделей: по одному короткому виклику кожна — без питань і без запису в журнал.
+    for (const [name, m] of [['читач/звід', gemini], ['верифікатор', verifier]] as const) {
+      try {
+        const r = await generateText({ model: m, prompt: 'Відповідай одним словом: ok', maxRetries: 0 });
+        console.log(`${name}: ok · ${JSON.stringify(r.text.trim().slice(0, 40))} · in ${r.totalUsage.inputTokens ?? 'не повідомлено'} out ${r.totalUsage.outputTokens ?? 'не повідомлено'}`);
+      } catch (error) {
+        console.log(`${name}: ПОМИЛКА ${JSON.stringify(describeError(name, error))}`);
+      }
+    }
+    return;
+  }
+
   const telemetry = startTelemetry();
   const tracer = trace.getTracer('lab4-multi');
   console.log(`Читачі/звід: ${CATALOG['gemini-3.5-flash-lite'].id} (≤${rpm} RPM) · верифікатор: ${orModel} · форк: ${root}`);
@@ -110,6 +125,7 @@ async function main(): Promise<void> {
           recordOutcome({ ok: true, reason: null }, new Date(), BREAKER_MULTI);
           const v = row.verdicts.map((x) => x.verdict).join(',') || '—';
           console.log(`${q.id} ${mode.padEnd(6)} ${String(row.wallMs).padStart(6)} мс · ходів ${row.spent.calls} · in ${row.spent.input} out ${row.spent.output} · не повідомлено ${row.spent.unreported} · stop ${row.stop}${row.stopRound === null ? '' : `@${row.stopRound}`} · вердикти ${v} · ${row.blocked ? 'ЗАБЛОКОВАНО' : 'записано'} · імпортерів ${row.quality.importers}/${row.quality.importersTotal} · trace ${row.traceId}`);
+          for (const e of row.errors) console.log(`   помилка ${e.stage}: ${e.name}${e.status === null ? '' : ` ${e.status}`} — ${e.message}`);
           if (row.blocked) code = Math.max(code, 1);
         } catch (error) {
           if (error instanceof QuotaError) {

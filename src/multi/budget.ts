@@ -66,6 +66,17 @@ export function addLost(s: Spent, ms: number): Spent {
   return { ...s, calls: s.calls + 1, unreported: s.unreported + 1, ms: s.ms + ms };
 }
 
+/** Помилка етапу в журналі: лише клас, код і перший рядок повідомлення — без тіла запиту й ключів. */
+export type StageError = { stage: string; name: string; status: number | null; message: string };
+
+export function describeError(stage: string, error: unknown): StageError {
+  const e = (error ?? {}) as { name?: unknown; statusCode?: unknown; message?: unknown; responseBody?: unknown };
+  const first = (typeof e.message === 'string' ? e.message : String(error)).split(/\r?\n/)[0] ?? '';
+  const body = typeof e.responseBody === 'string' ? ` · ${e.responseBody.replace(/\s+/g, ' ')}` : '';
+  const message = `${first}${body}`.replace(/(sk-[A-Za-z0-9_-]{6})[A-Za-z0-9_-]+/g, '$1…').replace(/(AIza[A-Za-z0-9_-]{4})[A-Za-z0-9_-]+/g, '$1…').slice(0, 300);
+  return { stage, name: typeof e.name === 'string' ? e.name : 'Error', status: typeof e.statusCode === 'number' ? e.statusCode : null, message };
+}
+
 export const tokensUsed = (s: Spent): number => s.input + s.output;
 
 export type Stop = 'none' | 'token-ceiling' | 'turn-budget' | 'wall-clock';

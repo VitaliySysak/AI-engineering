@@ -139,6 +139,18 @@ describe('ask: звід, верифікатор на fan-in, єдина смуг
     expect(row).toMatchObject({ blocked: true, stop: 'turn-budget', answerFile: null, spent: { calls: 5 } });
     expect(row.verdicts[0]).toMatchObject({ verdict: 'unknown' });
   });
+  it('впалий виклик верифікатора — unknown саме цього твердження і рядок помилки в журналі', async () => {
+    const down = new MockLanguageModelV4({ doGenerate: async () => { throw Object.assign(new Error('No endpoints found matching your data policy'), { statusCode: 404 }); } });
+    const row = await ask({ mode: 'fanout', q: Q, root: fakeFork(), readerModel: model('читання'), synthModel: model(draft), verifierModel: down, budget: DEFAULT_BUDGET, ...paths() });
+    expect(row).toMatchObject({ blocked: true, spent: { calls: 6, unreported: 1 } });
+    expect(row.errors).toEqual([{ stage: 'verify:c1', name: 'Error', status: 404, message: 'No endpoints found matching your data policy' }]);
+  });
+  it('звід із зайвими твердженнями не падає: беремо перші три', async () => {
+    const many = JSON.stringify({ answer: 'a', claims: [1, 2, 3, 4, 5].map((n) => ({ text: `t${n}`, path: 'lib/helpers/buildURL.js', line: n })) });
+    const row = await ask({ mode: 'fanout', q: Q, root: fakeFork(), readerModel: model('читання'), synthModel: model(many), verifierModel: verdict('pass'), budget: { ...DEFAULT_BUDGET, maxTurns: 10 }, ...paths() });
+    expect(row.verdicts).toHaveLength(3);
+    expect(row.errors).toEqual([]);
+  });
   it('базова лінія — один читач, той самий звід і верифікатор', async () => {
     const row = await ask({ mode: 'single', q: Q, root: fakeFork(), readerModel: model('читання'), synthModel: model(draft), verifierModel: verdict('pass'), budget: DEFAULT_BUDGET, ...paths() });
     expect(row).toMatchObject({ mode: 'single', blocked: false, spent: { calls: 3 } });

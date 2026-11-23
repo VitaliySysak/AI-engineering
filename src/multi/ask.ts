@@ -11,7 +11,7 @@
  */
 import { performance } from 'node:perf_hooks';
 
-import { add, addLost, overBudget, type Budget, type Spent, type Stop } from './budget';
+import { add, addLost, describeError, overBudget, type Budget, type Spent, type StageError, type Stop } from './budget';
 import { fanOut, isQuotaError, logStop, QuotaError, STOP_LOG, type Model } from './fanout';
 import { readOnlyForkTools } from './fork-tools';
 import { score } from './gold';
@@ -61,6 +61,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
   let draft: Draft | null = null;
   let report: VerifyReport | null = null;
   let blocked = true;
+  const errors: StageError[] = [...read.errors];
 
   const halt = (s: Stop, round: number) => {
     stop = s;
@@ -77,6 +78,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
       draft = s.draft;
     } catch (error) {
       spent = addLost(spent, 0);
+      errors.push(describeError('synthesize', error));
       if (isQuotaError(error)) throw new QuotaError('synthesize', error);
     }
   } else if (read.out.length > 0 && stop === 'none') {
@@ -91,10 +93,12 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
     if (checked.length > 0 && left() > 0) {
       try {
         const v = await verifyClaims({ model: opts.verifierModel, root: opts.root, claims: checked, taskId, abortSignal: AbortSignal.timeout(left()) });
-        for (const c of v.calls) spent = add(spent, c.usage, c.ms);
+        for (const c of v.calls) spent = c.usage === null ? addLost(spent, c.ms) : add(spent, c.usage, c.ms);
+        errors.push(...v.errors);
         results = v.report.results;
       } catch (error) {
         spent = addLost(spent, 0);
+        errors.push(describeError('verify', error));
         if (isQuotaError(error)) throw new QuotaError('verify', error);
       }
     }
@@ -122,6 +126,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
       stop,
       stopRound,
       failed: read.failed,
+      errors,
       incomplete: read.failed.length > 0,
       blocked: draft === null || blocked,
       verdicts: (report?.results ?? []).map((r, i) => {
