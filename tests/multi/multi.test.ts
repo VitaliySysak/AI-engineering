@@ -174,7 +174,7 @@ describe('допоміжне', () => {
   it('503 повторюється до двох разів, 429 — ні', async () => {
     const seq = (codes: number[]) => {
       let i = 0;
-      return (async () => new Response('x', { status: codes[Math.min(i++, codes.length - 1)] })) as typeof fetch;
+      return (async () => new Response('x', { status: codes[Math.min(i++, codes.length - 1)] ?? 200 })) as typeof fetch;
     };
     let retries = 0;
     expect((await retry503Fetch(seq([503, 503, 200]), [1, 1], () => retries++)('u')).status).toBe(200);
