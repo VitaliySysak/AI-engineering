@@ -29,7 +29,8 @@ export type RunRow = {
   errors: StageError[];
   incomplete: boolean;
   blocked: boolean;
-  verdicts: { id: string; verdict: string; ref: string }[];
+  /** Твердження зводу з вердиктом і причиною — і для заблокованих відповідей, щоб розбір був можливий. */
+  verdicts: { id: string; verdict: string; ref: string; claim: string; reason: string }[];
   quality: { importers: number; importersTotal: number; tests: number; testsTotal: number };
   answerFile: string | null;
   traceId: string | null;

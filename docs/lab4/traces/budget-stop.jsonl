@@ -1,1 +1,2 @@
 {"at":"2026-11-23T11:48:52.050Z","taskId":"q1-fanout","limit":"token-ceiling","round":0,"spent":{"calls":4,"input":7950,"output":1124,"unreported":0,"ms":104174.1242}}
+{"at":"2026-11-25T13:04:17.786Z","taskId":"q4-single","limit":"wall-clock","round":0,"spent":{"calls":1,"input":0,"output":0,"unreported":1,"ms":240003.99060000002}}

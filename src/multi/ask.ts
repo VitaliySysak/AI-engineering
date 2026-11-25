@@ -131,7 +131,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
       blocked: draft === null || blocked,
       verdicts: (report?.results ?? []).map((r, i) => {
         const claim = draft?.claims[i];
-        return { id: r.id, verdict: r.verdict, ref: claim === undefined ? '' : refOf(claim) };
+        return { id: r.id, verdict: r.verdict, ref: claim === undefined ? '' : refOf(claim), claim: claim?.text ?? '', reason: r.reason };
       }),
       quality: score(opts.q, draft),
       traceId: opts.traceId ?? null,
