@@ -14,7 +14,7 @@ import { score } from '../../src/multi/gold';
 import { lanes, parseQuestions, singleLane, type Question } from '../../src/multi/question';
 import { READER_TOOLS, ROLES, WRITE_LIKE } from '../../src/multi/roles';
 import { parseVerdict } from '../../src/multi/verify-claims';
-import { assertNotGemini, rateLimitedFetch } from '../../scripts/multi/run-multi';
+import { assertNotGemini, rateLimitedFetch, retry503Fetch } from '../../scripts/multi/run-multi';
 
 type GenResult = Awaited<ReturnType<MockLanguageModelV4['doGenerate']>>;
 const usage = (i: number | undefined, o: number | undefined) => ({
@@ -170,6 +170,17 @@ describe('допоміжне', () => {
     expect(parseQuestions(readFileSync('docs/lab4/multi-questions.jsonl', 'utf8'))).toHaveLength(5);
     expect(() => assertNotGemini('google/gemini-3.5-flash-lite')).toThrow();
     expect(() => assertNotGemini('nvidia/nemotron-3-super-120b-a12b:free')).not.toThrow();
+  });
+  it('503 повторюється до двох разів, 429 — ні', async () => {
+    const seq = (codes: number[]) => {
+      let i = 0;
+      return (async () => new Response('x', { status: codes[Math.min(i++, codes.length - 1)] })) as typeof fetch;
+    };
+    let retries = 0;
+    expect((await retry503Fetch(seq([503, 503, 200]), [1, 1], () => retries++)('u')).status).toBe(200);
+    expect(retries).toBe(2);
+    expect((await retry503Fetch(seq([503, 503, 503, 200]), [1, 1])('u')).status).toBe(503);
+    expect((await retry503Fetch(seq([429, 200]), [1, 1])('u')).status).toBe(429);
   });
   it('ліміт запитів розводить старти', async () => {
     const starts: number[] = [];

@@ -55,6 +55,24 @@ export function rateLimitedFetch(rpm: number, base: typeof fetch = fetch): typeo
   }) as typeof fetch;
 }
 
+/** Скільки разів повторювати 503 і з якими паузами, мс. */
+export const RETRY_503_DELAYS = [5_000, 15_000];
+
+/**
+ * 503 «high demand» — тимчасове перевантаження моделі, а не квота: такий запит повторюємо до двох разів.
+ * 429 НЕ повторюємо — квоту лікує не повтор, а circuit breaker. Кожен повтор іде через той самий ліміт RPM.
+ */
+export function retry503Fetch(base: typeof fetch, delays: readonly number[] = RETRY_503_DELAYS, onRetry: (attempt: number) => void = () => {}): typeof fetch {
+  return (async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    for (let attempt = 0; ; attempt++) {
+      const res = await base(input, init);
+      if (res.status !== 503 || attempt >= delays.length) return res;
+      onRetry(attempt + 1);
+      await new Promise((r) => setTimeout(r, delays[attempt]));
+    }
+  }) as typeof fetch;
+}
+
 /** Верифікатор мусить бути іншої родини, ніж читачі (Gemini). */
 export function assertNotGemini(modelId: string): void {
   if (/gemini|gemma|google\//i.test(modelId)) throw new Error(`верифікатор ${modelId} — тієї самої родини, що й читачі (Google)`);
@@ -82,7 +100,8 @@ async function main(): Promise<void> {
   };
   const rpm = num('rpm', 14);
 
-  const google = createGoogleGenerativeAI({ apiKey: geminiKey, fetch: rateLimitedFetch(rpm) });
+  let retries503 = 0;
+  const google = createGoogleGenerativeAI({ apiKey: geminiKey, fetch: retry503Fetch(rateLimitedFetch(rpm), RETRY_503_DELAYS, () => { retries503++; }) });
   const gemini = google(CATALOG['gemini-3.5-flash-lite'].id);
   const verifier = createOpenRouter({ apiKey: orKey })(orModel);
 
@@ -139,6 +158,7 @@ async function main(): Promise<void> {
       }
     }
   } finally {
+    console.log(`\nПовторів після 503 від Gemini за прогін: ${retries503}`);
     await telemetry.shutdown();
     process.exitCode = code;
   }
