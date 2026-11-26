@@ -55,6 +55,17 @@ export function rateLimitedFetch(rpm: number, base: typeof fetch = fetch): typeo
   }) as typeof fetch;
 }
 
+/**
+ * Перемикач розгалуження (вердикт кроку 03 — «не окупилося», docs/lab4/multiagent.md): без --mode питання йде
+ * одним агентом; розгалуження вмикає лише MULTI_FANOUT=1. --mode both — режим виміру для таблиці.
+ */
+export function selectModes(mode: string | undefined, fanoutFlag: string | undefined): Mode[] {
+  if (mode === 'both') return ['single', 'fanout'];
+  if (mode === 'single' || mode === 'fanout') return [mode];
+  if (mode !== undefined) throw new Error(`--mode: single | fanout | both, а не ${mode}`);
+  return [fanoutFlag === '1' ? 'fanout' : 'single'];
+}
+
 /** Скільки разів повторювати 503 і з якими паузами, мс. */
 export const RETRY_503_DELAYS = [5_000, 15_000];
 
@@ -88,7 +99,7 @@ async function main(): Promise<void> {
 
   const root = resolve(flag('fork') ?? '../axios');
   if (!existsSync(resolve(root, 'lib/helpers/buildURL.js'))) throw new Error(`${root} — не форк axios`);
-  const modes: Mode[] = (flag('mode') ?? 'both') === 'both' ? ['single', 'fanout'] : [flag('mode') as Mode];
+  const modes = selectModes(flag('mode'), process.env.MULTI_FANOUT);
   const only = flag('only')?.split(',');
   const questions = parseQuestions(readFileSync(QUESTIONS, 'utf8')).filter((q) => only === undefined || only.includes(q.id));
   const budget: Budget = {

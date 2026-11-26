@@ -5,7 +5,7 @@
  *
  * Бере з docs/lab4/traces/multi-runs.jsonl УСІ прогони з типовим бюджетом від --since (прогони з навмисно
  * зниженою стелею — докази зупинки, а не базова лінія). Пара, зірвана інфраструктурою провайдера
- * (HTTP 503 / 404, перерваний запит), рахується окремим рядком і в якість та час не йде: це шум провайдера,
+ * (HTTP 503 / 404, немає мережі, перерваний запит), рахується окремим рядком і в якість та час не йде: це шум провайдера,
  * а не властивість архітектури. Ходи й токени рахуються по ВСІХ прогонах — квоту вони з'їли однаково.
  */
 import { readFileSync } from 'node:fs';
@@ -23,9 +23,12 @@ export function median(xs: number[]): number {
 
 const sameBudget = (row: RunRow, mode: Mode) => JSON.stringify(row.budget) === JSON.stringify(budgetFor(mode, DEFAULT_BUDGET));
 
-/** Збій інфраструктури: провайдер недоступний (503/404) або запит перервано. Вердикт верифікатора сюди не входить. */
+/**
+ * Збій інфраструктури: провайдер недоступний (503/404), немає мережі (DNS, таймаут з'єднання) або запит
+ * перервано. Вердикт верифікатора сюди не входить.
+ */
 export function infraFailed(row: RunRow): boolean {
-  return (row.errors ?? []).some((e) => e.status === 503 || e.status === 404 || e.name === 'AbortError');
+  return (row.errors ?? []).some((e) => e.status === 503 || e.status === 404 || e.name === 'AbortError' || /Cannot connect to API|ENOTFOUND|Connect Timeout/i.test(e.message));
 }
 
 export function pick(rows: RunRow[], mode: Mode, since = ''): RunRow[] {
@@ -61,7 +64,7 @@ function main(): void {
   const s = (ms: number) => (Number.isNaN(ms) ? '—' : (ms / 1000).toFixed(1));
   console.log(`Прогонів від ${since || 'початку'}: один агент ${a.runs} (чистих ${a.clean}), розгалуження ${b.runs} (чистих ${b.clean})\n`);
   console.log('| Вимір | Один агент | Розгалуження |\n|---|---|---|');
-  line('пар, зірваних провайдером (503 / 404 / перервано)', a.runs - a.clean, b.runs - b.clean);
+  line('пар, зірваних провайдером або мережею', a.runs - a.clean, b.runs - b.clean);
   line('час ДО ВІДПОВІДІ, медіана по чистих, с', s(a.wallMedianMs), s(b.wallMedianMs));
   line('час обчислення (сума по викликах), медіана по чистих, с', s(a.computeMedianMs), s(b.computeMedianMs));
   line('вхідні токени, усі прогони', a.input, b.input);

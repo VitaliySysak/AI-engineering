@@ -14,7 +14,7 @@ import { score } from '../../src/multi/gold';
 import { lanes, parseQuestions, singleLane, type Question } from '../../src/multi/question';
 import { READER_TOOLS, ROLES, WRITE_LIKE } from '../../src/multi/roles';
 import { parseVerdict } from '../../src/multi/verify-claims';
-import { assertNotGemini, rateLimitedFetch, retry503Fetch } from '../../scripts/multi/run-multi';
+import { assertNotGemini, rateLimitedFetch, retry503Fetch, selectModes } from '../../scripts/multi/run-multi';
 
 type GenResult = Awaited<ReturnType<MockLanguageModelV4['doGenerate']>>;
 const usage = (i: number | undefined, o: number | undefined) => ({
@@ -170,6 +170,12 @@ describe('допоміжне', () => {
     expect(parseQuestions(readFileSync('docs/lab4/multi-questions.jsonl', 'utf8'))).toHaveLength(5);
     expect(() => assertNotGemini('google/gemini-3.5-flash-lite')).toThrow();
     expect(() => assertNotGemini('nvidia/nemotron-3-super-120b-a12b:free')).not.toThrow();
+  });
+  it('перемикач: типово один агент, розгалуження лише з MULTI_FANOUT=1', () => {
+    expect(selectModes(undefined, undefined)).toEqual(['single']);
+    expect(selectModes(undefined, '1')).toEqual(['fanout']);
+    expect(selectModes('both', undefined)).toEqual(['single', 'fanout']);
+    expect(() => selectModes('fast', undefined)).toThrow();
   });
   it('503 повторюється до двох разів, 429 — ні', async () => {
     const seq = (codes: number[]) => {
