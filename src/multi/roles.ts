@@ -38,3 +38,6 @@ export const ROLES: readonly Role[] = [
     limit: 'модель іншої родини; один запит на одне твердження; блокує все, що не pass',
   },
 ];
+
+/** Інструменти дослідника (крок 04): ті самі читальні + git blame і git show. Жодного запису. */
+export const RESEARCH_TOOLS = [...READER_TOOLS, 'git_blame', 'git_show'] as const;

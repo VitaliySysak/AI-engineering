@@ -25,6 +25,7 @@ import { DEFAULT_BUDGET, describeError, type Budget } from '../../src/multi/budg
 import { QuotaError } from '../../src/multi/fanout';
 import { parseQuestions } from '../../src/multi/question';
 import { startTelemetry } from '../../src/telemetry/otel';
+import { describeRecall, recall } from '../../src/memory/store';
 
 export const BREAKER_MULTI = '.harness/breaker-multi.json';
 export const QUESTIONS = 'docs/lab4/multi-questions.jsonl';
@@ -129,9 +130,14 @@ async function main(): Promise<void> {
     return;
   }
 
+  // Памʼять харнеса (крок 04): лише з --memory; читається один раз на прогін, з двома межами й перевіркою застарілості.
+  const mem = process.argv.includes('--memory') ? recall({ roots: { course: '.', fork: root } }) : null;
+  const memory = mem === null ? null : { text: mem.text, stats: { used: mem.used, total: mem.total, staleDropped: mem.staleDropped, cutEntries: mem.cutEntries, cutBytes: mem.cutBytes } };
+
   const telemetry = startTelemetry();
   const tracer = trace.getTracer('lab4-multi');
   console.log(`Читачі/звід: ${CATALOG['gemini-3.5-flash-lite'].id} (≤${rpm} RPM) · верифікатор: ${orModel} · форк: ${root}`);
+  console.log(mem === null ? 'Памʼять: вимкнено' : `Памʼять: ${describeRecall(mem)}${mem.stale.length > 0 ? ` (застарілі: ${mem.stale.join('; ')})` : ''}`);
   console.log(`Бюджет: ${JSON.stringify(budget)} · режими: ${modes.join(', ')} · питань: ${questions.length}\n`);
 
   let code = 0;
@@ -145,9 +151,9 @@ async function main(): Promise<void> {
           return;
         }
         try {
-          const row = await tracer.startActiveSpan(`lab4-multi ${q.id}/${mode}`, async (span) => {
+          const row = await tracer.startActiveSpan(`lab4-multi ${q.id}/${mode}${memory === null ? "" : "+mem"}`, async (span) => {
             try {
-              return await ask({ mode, q, root, readerModel: gemini, synthModel: gemini, verifierModel: verifier, budget, traceId: span.spanContext().traceId });
+              return await ask({ mode, q, root, readerModel: gemini, synthModel: gemini, verifierModel: verifier, budget, traceId: span.spanContext().traceId, memory });
             } finally {
               span.end();
             }

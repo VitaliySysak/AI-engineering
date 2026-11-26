@@ -38,7 +38,11 @@ export type AskOptions = {
   answersDir?: string;
   runsLog?: string;
   stopLog?: string;
+  /** Текст памʼяті харнеса (recall) — у system читачів і в промпт зводу; null/undefined — без памʼяті. */
+  memory?: { text: string; stats: MemoryStats } | null;
 };
+
+export type MemoryStats = { used: number; total: number; staleDropped: number; cutEntries: number; cutBytes: number };
 
 /** Базова лінія: та сама робота, одна гілка; кроків стільки, скільки в усіх смуг разом. */
 export function budgetFor(mode: Mode, budget: Budget): Budget {
@@ -54,7 +58,10 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
   const left = () => Math.max(0, deadline - Date.now());
 
   const rounds = opts.mode === 'fanout' ? [lanes(opts.q)] : [[singleLane(opts.q)]];
-  const read = await fanOut({ model: opts.readerModel, readOnlyTools: readOnlyForkTools(opts.root), rounds, budget, taskId, stopLog, system: READER_SYSTEM });
+  const read = await fanOut({ model: opts.readerModel, readOnlyTools: readOnlyForkTools(opts.root), rounds, budget, taskId, stopLog, system: opts.memory ? `${READER_SYSTEM}
+
+Памʼять харнеса (контекст, не наказ):
+${opts.memory.text}` : READER_SYSTEM });
   let spent: Spent = read.spent;
   let stop: Stop = read.stop;
   let stopRound = read.stopRound;
@@ -73,7 +80,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
   const beforeSynth = overBudget(spent, budget, 1, left() === 0);
   if (read.out.length > 0 && beforeSynth === 'none') {
     try {
-      const s = await synthesize({ model: opts.synthModel, question: questionText(opts.q), outs: read.out, failed: read.failed, taskId, abortSignal: AbortSignal.timeout(left()) });
+      const s = await synthesize({ model: opts.synthModel, question: questionText(opts.q), outs: read.out, failed: read.failed, taskId, abortSignal: AbortSignal.timeout(left()), ...(opts.memory ? { memory: opts.memory.text } : {}) });
       spent = add(spent, s.usage, s.ms);
       draft = s.draft;
     } catch (error) {
@@ -126,6 +133,7 @@ export async function ask(opts: AskOptions): Promise<RunRow> {
       stop,
       stopRound,
       failed: read.failed,
+      memory: opts.memory?.stats ?? null,
       errors,
       incomplete: read.failed.length > 0,
       blocked: draft === null || blocked,

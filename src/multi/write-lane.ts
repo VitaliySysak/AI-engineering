@@ -25,6 +25,8 @@ export type RunRow = {
   stop: Stop;
   stopRound: number | null;
   failed: string[];
+  /** Скільки памʼяті пішло в промпт (крок 04); null — прогін без памʼяті. */
+  memory?: { used: number; total: number; staleDropped: number; cutEntries: number; cutBytes: number } | null;
   /** Помилки етапів: без цього впалий виклик видно лише як «не повідомлено». */
   errors: StageError[];
   incomplete: boolean;
@@ -47,7 +49,7 @@ export function writeAnswer(opts: {
   const { row, draft, report } = opts;
   let answerFile: string | null = null;
   if (!row.blocked && draft !== null && report !== null) {
-    answerFile = join(opts.answersDir ?? ANSWERS_DIR, `${row.qid}-${row.mode}.md`).split('\\').join('/');
+    answerFile = join(opts.answersDir ?? ANSWERS_DIR, `${row.qid}-${row.mode}${row.memory ? '-mem' : ''}.md`).split('\\').join('/');
     mkdirSync(dirname(answerFile), { recursive: true });
     const lines = [
       `# ${row.qid} (${row.mode}): ${opts.question}`,

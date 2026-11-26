@@ -31,8 +31,14 @@ export function infraFailed(row: RunRow): boolean {
   return (row.errors ?? []).some((e) => e.status === 503 || e.status === 404 || e.name === 'AbortError' || /Cannot connect to API|ENOTFOUND|Connect Timeout/i.test(e.message));
 }
 
-export function pick(rows: RunRow[], mode: Mode, since = ''): RunRow[] {
-  return rows.filter((r) => r.mode === mode && r.at >= since && sameBudget(r, mode));
+/** withMemory: undefined — байдуже (крок 03, усі прогони до памʼяті), true/false — лише з памʼяттю / без (крок 04). */
+export function pick(rows: RunRow[], mode: Mode, since = '', withMemory?: boolean): RunRow[] {
+  return rows.filter((r) => r.mode === mode && r.at >= since && sameBudget(r, mode) && (withMemory === undefined || Boolean(r.memory) === withMemory));
+}
+
+/** Складене твердження — помилка, яку памʼять мала попередити: один claim називає два й більше різних .js-файлів. */
+export function isCompound(claim: string): boolean {
+  return new Set(claim.match(/[\w.-]+\.js\b/g) ?? []).size >= 2;
 }
 
 export function column(all: RunRow[]) {
@@ -51,19 +57,23 @@ export function column(all: RunRow[]) {
     tests: `${sum(clean, (r) => r.quality.tests)}/${sum(clean, (r) => r.quality.testsTotal)}`,
     claimsPass: `${sum(clean, (r) => r.verdicts.filter((v) => v.verdict === 'pass').length)}/${sum(clean, (r) => r.verdicts.length)}`,
     passed: clean.filter((r) => !r.blocked).length,
+    compound: `${sum(clean, (r) => r.verdicts.filter((v) => isCompound(v.claim ?? '')).length)}/${sum(clean, (r) => r.verdicts.length)}`,
   };
 }
 
 function main(): void {
   const at = process.argv.indexOf('--since');
   const since = at > 0 ? process.argv[at + 1] ?? '' : '';
+  const memCompare = process.argv.includes('--memory-compare');
   const rows = readFileSync(RUNS_LOG, 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '').map((l) => JSON.parse(l) as RunRow);
-  const a = column(pick(rows, 'single', since));
-  const b = column(pick(rows, 'fanout', since));
+  const a = column(memCompare ? pick(rows, 'single', since, false) : pick(rows, 'single', since));
+  const b = column(memCompare ? pick(rows, 'single', since, true) : pick(rows, 'fanout', since));
+  const [ha, hb] = memCompare ? ['Без памʼяті', 'З памʼяттю'] : ['Один агент', 'Розгалуження'];
   const line = (name: string, x: string | number, y: string | number) => console.log(`| ${name} | ${x} | ${y} |`);
   const s = (ms: number) => (Number.isNaN(ms) ? '—' : (ms / 1000).toFixed(1));
-  console.log(`Прогонів від ${since || 'початку'}: один агент ${a.runs} (чистих ${a.clean}), розгалуження ${b.runs} (чистих ${b.clean})\n`);
-  console.log('| Вимір | Один агент | Розгалуження |\n|---|---|---|');
+  console.log(`Прогонів від ${since || 'початку'}: ${ha} ${a.runs} (чистих ${a.clean}), ${hb} ${b.runs} (чистих ${b.clean})\n`);
+  console.log(`| Вимір | ${ha} | ${hb} |\n|---|---|---|`);
+  if (memCompare) line('складених тверджень (≥2 файли в одному claim), чисті', a.compound, b.compound);
   line('пар, зірваних провайдером або мережею', a.runs - a.clean, b.runs - b.clean);
   line('час ДО ВІДПОВІДІ, медіана по чистих, с', s(a.wallMedianMs), s(b.wallMedianMs));
   line('час обчислення (сума по викликах), медіана по чистих, с', s(a.computeMedianMs), s(b.computeMedianMs));
