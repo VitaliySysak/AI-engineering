@@ -1,0 +1,46 @@
+trace_id: 48be788ed55d0d1a3282bf5e4521e345
+клас: multi-fanout
+корінь: lab4-multi q5/fanout
+час: 2026-11-26T11:52:45.925Z
+спанів: 40
+
+lab4-multi q5/fanout [SPAN] 102420 мс
+  invoke_agent gemini-3.5-flash-lite [AGENT] 31073 мс · gen_ai.usage.output_tokens=251 gen_ai.usage.input_tokens=1445 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/history gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 728 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 683 мс · gen_ai.usage.output_tokens=23 gen_ai.usage.input_tokens=505 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["tool-calls"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=505 output=23 input_cached_tokens=0 total=528
+      git_history [TOOL] 45 мс · gen_ai.tool.name=git_history gen_ai.operation.name=execute_tool
+    step 2 [SPAN] 30343 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 30343 мс · gen_ai.usage.output_tokens=228 gen_ai.usage.input_tokens=940 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=940 output=228 input_cached_tokens=0 total=1168
+  invoke_agent gemini-3.5-flash-lite [AGENT] 68106 мс · gen_ai.usage.output_tokens=202 gen_ai.usage.input_tokens=2627 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/deps gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 9301 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 9270 мс · gen_ai.usage.output_tokens=24 gen_ai.usage.input_tokens=525 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["tool-calls"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=525 output=24 input_cached_tokens=0 total=549
+      search_code [TOOL] 30 мс · gen_ai.tool.name=search_code gen_ai.operation.name=execute_tool
+    step 2 [SPAN] 28994 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 28993 мс · gen_ai.usage.output_tokens=32 gen_ai.usage.input_tokens=897 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["tool-calls"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=897 output=32 input_cached_tokens=0 total=929
+      read_file [TOOL] 0 мс · gen_ai.tool.name=read_file gen_ai.operation.name=execute_tool
+    step 3 [SPAN] 29809 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 29809 мс · gen_ai.usage.output_tokens=146 gen_ai.usage.input_tokens=1205 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=1205 output=146 input_cached_tokens=0 total=1351
+  invoke_agent gemini-3.5-flash-lite [AGENT] 53193 мс · gen_ai.usage.output_tokens=202 gen_ai.usage.input_tokens=1674 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/tests gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 23904 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 23870 мс · gen_ai.usage.output_tokens=26 gen_ai.usage.input_tokens=490 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["tool-calls"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=490 output=26 input_cached_tokens=0 total=516
+      search_code [TOOL] 33 мс · gen_ai.tool.name=search_code gen_ai.operation.name=execute_tool
+    step 2 [SPAN] 29287 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 29287 мс · gen_ai.usage.output_tokens=176 gen_ai.usage.input_tokens=1184 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=1184 output=176 input_cached_tokens=0 total=1360
+  invoke_agent gemini-3.5-flash-lite [AGENT] 49791 мс · gen_ai.usage.output_tokens=326 gen_ai.usage.input_tokens=1377 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/module gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 15573 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 15572 мс · gen_ai.usage.output_tokens=33 gen_ai.usage.input_tokens=490 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["tool-calls"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=490 output=33 input_cached_tokens=0 total=523
+      read_file [TOOL] 0 мс · gen_ai.tool.name=read_file gen_ai.operation.name=execute_tool
+    step 2 [SPAN] 34216 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 34216 мс · gen_ai.usage.output_tokens=293 gen_ai.usage.input_tokens=887 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=887 output=293 input_cached_tokens=0 total=1180
+  invoke_agent gemini-3.5-flash-lite [AGENT] 1665 мс · gen_ai.usage.output_tokens=288 gen_ai.usage.input_tokens=1015 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/synthesize gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 1664 мс · gen_ai.operation.name=agent_step
+      chat gemini-3.5-flash-lite [GENERATION] 1664 мс · gen_ai.usage.output_tokens=288 gen_ai.usage.input_tokens=1015 gen_ai.response.model=gemini-3.5-flash-lite gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=gemini-3.5-flash-lite gen_ai.provider.name=gcp.gemini gen_ai.operation.name=chat · usage input=1015 output=288 input_cached_tokens=0 total=1303
+  invoke_agent nvidia/nemotron-3-ultra-550b-a55b:free [AGENT] 11242 мс · gen_ai.usage.output_tokens=291 gen_ai.usage.input_tokens=344 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/verify-c1 gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 11242 мс · gen_ai.operation.name=agent_step
+      chat nvidia/nemotron-3-ultra-550b-a55b:free [GENERATION] 11242 мс · gen_ai.usage.output_tokens=291 gen_ai.usage.input_tokens=344 gen_ai.response.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=chat · usage input=344 output=291 input_cached_tokens=0 input_cache_creation=0 total=635
+  invoke_agent nvidia/nemotron-3-ultra-550b-a55b:free [AGENT] 8636 мс · gen_ai.usage.output_tokens=248 gen_ai.usage.input_tokens=312 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/verify-c2 gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 8636 мс · gen_ai.operation.name=agent_step
+      chat nvidia/nemotron-3-ultra-550b-a55b:free [GENERATION] 8636 мс · gen_ai.usage.output_tokens=248 gen_ai.usage.input_tokens=312 gen_ai.response.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=chat · usage input=312 output=248 input_cached_tokens=0 input_cache_creation=0 total=560
+  invoke_agent nvidia/nemotron-3-ultra-550b-a55b:free [AGENT] 12714 мс · gen_ai.usage.output_tokens=464 gen_ai.usage.input_tokens=327 gen_ai.response.finish_reasons=["stop"] gen_ai.agent.name=q5-fanout/verify-c3 gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=invoke_agent
+    step 1 [SPAN] 12713 мс · gen_ai.operation.name=agent_step
+      chat nvidia/nemotron-3-ultra-550b-a55b:free [GENERATION] 12713 мс · gen_ai.usage.output_tokens=464 gen_ai.usage.input_tokens=327 gen_ai.response.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.response.finish_reasons=["stop"] gen_ai.request.model=nvidia/nemotron-3-ultra-550b-a55b:free gen_ai.provider.name=openrouter gen_ai.operation.name=chat · usage input=327 output=464 input_cached_tokens=0 input_cache_creation=0 total=791
