@@ -22,6 +22,8 @@ import type { VerifyReport } from '../verify/schema';
 import { checkCite, type Cite } from './cite-check';
 
 export const MAX_RESEARCH_CLAIMS = 5;
+/** Менше трьох тверджень — це не дослідження, а переказ одного рядка (прогін 2026-11-28 дав одне). */
+export const MIN_RESEARCH_CLAIMS = 3;
 
 export const RESEARCH_BUDGET: Budget = { maxBranches: 5, maxTurns: 14, stepsPerBranch: 4, tokenCeiling: 300_000, wallClockMs: 420_000 };
 
@@ -62,7 +64,9 @@ export function researchSynthesisPrompt(question: string, outs: BranchOut[], fai
     failed.length > 0 ? `Смуги ${failed.join(', ')} не дали результату — відповідь НЕПОВНА, так і напиши.` : '',
     ...outs.map((o) => `--- смуга ${o.lane} ---\n${o.text}`),
     '',
-    `Зведи в відповідь (answer, 2–3 короткі абзаци) і до ${MAX_RESEARCH_CLAIMS} АТОМАРНИХ тверджень (claims): один факт — одне посилання.`,
+    `Зведи в відповідь (answer, 2–3 короткі абзаци) і від ${MIN_RESEARCH_CLAIMS} до ${MAX_RESEARCH_CLAIMS} АТОМАРНИХ тверджень (claims): один факт — одне посилання.`,
+    'Відповідь має покрити окремими твердженнями: (1) ДЕ в коді це відбувається; (2) У ЯКОМУ КОМІТІ й навіщо це зʼявилось (смуги history/blame) — це і є відповідь «чи задумано»;',
+    '(3) що про це кажуть ТЕСТИ; (4) що кажуть ДОКУМЕНТИ. Якщо смуга нічого не знайшла — так і напиши в answer, але не вигадуй твердження під неї.',
     'Посилання беріть зі смуг дослівно: для файлу — file + line (і без sha), для коміту — sha (і без file).',
     'Не вигадуйте посилань, яких немає у смугах.',
   ].join('\n');
@@ -96,6 +100,8 @@ export type ResearchResult = {
   errors: StageError[];
   citesTotal: number;
   citesBad: number;
+  /** Що повернула кожна смуга (до 1500 символів) — без цього не розібрати, чому звід вийшов тонким. */
+  lanes: { lane: string; text: string }[];
 };
 
 async function synth(model: Model, question: string, outs: BranchOut[], failed: string[], taskId: string) {
@@ -136,6 +142,8 @@ export async function research(opts: {
   let rounds = 0;
   let stopReason: ResearchResult['stopReason'] = 'no-draft';
   const timeLeft = () => budget.wallClockMs - (performance.now() - wall0);
+  /** Стоп за змістом: щонайменше MIN тверджень, і в кожного існує цитата. */
+  const complete = () => checked.length >= MIN_RESEARCH_CLAIMS && checked.every((c) => c.why === null);
 
   // Раунд 1: K паралельних смуг.
   const first = await fanOut({ model: opts.readerModel, readOnlyTools: tools, rounds: [researchLanes(opts.question, opts.module)], budget, taskId, spent, system: RESEARCH_SYSTEM, ...(opts.stopLog === undefined ? {} : { stopLog: opts.stopLog }) });
@@ -162,11 +170,14 @@ export async function research(opts: {
   };
 
   if (outs.length > 0 && stop === 'none' && (await synthesizeNow())) {
-    stopReason = checked.every((c) => c.why === null) ? 'all-cited' : 'no-new-cites';
-    // Раунд добору: лише якщо є твердження без перевіреної цитати і бюджет дозволяє смугу + звід.
+    stopReason = complete() ? 'all-cited' : 'no-new-cites';
+    // Раунд добору: лише якщо є твердження без перевіреної цитати (або їх менше MIN) і бюджет дозволяє смугу + звід.
     if (stopReason !== 'all-cited' && spent.calls + 2 <= budget.maxTurns && timeLeft() > 0) {
       const before = checked.filter((c) => c.why === null).length;
-      const missing = checked.filter((c) => c.why !== null).map((c) => `- ${c.text} (брак: ${c.why})`).join('\n');
+      const missing = [
+        ...checked.filter((c) => c.why !== null).map((c) => `- ${c.text} (брак: ${c.why})`),
+        ...(checked.length < MIN_RESEARCH_CLAIMS ? [`- тверджень лише ${checked.length}: знайди факти з цитатами про коміт, що ввів цю поведінку, про тести й документи`] : []),
+      ].join('\n');
       const follow: Branch = { lane: 'cites', prompt: `Дослідницьке питання: «${opts.question}»\nДля цих тверджень немає існуючої цитати. Знайди інструментами точне шлях:рядок або SHA коміту, або напиши, що твердження не підтверджується:\n${missing}` };
       const second = await fanOut({ model: opts.readerModel, readOnlyTools: tools, rounds: [[follow]], budget, taskId, spent, system: RESEARCH_SYSTEM, ...(opts.stopLog === undefined ? {} : { stopLog: opts.stopLog }) });
       rounds = 2;
@@ -176,7 +187,7 @@ export async function research(opts: {
       errors.push(...second.errors);
       if (second.out.length > 0 && (await synthesizeNow())) {
         const after = checked.filter((c) => c.why === null).length;
-        stopReason = checked.every((c) => c.why === null) ? 'all-cited' : after > before ? 'budget' : 'no-new-cites';
+        stopReason = complete() ? 'all-cited' : after > before ? 'budget' : 'no-new-cites';
       }
     }
   } else if (stop !== 'none') {
@@ -209,5 +220,6 @@ export async function research(opts: {
     errors,
     citesTotal: checked.length,
     citesBad: checked.filter((c) => c.why !== null).length,
+    lanes: outs.map((o) => ({ lane: o.lane, text: o.text.slice(0, 1500) })),
   };
 }

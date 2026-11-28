@@ -121,7 +121,9 @@ export function recall(o: StoreOptions = {}): Recall {
   let cutEntries = 0;
   for (const e of [...fresh].reverse()) {
     // найновіші першими
-    const line = `- [${e.kind}] ${e.text} (${e.repo}@${e.sha.slice(0, 7)}; ${e.source})`;
+    // У промпт — лише вид і текст. sha і source лишаються у файлі (для застарілості й аудиту), але моделі не показуються:
+    // у прогоні 2026-11-28 модель процитувала службовий sha запису (fork@37890f4) як доказ — метадані протекли в цитати.
+    const line = `- [${e.kind}] ${e.text}`;
     const size = Buffer.byteLength(line, 'utf8');
     if (lines.length >= maxEntries || bytes + size > maxBytes) {
       cutBytes += size;

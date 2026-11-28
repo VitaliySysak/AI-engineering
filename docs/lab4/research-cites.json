@@ -1,0 +1,8 @@
+[
+  {
+    "sha": "9f0f4ddfe72b4c06afafe1a658e6ee53d35b5760",
+    "file": "lib/helpers/buildURL.js",
+    "line": 59,
+    "claim": "Функція buildURL обрізає #фрагмент лише за умови, що серіалізовані параметри непорожні через розташування логіки всередині блоку if (serializedParams)."
+  }
+]

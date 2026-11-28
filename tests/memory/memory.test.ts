@@ -124,11 +124,18 @@ describe('дослідження: раунди й критерій зупинк�
   const json = (o: object) => new MockLanguageModelV4({ doGenerate: async () => ({ content: [{ type: 'text', text: JSON.stringify(o) }], finishReason: { unified: 'stop', raw: undefined }, usage: { inputTokens: { total: 80, noCache: 80, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 20, text: 20, reasoning: undefined } }, warnings: [] }) });
   const pass = json({ id: 'c1', verdict: 'pass', reason: 'так', evidence: '// hash' });
 
-  it('усі цитати існують — один раунд, зупинка all-cited, верифікатор лише на них', async () => {
+  const three = [1, 2, 3].map((line) => ({ text: `рядок ${line}`, file: 'lib/a.js', line }));
+  it('три твердження з існуючими цитатами — один раунд, зупинка all-cited, верифікатор лише на них', async () => {
     const r = repo();
-    const res = await research({ question: 'чому?', module: 'lib/a.js', root: r.dir, zeroSha: r.first, readerModel: lane, synthModel: json({ answer: 'бо так', claims: [{ text: 'коментар про hash', file: 'lib/a.js', line: 2 }] }), verifierModel: pass, stopLog: tmp('s.jsonl') });
-    expect(res).toMatchObject({ rounds: 1, stopReason: 'all-cited', citesTotal: 1, citesBad: 0, spent: { calls: 7 } });
-    expect(res.verdicts.map((v) => v.verdict)).toEqual(['pass']);
+    const res = await research({ question: 'чому?', module: 'lib/a.js', root: r.dir, zeroSha: r.first, readerModel: lane, synthModel: json({ answer: 'бо так', claims: three }), verifierModel: pass, stopLog: tmp('s.jsonl') });
+    expect(res).toMatchObject({ rounds: 1, stopReason: 'all-cited', citesTotal: 3, citesBad: 0, spent: { calls: 9 } });
+    expect(res.verdicts).toHaveLength(3);
+    expect(res.lanes.map((l) => l.lane)).toEqual(['history', 'blame', 'callers', 'tests', 'docs']);
+  });
+  it('одне твердження — замало навіть із цитатою: раунд добору', async () => {
+    const r = repo();
+    const res = await research({ question: 'чому?', module: 'lib/a.js', root: r.dir, zeroSha: r.first, readerModel: lane, synthModel: json({ answer: 'бо так', claims: [three[0]] }), verifierModel: pass, stopLog: tmp('s.jsonl') });
+    expect(res).toMatchObject({ rounds: 2, stopReason: 'no-new-cites', citesBad: 0 });
   });
   it('вигадана цитата — раунд добору; нових цитат немає — стоп no-new-cites; модель не бачить браку', async () => {
     const r = repo();
